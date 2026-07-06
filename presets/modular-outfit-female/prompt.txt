@@ -1,0 +1,69 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the outfit source. Use it for outfit inspiration only: major garment design, large armor zones, color palette, material categories, and broad fantasy/medieval identity.
+
+Image 2 is the locked female modular silhouette template. This template is authoritative for pose, body width, torso shape, waist, hips, bust volume, arm length, arm thickness, leg length, lower-leg bulk, boot scale, neck cutoff, wrist cutoffs, and overall modular compatibility.
+
+Create a technical modular outfit reference for AI-to-3D conversion, not fantasy character art, fashion art, pin-up art, or a posed illustration.
+
+Output a clean full-body FRONT view on the locked female modular silhouette.
+
+The figure must be:
+- true T-pose with both arms extended horizontally
+- full body visible with arms, wrist cutoffs, legs, and boots fully in frame
+- headless with a clean neck opening or collar finish
+- handless with clean wrist cuffs, bracers, sleeve cuffs, or modular wrist openings
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+
+The silhouette template wins over the outfit source whenever they conflict. Keep the locked female body proportions, shoulder width, waist, hip width, bust volume, arm length, leg length, lower-leg form, and boot scale. Do not exaggerate the anatomy, sexualize the outfit, narrow the waist beyond the template, enlarge the bust beyond the template, or turn the render into character art.
+
+Rebuild the source outfit onto the locked silhouette. Preserve the outfit's main identity and readable material layout. Keep large armor plates, tunics, tabards, belts, collars, cuffs, boots, leather zones, cloth zones, metal zones, and chainmail zones when they are important to the design.
+
+Remove outer cloak layers before rebuilding the outfit. Do not include cloaks, capes, mantles, trailing hoods, loose shoulder drapes, back-hanging cloth, or long flowing outer garments. If the source outfit uses a cloak as part of the character identity, translate only its broad color/material influence into fitted clothing, shoulder armor, a collar, a short tabard, skirt-safe fitted panels, or clean rig-friendly panels attached to the torso. Keep all clothing close to the locked silhouette.
+
+Simplify decoration, not material identity. Preserve structural ornament only when it is part of the physical armor or garment construction, such as raised trim, borders, bevels, panel lines, rivets, embossed metalwork, or non-symbolic filigree. Remove identity markings completely.
+
+Remove all heraldry and identifiers:
+- no heraldic symbols
+- no faction marks
+- no family crests
+- no badges
+- no sigils
+- no emblems
+- no religious symbols
+- no readable icons
+- no logos
+- no text
+- no decals
+- no watermarks
+
+If the source has a symbol or crest on a tabard, shield, chest plate, belt, shoulder plate, cloak, or cloth panel, replace it with plain material, clean trim, non-symbolic engraved borders, or simple abstract panel geometry.
+
+Clean PBR-readable materials only:
+- cloth reads as clean cloth with broad folds
+- leather reads as clean leather with controlled sheen
+- metal reads as clean smooth metal with broad highlights
+- chainmail reads as simplified structured chainmail zones
+- boots read as practical clean boots
+
+Do not add weathered realism. No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
+
+Remove or simplify mesh-hostile clutter:
+- tiny straps
+- dangling cords
+- dangling chains
+- loose trophies
+- small pouches unless essential
+- tiny buckles
+- dense filigree
+- text, logos, decals, insignias, crests, heraldry, sigils, emblems, badges, readable icons, or watermarks
+- weapons, shields, and handheld props
+- ragged shredded cloth edges
+- cloaks, capes, mantles, hoods, trailing cloth, or loose back drapes
+
+Use clean garment construction. If the outfit has a tunic, tabard, coat, skirt panel, robe panel, or front cloth, make the split and layering clean and rig-friendly so the legs remain visually separate. Keep the neck and wrist cutoffs modular.
+
+The final image should look like a clean production-friendly outfit asset reference that could be fed into image-to-3D, then cleaned in Blender, retopologized, decimated, baked, and used in a modular armor system.
+
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or losing the locked silhouette.

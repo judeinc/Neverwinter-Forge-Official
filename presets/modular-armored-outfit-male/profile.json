@@ -1,0 +1,24 @@
+{
+  "profileName": "NWN2 Modular Armored Outfit - Male",
+  "profileVersion": "1.0",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert outfit reference images into clean headless and handless male T-pose modular outfit renders that preserve pauldrons, fur liners, belts, sashes, and structured coats when compatible with the locked silhouette.",
+  "referenceImages": [
+    {
+      "role": "locked_silhouette",
+      "path": "../modular-outfit-male/locked-silhouette.png",
+      "description": "Authoritative male T-pose body, limb length, width, cutoff, and framing template."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Male Armored Outfit Front",
+      "description": "Front-facing technical modular armored outfit render on the locked male silhouette."
+    },
+    "back": {
+      "label": "Male Armored Outfit Back",
+      "description": "Direct rear view continuing the same modular armored outfit from the approved front view."
+    }
+  }
+}

@@ -1,0 +1,152 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the outfit source. Use it for outfit identity only: large garment shapes, armor zones, belts, sashes, broad color palette, material categories, and major fantasy/medieval construction. Do not copy the source pose, source camera angle, human anatomy, human leg stance, human boots, face, hands, weapon, shield, or fine surface detail.
+
+Image 2 is the locked Dog Leg front gray mannequin silhouette and pose reference. This template is authoritative for the final orthographic front pose, widened arm spacing, hand height, closed finger grouping, body width, close upper thighs, close feet, digitigrade dog-leg structure, foot placement, attached head framing, and full-body composition.
+
+Image 3 is the Dog Leg profile reference. Use it to understand the side anatomy that must inform the front result: forward thigh mass, swept-back hock/lower leg, long foot, forward head/neck posture, low relaxed arms, and optional tail root.
+
+Image 4 is the Dog Leg three-quarter reference. Use it only to understand creature volume, attached head, long arms, closed fingers, and dog-leg body mass.
+
+Image 5 is the Dog Leg back gray mannequin silhouette and pose reference. Use it to understand the rear body width, widened arms, rear hand spacing, close legs, and back-view silhouette.
+
+Image 6 is the Dog Leg tail range reference. Use it only when Creature has tail is enabled. It defines the maximum tail length and extension allowed by the skeleton.
+
+Create a technical simplified creature outfit reference for AI-to-3D conversion, STL-like solidification, Blender cleanup, and later Dog Leg skeleton weight transfer. This is not fantasy character art, not a portrait, not a photoreal creature render, and not a final high-detail texture concept.
+
+The output should look like a clean production-friendly low-detail game asset reference. It should be useful for image-to-3D, retopology, decimation, baking, and manual repainting later. Preserve silhouette, major construction, and large material zones. Remove visual noise.
+
+Output a clean full-body ORTHOGRAPHIC FRONT view on the locked Dog Leg silhouette.
+
+The figure must be:
+- direct orthographic front-facing with no perspective and no three-quarter turn
+- full body visible with attached head, torso, arms, hands, dog-leg legs, feet, and optional front-visible tail fully in frame
+- grounded by a clear soft contact shadow under the paws/feet
+- standing in the exact Dog Leg front gray mannequin pose from Image 2
+- arms relaxed down and outward like Image 2, with clear empty background gaps between arms and torso/hips/legs
+- shoulders, elbows, wrists, hands, crotch centerline, close thighs, ankles, feet, and paw contact must align to the Image 2 mannequin landmarks as closely as possible
+- hands outside the leg silhouette, not touching or overlapping thighs, skirt panels, coat panels, armor plates, or hips
+- fingers held close together like Image 2, not spread, clenched, curled into fists, or hidden
+- upper thighs close together under the pelvis like Image 2, not a wide heroic stance
+- feet close together near the centerline like Image 2, not shoulder-width apart
+- lower body converted to the Dog Leg skeleton: forward thigh mass, swept-back hock/lower-leg structure, long lower foot, paw/claw contact
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+
+The locked Dog Leg gray mannequin silhouette wins over the outfit source whenever they conflict. The final output must fit the Dog Leg pose before it preserves outfit fidelity. A beautiful creature is a failure if it does not match the Dog Leg skeleton spacing.
+
+Silhouette transfer rule:
+- Treat Image 2 like a rigging mannequin plate, not a mood reference.
+- Copy the front pose landmarks from Image 2 before adding creature identity or outfit pieces.
+- The arms must stay widened away from the torso and legs. Do not let sleeves, armor, fur, cloth, or anatomy fill the negative-space gaps.
+- The legs must stay close together under the pelvis, with close feet and visible dog-leg lower anatomy.
+- Do not make a normal fantasy character stance, combat stance, wide stance, runway pose, or relaxed human posture.
+- Do not improve the pose for aesthetics. Rig compatibility is more important than beauty.
+
+Rebuild the source outfit onto the Dog Leg creature body. Preserve the outfit's main identity and readable material layout, but simplify or cut away anything that hides the rig silhouette. Keep only broad armor plates, major tunic panels, large belts, simple sashes, collar/cuff logic, broad shoulder armor, clean leather zones, clean cloth zones, clean metal zones, simplified chainmail zones, and large construction seams. Use coats only when they are clearly tailored sleeved garments, not cloaks or capes.
+
+Simplify decoration, not material identity. Preserve structural ornament only when it is part of the physical armor or garment construction, such as raised trim, borders, bevels, large panel lines, large rivets, broad fur trim, leather panels, sash wraps, or simple non-symbolic engraved borders. Remove identity markings and micro-detail completely.
+
+Coat gate:
+- Only preserve a trench coat, long coat, duster, robe coat, or structured outer garment if it has clear sleeves or armholes, front closure logic, torso seams, and body-attached panels.
+- Keep any preserved coat close to the Dog Leg body, open or split where needed so the arms, hand gaps, close thighs, hocks, paws, and tail root remain readable.
+- If an outer layer is sleeveless, shoulder-hung, open behind the arms, draped from the neck or shoulders, primarily a back/side hanging panel, wind-blown cloth, or a free-hanging physics layer, classify it as a cloak or cape and remove it.
+
+Cloaks and capes are not allowed in this preset. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, long vertical fabric panels hanging behind the arms, or long vertical fabric panels along the outside of the legs. If the source outfit includes a cloak or cape, discard that cloak/cape completely. Do not preserve its color, length, outline, side panels, back panels, border trim, or hanging fabric. Do not convert it into a coat, tabard, sash, skirt panel, side panel, or torso-attached panel. Keep only non-cloak outfit parts such as armor, pauldrons, fur collar, belts, boots or paw wraps, tunic, chainmail, fitted clothing, and rig-friendly body-attached panels.
+
+Outfit sacrifice rule:
+- If skirt panels, faulds, robe panels, coat tails, boot shafts, thigh armor, sleeves, gauntlets, fur, straps, or cloth hide the arm gaps, hand clearance, close-thigh stance, hock bend, paw/foot shape, or dog-leg silhouette, simplify them.
+- Split, raise, narrow, shorten, flatten, or remove obstructing lower garments.
+- Replace human boots with creature-compatible wraps, simple greaves, paw guards, or clawed sabatons that preserve the dog-leg hock and paw/foot contact.
+- Do not cover the hock with straight boot shafts.
+- Do not let armor or clothing fill the empty background gaps between the arms and body.
+
+Creature identity comes from Misc / Extra Prompt. Use it for the attached head, muzzle or snout, ears, hide, fur, scales, mane, crest, claws, and broad surface identity. The creature species must adapt to the Dog Leg template; the Dog Leg template must not adapt to the species.
+
+Default simplification is required:
+- Reduce the creature and outfit into clean, broad, solid, PBR-readable forms.
+- Use large readable shapes first: silhouette, armor plate layout, garment blocks, belt bands, cuff bands, simple seams, paw forms, claws, and broad creature markings.
+- Remove fine textile weave, tiny straps, tiny buckles, tiny rivets, micro engravings, dense chain links, individual hair strands, noisy scale texture, grunge, scratches, dirt, rust, pores, wet highlights, high-frequency surface detail, and photoreal material noise.
+- Chainmail must become simplified grouped chainmail panels or shallow ring-pattern material blocks, not thousands of individual rings.
+- Leather must be smooth broad leather with only large straps and large buckles.
+- Metal must be smooth broad metal plates with simple bevels, large panel lines, and broad highlights.
+- Cloth must be broad cloth planes with simple folds, not noisy fabric texture.
+- Fur must be sculpted STL-friendly clumps, broad mane masses, and solid tufts. Do not render loose strands, fuzzy edges, wispy hair, shag, flyaway hair, strand-by-strand fur, or painterly fur texture.
+- Scales must be broad grouped scale plates or simple hide texture. Do not render many tiny individual scales.
+- Creature spots, stripes, or markings must be broad painted/texture-block markings only, not fine fur detail.
+- Fine detail is allowed only when it reads as shallow grouped sculptural detail and does not create polygon-expensive texture noise.
+
+Remove or simplify mesh-hostile creature clutter:
+- tiny straps
+- dangling cords
+- dangling chains
+- loose trophies
+- small pouches unless essential to the outfit identity
+- tiny buckles
+- dense filigree
+- dense chainmail rings
+- cloaks
+- capes
+- mantles
+- trailing hoods
+- loose shoulder drapes
+- back-hanging cloth
+- cape-like side panels
+- wind-blown cloth
+- shaggy fur edges
+- individual fur strands
+- tiny scale fields
+- ragged shredded cloth edges
+- weathering, scratches, grime, rust, dirt, and battle damage
+- weapons, shields, and handheld props
+
+Tail rule:
+- If Creature has tail is enabled, include only the part of one tail that would naturally be visible from strict orthographic front view.
+- The front-view tail must stay centered behind the body on the vertical centerline. It may hang straight down behind the close legs if visible.
+- Do not sway, curve, curl, hook, wag, arc, coil, twist, or drift the tail left or right in the front view.
+- Do not rotate the body to show the tail in the front view.
+- The dedicated Side View is where the full tail profile should be shown.
+- If Creature has tail is disabled, do not include a tail, tail stump, tail shadow, tail strap, or tail-like cloth.
+
+Remove all identifiers:
+- no heraldic symbols
+- no faction marks
+- no family crests
+- no badges
+- no sigils
+- no emblems
+- no religious symbols
+- no readable icons
+- no logos
+- no text
+- no decals
+- no watermarks
+
+If the source has a symbol or crest on a tabard, shield, chest plate, belt, shoulder plate, coat, cloak, cape, cloth panel, armor plate, or sash, replace it with plain material, clean trim, non-symbolic engraved borders, or simple abstract panel geometry.
+
+Clean PBR-readable materials only:
+- cloth reads as clean broad cloth with simple folds
+- leather reads as clean leather with controlled sheen
+- metal reads as clean smooth metal with broad highlights
+- chainmail reads as simplified grouped chainmail zones
+- fur reads as sculpted solid fur masses and broad tufts
+- scales read as grouped plates or simple hide zones
+- paw wraps, greaves, or clawed sabatons read as practical clean rig-friendly foot gear
+- creature markings read as broad painted/texture-block markings only
+
+Do not add weathered realism. No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, wet highlights, or micro-surface noise.
+
+Do not invent new props, new weapons, new shields, new symbols, new large ornaments, new creature anatomy outside the Dog Leg template, or a different outfit.
+
+Before final output, run this compliance check:
+- Does the pose match Image 2 more than Image 1?
+- Are the arms angled outward with visible empty gaps from body and legs?
+- Are the hands outside the leg silhouette?
+- Are the upper thighs close together?
+- Are the legs digitigrade instead of human straight legs?
+- Are hocks, paw/foot contact, and claws visible?
+- Is there a clean contact shadow grounding the paws/feet?
+- Did obstructing clothing yield to the rig silhouette?
+- Is fur/scales/chainmail simplified into solid grouped forms with no strand, ring, or tiny-scale noise?
+
+Hard failures: source pose copied, source camera copied, three-quarter front output, arms touching legs, hands overlapping thighs, no arm gap, wide human stance, straight human legs, plantigrade feet, straight human boots, hidden hocks, hidden paw contact, missing contact shadow, lower garments covering the dog-leg structure, cloaks, capes, mantles, loose back-hanging cloth, cape-like shoulder drapes, long vertical side panels, cloak colors reused as side panels, tail swaying left or right, curved tail, curled tail, off-center front tail, photoreal creature render, noisy fur strands, shaggy fur edges, busy scale noise, tiny scale fields, dense chainmail rings, over-detailed texture, scratches, grime, rust, dirt, weapons, shields, heraldry, text, logos, missing head, headless body, missing hands, spread fingers, generic T-pose instead of the Dog Leg rig pose, or losing the Dog Leg silhouette.

@@ -1,0 +1,90 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the primary outfit render. Treat it as the exact source view to preserve.
+
+If Image 2 is provided, it is the matching opposite raw view of the same outfit. Use it only to keep part labels, colors, material regions, belts, straps, trim, boots, armor pieces, and visible cutoffs consistent between the front and back. Do not merge the two views into a redesigned outfit.
+
+If Image 3 is provided, it is an approved completed flat color guide from the opposite view. Treat Image 3 as the color-label authority for matching outfit parts. Copy its decisions for every object that continues around the model: collar or neck ring, gorget, chainmail, sleeves, bracers, cuffs, belts, straps, side panels, lower cloth, boots, boot cuffs, metal plates, trim, and body gaps. The approved guide is more important than the original material colors when deciding which ID color a matching part should use.
+
+Create a flat color ID map guide image for texture projection, not a realistic texture, not a material render, not concept art, and not a new outfit design.
+
+Preserve the source render exactly:
+- same silhouette
+- same pose
+- same camera angle
+- same crop and framing
+- same garment length
+- same collar, cuff, boot, belt, strap, trim, armor, and panel placement
+- same front-facing or back-facing direction as the uploaded primary image
+- same headless and handless cutoffs when present
+- same proportions and object boundaries
+
+Only recolor the visible outfit into clean solid ID regions. Remove all realistic texture information while keeping the visible part boundaries.
+
+Use hard, readable color boundaries at real object edges: cuffs, hems, boot tops, glove ends, belts, straps, collar edges, armor plates, chainmail borders, side panels, tabard edges, robe hems, buckles, and trim borders.
+
+Do not change shape, do not redraw missing parts, do not rotate the view, do not change the outfit identity, and do not invent new props or ornaments.
+
+Use this exact flat color palette:
+- #FF0000 red for the main torso tunic, shirt, vest, chest cloth, or central tabard cloth
+- #0000FF blue for left and right sleeve cloth or chainmail sleeve regions
+- #808080 gray for robe skirt, pants, lower hanging cloth panels, or lower garment cloth
+- #000080 navy blue for both boots and boot cuffs
+- #00FFFF cyan for gloves, wrist wraps, bracers, forearm guards, or lower-arm armor
+- #800000 maroon for the waist belt, sash, buckle base, or large waist wrap
+- #FF8000 orange for diagonal straps, hanging strips, narrow leather bands, or secondary straps
+- #8000FF purple for collar ring, neckline trim, neck cloth border, or gorget-adjacent cloth trim
+- #FFFFFF white for metal plates, buckles, clasps, greaves, bracer metal, hard armor pieces, and metal collar or gorget pieces
+- #FFFF00 yellow for large readable trim borders and accent bands
+- #FF00FF magenta only for visible mannequin body, exposed skin-like gaps, or unassigned body gaps
+- #000000 black only for tiny uncertain details, holes, deep gaps, background separation, or regions that should be ignored
+
+Neck and collar consistency rules:
+- Smooth metal collar plates, metal neck rings, and rigid gorget pieces are #FFFFFF white.
+- Cloth collar rings, neckline trim, and cloth borders touching a gorget are #8000FF purple.
+- Chainmail visible behind or below the collar is #0000FF blue.
+- Do not classify the same neck object as chainmail in one view and metal or trim in the other view. If Image 3 shows the front neck/collar split as white metal plus purple trim, the back view must preserve that same split wherever those parts are visible.
+- Do not let the dark hole inside the neck decide the collar color. The interior opening can be black, but the visible collar rim keeps its assigned palette color.
+
+Waist belt and strap consistency rules:
+- The main horizontal waist belt is one continuous #800000 maroon band across the full visible waist on both front and back views.
+- Diagonal cross-body straps, hanging belt tails, narrow leather tabs, and loose secondary strips are #FF8000 orange.
+- Buckles, rivets, and metal clasp hardware on the belt or straps are #FFFFFF white only if they are large enough to read clearly; otherwise merge them into the belt or strap color.
+- Do not color the main horizontal waist belt red like the torso cloth. Do not let the diagonal strap erase or replace the horizontal belt.
+- If Image 3 shows a maroon belt plus orange diagonal straps, preserve that same split on the opposite view wherever those parts continue around the model.
+
+Lower leg consistency rules:
+- Metal shin guards, greaves, knee plates, ankle plates, and rigid lower-leg armor are #FFFFFF white.
+- Leather or cloth boots, visible foot sections, soles, and boot cuffs are #000080 navy blue.
+- Do not paint metal greaves navy blue just because they sit on top of boots. Separate the white shin armor from the navy boot below it.
+- If a lower leg has both a metal greave and a boot, the greave remains white and the exposed boot foot remains navy blue.
+
+Keep each major object one consistent flat color across its full visible shape. Do not split one object into many colors because of folds, lighting, texture, chainmail rings, cloth weave, scratches, seams inside the same object, or local shading.
+
+Remove all texture and material detail:
+- no fabric weave
+- no leather grain
+- no chainmail ring detail
+- no metal shine
+- no scratches
+- no grime
+- no dirt
+- no rust
+- no highlights
+- no shadows
+- no gradients
+- no wrinkles as color changes
+- no embroidery
+- no symbols
+- no logos
+- no decals
+- no readable text
+- no decorative patterns
+
+The output should look like a computer-vision annotation mask painted over the same render: bright flat colors, crisp boundaries, no blended colors, no realistic material behavior.
+
+When front and back images are supplied, keep the color meaning identical between both views. For example, if the belt is maroon on the front, the belt continuation on the back must also be maroon. If boots are navy blue on the front, boots must also be navy blue on the back. If metal is white on one view, matching metal pieces remain white on the other view.
+
+Tiny details can be black or merged into the nearest large object color. Prioritize useful large regions for a tint map or material ID workflow.
+
+Hard failures to avoid: changing the pose, changing the silhouette, changing the camera angle, changing the crop, redesigning the outfit, adding realistic materials, preserving fabric texture, preserving chainmail ring detail, preserving leather grain, adding shadows or highlights as painted color, using brown boots, painting metal greaves navy blue, losing the continuous maroon waist belt, coloring the belt red like the torso, using natural cloth colors, using gray metal shading instead of flat white, making a pretty costume texture, inventing a new palette, or ignoring the exact hex color assignments.

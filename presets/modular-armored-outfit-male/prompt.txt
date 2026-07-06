@@ -1,0 +1,74 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the outfit source. Use it for outfit identity: major garment design, large armor zones, pauldrons, shoulder armor, fur liners, belts, sashes, color palette, material categories, and broad fantasy/medieval identity. Use coats only when they are clearly tailored sleeved garments, not cloaks or capes.
+
+Image 2 is the locked male modular silhouette template. This template is authoritative for true T-pose, body width, torso width, waist, hips, arm length, arm thickness, leg length, lower-leg bulk, boot scale, neck cutoff, wrist cutoffs, and overall modular compatibility.
+
+Create a technical modular outfit reference for AI-to-3D conversion, not fantasy character art and not a posed illustration.
+
+Output a clean full-body FRONT view on the locked slim male modular silhouette.
+
+The figure must be:
+- true T-pose with both arms extended horizontally
+- full body visible with arms, wrist cutoffs, legs, and boots fully in frame
+- headless with a clean neck opening, collar finish, fur collar, armor gorget, or coat collar
+- handless with clean wrist cuffs, bracers, sleeve cuffs, gauntlet cutoffs, or modular wrist openings
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+
+The silhouette template wins over the outfit source whenever they conflict. Keep the body slim, narrow-waisted, controlled at the hips, slim in the arms, long enough in the arms, slim in the legs, and practical in boot scale. Do not broaden the body into heroic fantasy proportions.
+
+Rebuild the source outfit onto the locked silhouette. Preserve the outfit's main identity and readable material layout. Keep large armor plates, tunics, tabards, belts, sashes, collars, cuffs, boots, leather zones, cloth zones, metal zones, chainmail zones, fur liners, pauldrons, shoulder guards, upper-arm armor, tailored sleeved coats, trench coats, fitted robes, and long structured coat-like garments when they are important to the design and are not cloak/cape substitutes.
+
+Pauldrons, shoulder armor, fur collars, fur liners, large coat collars, trench coats, fitted long coats, broad belts, and sashes are allowed when they follow the locked T-pose and do not hide the arm pose, neck cutoff, wrist cutoffs, or full body framing. Keep them rig-friendly, readable, and attached to the outfit rather than floating or trailing.
+
+Coat gate: only preserve a trench coat, long coat, duster, robe coat, or structured outer garment if it is clearly a tailored garment with sleeves or armholes, front closure logic, torso seams, and body-attached panels. Keep it close to the body, open or split where needed so the legs remain readable, and make the hem clean enough for AI-to-3D cleanup. If an outer layer is sleeveless, shoulder-hung, open behind the arms, draped from the neck or shoulders, or primarily a back/side hanging panel, classify it as a cloak or cape and remove it.
+
+Cloaks and capes are not allowed in this preset. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long vertical fabric panels hanging behind the arms or along the outside of the legs. If the source outfit includes a cloak or cape, discard that cloak/cape completely. Do not preserve its color, length, outline, side panels, back panels, border trim, or hanging fabric. Do not convert it into a coat, tabard, sash, skirt panel, or torso-attached panel. Keep only non-cloak outfit parts such as armor, pauldrons, fur collar, belts, boots, tunic, chainmail, and fitted clothing.
+
+Simplify decoration, not material identity. Preserve structural ornament only when it is part of the physical armor or garment construction, such as raised trim, borders, bevels, panel lines, rivets, embossed metalwork, fur trim, leather panels, sash wraps, or non-symbolic filigree. Remove identity markings completely.
+
+Remove all heraldry and identifiers:
+- no heraldic symbols
+- no faction marks
+- no family crests
+- no badges
+- no sigils
+- no emblems
+- no religious symbols
+- no readable icons
+- no logos
+- no text
+- no decals
+- no watermarks
+
+If the source has a symbol or crest on a tabard, shield, chest plate, belt, shoulder plate, coat, or cloth panel, replace it with plain material, clean trim, non-symbolic engraved borders, or simple abstract panel geometry.
+
+Clean PBR-readable materials only:
+- cloth reads as clean cloth with broad folds
+- leather reads as clean leather with controlled sheen
+- metal reads as clean smooth metal with broad highlights
+- chainmail reads as simplified structured chainmail zones
+- fur reads as broad clean fur masses with simplified strand detail
+- boots read as practical clean boots
+
+Do not add weathered realism. No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
+
+Remove or simplify mesh-hostile clutter:
+- tiny straps
+- dangling cords
+- dangling chains
+- loose trophies
+- small pouches unless essential
+- tiny buckles
+- dense filigree
+- text, logos, decals, insignias, crests, heraldry, sigils, emblems, badges, readable icons, or watermarks
+- weapons, shields, and handheld props
+- ragged shredded cloth edges
+- cloaks, capes, mantles, cape-like shoulder drapes, trailing hoods, loose back-hanging cloth, long vertical side panels from shoulders to hem, or wind-blown cloth
+
+Use clean garment construction. Belts and sashes are allowed and should be broad, readable, and structurally useful. If the outfit has a tunic, tabard, trench coat, long coat, robe panel, or front cloth, make the central split clean and rig-friendly so the legs remain visually separate. Keep the neck and wrist cutoffs modular.
+
+The final image should look like a clean production-friendly outfit asset reference that could be fed into image-to-3D, then cleaned in Blender, retopologized, decimated, baked, and used in a modular armor system.
+
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, broken T-pose from shoulder armor, shoulder armor hiding the arms, cloaks, capes, mantles, loose back-hanging cloth, long vertical fabric panels from shoulders to hem, cloak colors reused as side panels, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or losing the locked silhouette.

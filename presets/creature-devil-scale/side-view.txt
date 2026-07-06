@@ -1,0 +1,67 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the approved front Devil Scale creature outfit render. Treat it as the exact creature identity and outfit identity.
+
+Image 2 is the locked Devil Scale front gray mannequin silhouette and pose reference. Use it to preserve scale, arm length, hand grouping, leg stance, and full-body framing.
+
+Image 3 is the Devil Scale profile gray mannequin silhouette and pose reference. This is the authoritative side-view pose and silhouette reference.
+
+Important head rule: Image 2 and Image 3 show an oversized animated devil mannequin head with large horns. Do not copy that exact head, face, horn shape, horn count, grin, or expression. Preserve the approved creature identity from Image 1 and Misc / Extra Prompt.
+
+Create a clean simplified ORTHOGRAPHIC PROFILE SIDE view of the same Devil Scale creature outfit, not a redesign, not a photoreal creature render, and not a high-detail texture concept.
+
+The final side view must preserve:
+- strict profile side camera with no three-quarter angle
+- same creature identity and outfit identity from Image 1
+- same scale, proportions, color palette, material categories, and full-body framing from the approved front view
+- Devil Scale profile pose from Image 3
+- hunched upper back and forward neck/head placement from Image 3
+- low relaxed arm with fingers held close together
+- upright plantigrade leg stance, not Dog Leg digitigrade
+- long lower foot and foot/claw ground contact
+- clean soft contact shadow under the foot contact
+- simplified broad outfit forms that do not hide the Devil Scale structure
+- simplified fur/scales/chainmail/cloth/leather/metal in broad low-detail game-asset forms
+
+The Devil Scale profile silhouette wins over outfit fidelity. Image 3 is a rigging mannequin plate, not a mood reference. If skirt panels, faulds, coat tails, boot shafts, armor plates, sleeves, gauntlets, straps, wings, or fur hide or change the torso curve, arm placement, hand silhouette, leg stance, ankle line, foot footprint, foot contact, tail root, or side silhouette, simplify, split, raise, narrow, shorten, or remove them.
+
+Final profile silhouette lock:
+- The final side body must fit inside and follow the Image 3 profile silhouette like a traced rig plate.
+- Do not redraw the leg into Dog Leg anatomy, animal hocks, goat legs, bent-knee creature legs, or a new side stance.
+- Keep the upright plantigrade leg, ankle line, long foot footprint, and ground contact from Image 3.
+- Clothing, armor, boots, greaves, fur, scales, straps, loincloth panels, and creature anatomy must yield to the Image 3 leg and foot silhouette.
+- Feet, toes, claws, greaves, and boot/foot armor must stay inside the Image 3 side footprint and must not bulk up the ankle or foot beyond the profile template.
+
+Sash and hanging-panel rule:
+- Any side-visible sash, belt strap, loincloth strip, tabard strip, hanging cloth panel, coat tail, or armor-hung vertical panel must stop at mid-thigh.
+- If the approved front design has a sash or hanging panel longer than mid-thigh, rebuild the side continuation as a shorter rig-friendly panel that ends at mid-thigh on the upper leg.
+- Do not let a side sash, strap, tabard, loincloth strip, coat tail, or hanging panel reach the knee, pass below the knees, cover the shin, reach the ankle, touch the foot, cover the tail root, or hide the Devil Scale side leg silhouette.
+- The lower edge of every side sash or hanging panel must clearly sit above the knee with visible upper-leg space between the panel end and the knee line.
+- Keep the side thigh, knee line, lower leg, ankle line, foot footprint, foot contact, and tail root readable.
+
+Cloaks and capes remain forbidden in the side view. Do not add or preserve cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, long vertical fabric panels hanging behind the arms, wind-blown cloth, or cloak colors reused as side/back panels. If the approved front view implied a removed cloak, keep it removed.
+
+Continue the approved front design logically into profile with clean construction, readable seams, belt continuation, armor continuation, pauldron continuation, fur-collar continuation, cloth panels, leather zones, metal zones, simplified chainmail zones, and creature surface zones when applicable. Preserve front-view belt height, belt width, buckle scale, sash layering, side-strap placement, waistline position, armor band placement, and material boundaries as much as a true profile view allows.
+
+Infer unseen side details minimally. Do not invent new props, new weapons, new shields, new symbols, new large ornaments, new creature anatomy outside the Devil Scale template, a different outfit, or a different creature identity. If the side detail is unclear, simplify rather than invent.
+
+Remove all heraldry and identifiers in the side view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic engraved borders, or abstract panel geometry.
+
+Tail rule:
+- If Creature has tail is enabled, the side view must show one full tail attached at the correct rear pelvis/tail-root area.
+- The side-view tail must be a clean straight profile extension from the tail root.
+- Do not curve, curl, hook, wag, coil, twist, droop into an S-curve, or swing the tail toward or away from the camera.
+- If Creature has tail is disabled, do not include any tail or tail-like cloth.
+
+Wings rule:
+- If wings are present from the approved front view, keep them small, simplified, body-attached, and behind the torso.
+- Wings must not cover the arm, hand silhouette, torso outline, leg stance, foot contact, or tail root.
+- Do not add wings unless the approved front view includes them.
+
+Default simplification is required. Preserve silhouette, major construction, and large material zones. Remove fine textile weave, tiny straps, tiny buckles, tiny rivets, micro engravings, dense chain links, individual hair strands, noisy scale texture, grunge, scratches, dirt, rust, pores, wet highlights, and high-frequency surface detail. Fur must be sculpted STL-friendly clumps, broad mane masses, and solid tufts, not loose strands, shaggy edges, wispy hair, flyaway hair, or fuzzy noise. Chainmail must be simplified grouped panels, not individual rings. Scales must be broad grouped plates or simple hide texture, not tiny scale fields. Creature markings must be broad painted/texture-block markings only.
+
+Clean PBR-readable materials only. Cloth reads as clean broad cloth, leather reads as clean leather, metal reads as smooth broad metal, chainmail reads as simplified grouped zones, fur reads as sculpted solid masses, scales read as grouped plates or simple hide zones, and creature markings read as broad painted/texture-block markings only.
+
+Do not add weathered realism. No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, wet highlights, or micro-surface noise.
+
+Hard failures: front view, rear view, three-quarter side output, final profile silhouette not matching Image 3, leg redrawn into different anatomy, side ankle line changed from Image 3, side foot footprint changed from Image 3, foot or claws wider than the Image 3 side footprint, bulky greaves changing the lower-leg profile, arm pasted into torso or leg, sash reaching the knee, sash below the knees, tabard reaching the knee, tabard below the knees, hanging strap reaching the knee, hanging strap below the knees, side panel covering the knee or shin, side panel hiding the tail root, Dog Leg digitigrade legs, animal hocks, goat legs, missing upright plantigrade stance, hidden side foot contact, missing contact shadow, mannequin devil head copied exactly, mannequin horn shape copied exactly, lower garments covering the Devil Scale structure, cloaks, capes, mantles, loose back-hanging cloth, cape-like shoulder drapes, long vertical side panels, cloak colors reused as side/back panels, curved tail, curled tail, S-curve tail, tail swinging toward or away from camera, unrequested wings, wings covering the arm or hand silhouette, photoreal creature render, noisy fur strands, shaggy fur edges, busy scale noise, tiny scale fields, dense chainmail rings, over-detailed texture, scratches, grime, rust, dirt, missing tail when tail is enabled, tail when disabled, weapons, shields, heraldry, text, logos, missing head, missing hands, spread fingers, generic T-pose instead of the Devil Scale profile rig pose, changing the creature identity, or losing the Devil Scale profile silhouette.

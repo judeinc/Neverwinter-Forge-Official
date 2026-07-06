@@ -1,0 +1,27 @@
+{
+  "models": [
+    {
+      "id": "realesrgan-x2plus",
+      "name": "RealESRGAN x2 Plus",
+      "file": "RealESRGAN_x2plus.pth",
+      "scale": 2,
+      "sizeMb": 63.96,
+      "source": "local ComfyUI model repository",
+      "runner": "torch-realesrgan"
+    },
+    {
+      "id": "realesrgan-x4plus",
+      "name": "RealESRGAN x4 Plus",
+      "file": "RealESRGAN_x4plus.pth",
+      "scale": 4,
+      "sizeMb": 63.94,
+      "source": "local ComfyUI model repository",
+      "runner": "torch-realesrgan"
+    }
+  ],
+  "notes": [
+    "These .pth files are model weights only.",
+    "They require a compatible Real-ESRGAN runtime such as Python/Torch/basicsr or a converted portable runtime.",
+    "For a distributable desktop app, prefer a bundled portable upscaler runner over requiring users to install ComfyUI."
+  ]
+}

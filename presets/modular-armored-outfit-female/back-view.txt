@@ -1,0 +1,49 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the approved front modular armored outfit render. Treat it as the exact outfit identity.
+
+Image 2 is the locked female modular silhouette template. This template remains authoritative for body proportions, true T-pose, width, limb length, neck cutoff, wrist cutoffs, and modular compatibility.
+
+Create a clean direct BACK view of the same modular armored outfit, not a redesign.
+
+The figure must be:
+- direct back-facing
+- true T-pose with both arms extended horizontally
+- full body visible with arms, wrist cutoffs, legs, and boots fully in frame
+- headless with the same neck opening, collar finish, fur collar, armor gorget, or coat collar logic
+- handless with the same wrist cutoff logic
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+
+Preserve the same outfit from the front view:
+- same locked female silhouette
+- same garment length
+- same color palette
+- same material categories
+- same armor zones
+- same pauldrons, shoulder guards, fur liners, collars, tailored sleeved coats, trench coats, robe panels, skirt-safe fitted panels, and structured coat-like outer layers only when they are not cloak/cape substitutes
+- same belts and strap logic
+- same belt height, belt width, buckle scale, sash layering, side-strap placement, and waistline position
+- same boots
+- same collar and wrist cutoff style
+- same clean PBR-readable material identity
+
+Continue the front design logically around the back with clean construction, readable seams, belt continuation, armor continuation, pauldron continuation, fur-liner continuation, coat panels, cloth panels, leather zones, metal zones, and simplified chainmail zones when applicable.
+
+For belts, sashes, waist straps, cross straps, tabard edges, coat belts, and armor bands, preserve the front-view placement exactly as if the garment were being rotated in 3D. Do not move the belt higher or lower on the body. Do not change the belt thickness, number of layers, material, color, buckle scale, or strap count. Back-facing belt and strap details should line up with the visible front design at the sides and continue cleanly around the waist.
+
+For pauldrons, shoulder guards, fur collars, upper-arm armor, trench coats, long coats, and structured outer garments, preserve the front-view scale and placement while showing their back-facing continuation. Keep the T-pose readable. Do not let shoulder armor cover the arms, fuse into the torso, create an A-pose silhouette, or exaggerate anatomy.
+
+Coat gate: only continue a trench coat, long coat, duster, robe coat, or structured outer garment if it is clearly a tailored garment with sleeves or armholes, front closure logic, torso seams, and body-attached panels in the approved front render. If an outer layer is sleeveless, shoulder-hung, open behind the arms, draped from the neck or shoulders, or primarily a back/side hanging panel, classify it as a cloak or cape and remove it from the back view.
+
+Cloaks and capes are not allowed in this preset. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long vertical fabric panels hanging behind the arms or along the outside of the legs. If the front view contains a cloak-like shape, discard it completely in the back view. Do not preserve its color, length, outline, side panels, back panels, border trim, or hanging fabric. Do not convert it into a coat, tabard, sash, skirt panel, or torso-attached panel.
+
+Infer unseen back details minimally. Do not invent new props, new weapons, new symbols, new large ornaments, a different outfit, or a sexualized redesign.
+
+Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic engraved borders, or abstract panel geometry.
+
+Simplify decoration, not material identity. Preserve structural ornament and non-symbolic design language, but reduce micro-detail into clean broad forms suitable for image-to-3D conversion.
+
+No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
+
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, exaggerated anatomy, sexualized redesign, shoulder armor breaking the T-pose, cloaks, capes, mantles, loose back-hanging cloth, long vertical fabric panels from shoulders to hem, cloak colors reused as side panels, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.

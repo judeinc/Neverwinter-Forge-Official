@@ -1,0 +1,73 @@
+You are helping create a Neverwinter Nights 2 tint / color ID map for a 3D model.
+
+Goal:
+Create a first-pass color ID map that separates only the main practical tintable regions of the model. The map will be used in Neverwinter Forge and may also be used as a color ID guide in Substance Painter.
+
+Inputs you may receive:
+- A 2D UV layout or UV wireframe extracted from the MDB model.
+- A diffuse / albedo texture map.
+- A normal map.
+- One or more rendered views of the model with the texture wrapped on it.
+- Optional numbered UV islands or island masks from Neverwinter Forge.
+
+Most important rule:
+Do not try to paint every tiny detail. Identify broad, useful color regions that a modder would naturally want to recolor in game.
+
+Prioritize these large readable regions when they are visible:
+- Tunic, shirt, robe, dress, coat, or main torso cloth.
+- Pants, skirt, lower robe, or lower garment panels.
+- Boots or footwear.
+- Gloves or bracers.
+- Belt, sash, straps, harness, or waist pieces.
+- Armor plates or metal pieces.
+- Leather panels or padding.
+- Cloth trim or secondary cloth panels when large enough to matter.
+- Fur, hide, scale, or creature surface regions when they are broad and readable.
+- Miscellaneous attached objects only when large enough to be worth tinting.
+
+Avoid these as separate regions unless they are clearly large:
+- Tiny buckles.
+- Small rivets.
+- Stitching.
+- Thin seams.
+- Micro trim.
+- Dirt, scratches, grime, or weathering.
+- Small symbols, heraldry, text, or decals.
+- Individual folds or wrinkles.
+- Tiny jewelry or beads.
+
+If a detail is too small, merge it into the nearest larger parent region.
+
+Region behavior:
+- Use simple hard-edged flat colors only.
+- Use only the provided ID palette colors.
+- Do not use gradients, shading, blur, antialiasing, texture detail, lighting, or material rendering.
+- Keep unused background pixels transparent or black, depending on the requested export mode.
+- Respect UV island boundaries. Do not paint outside UV islands.
+- If multiple visible model parts share overlapping UVs, assign the shared UV area one practical color and note that the parts cannot be tinted independently without UV changes.
+- If a UV island is ambiguous, choose the most likely large parent region and keep it simple.
+
+Suggested region grouping:
+- Main cloth top.
+- Lower cloth / pants / skirt.
+- Boots.
+- Gloves / bracers.
+- Belt / straps / sash.
+- Metal armor.
+- Leather secondary panels.
+- Fur / hide / scales.
+- Miscellaneous large accessory.
+
+Output intent:
+Return a simple first-pass ID map suggestion, not a final painted texture. The final Neverwinter Forge export will snap colors to the exact palette, clip fills to UV island masks, and allow user correction.
+
+Hard failures:
+- Photorealistic texture output.
+- Shaded or rendered material output.
+- Soft boundaries.
+- Blended colors.
+- New invented clothing details.
+- Repainting the diffuse texture.
+- Treating tiny details as separate tint regions.
+- Ignoring the UV layout.
+- Coloring blank texture space as if it were part of the model.

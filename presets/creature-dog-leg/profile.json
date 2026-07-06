@@ -1,0 +1,48 @@
+{
+  "profileName": "NWN2 Creature - Dog Leg",
+  "profileVersion": "1.0",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert outfit reference images into clean attached-head creature outfit renders that preserve the Dog Leg skeleton pose, digitigrade legs, closed hand alignment, optional tail range, and user-specified creature identity.",
+  "referenceImages": [
+    {
+      "role": "dog_leg_front_pose",
+      "path": "dog-leg-front.png",
+      "description": "Authoritative front pose, arm angle, closed hand grouping, digitigrade leg spacing, and full-body framing reference."
+    },
+    {
+      "role": "dog_leg_profile_pose",
+      "path": "dog-leg-profile.png",
+      "description": "Authoritative profile silhouette for forward head posture, hunched upper body, digitigrade leg curve, paw angle, and tail root."
+    },
+    {
+      "role": "dog_leg_three_quarter_pose",
+      "path": "dog-leg-three-quarter.png",
+      "description": "Authoritative three-quarter creature volume, attached head, long arms, closed fingers, and dog-leg lower-body reference."
+    },
+    {
+      "role": "dog_leg_back_pose",
+      "path": "dog-leg-back.png",
+      "description": "Authoritative rear pose, widened arm spacing, close leg spacing, rear body scale, back silhouette, and rear full-body framing reference."
+    },
+    {
+      "role": "dog_leg_tail_range",
+      "path": "dog-leg-tail-range.png",
+      "description": "Maximum dog-leg skeleton tail length and extension reference for tailed creature outputs."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Dog Leg Creature Front",
+      "description": "Front-facing creature outfit render on the Dog Leg skeleton pose."
+    },
+    "back": {
+      "label": "Dog Leg Creature Back",
+      "description": "Direct rear view continuing the same Dog Leg creature outfit from the approved front view."
+    },
+    "side": {
+      "label": "Dog Leg Creature Side",
+      "description": "Direct profile side view continuing the same Dog Leg creature outfit, with full tail documentation when enabled."
+    }
+  }
+}

@@ -1,0 +1,27 @@
+Use the provided reference image as the exact source miniature statue.
+
+Create a matching true orthographic BACK view of the same full body 3D miniature resin kit prototype.
+
+The output must look like the same physical miniature rotated 180 degrees to show the rear side. Preserve the exact scale, proportions, silhouette logic, pose, base size, base shape, material, sculpt style, and simplified solid construction.
+
+Full figure centered, head to toe visible, feet and full base fully in frame, clean margin around figure, no cropping.
+
+Strict orthographic projection, zero perspective distortion, flat camera, no 3/4 turn, no tilt.
+
+Monochrome light gray clay/resin/plaster statue material only. Pure grayscale output. Zero color saturation. Matte surface, very low specular, no gloss, no shine, no reflections.
+
+For unseen back details, infer minimally from the front design. Continue visible straps, armor plates, clothing folds, hair masses, and base motifs in a logical symmetrical sculpted way. Do not add new story elements, weapons, props, logos, colors, patterns, or decorative details that are not implied by the reference.
+
+Keep all details solid and printable. Simplified hair in solid clumps. Simplified folds, straps, and armor plates. No thin floating elements. No fragile overhangs. No loose strands. Base must be one solid piece with the figure.
+
+No micro surface noise. No pores. No skin grain. No scratches. No dirt. No stone texture. Detail must look sculpted as solid forms, not texture noise.
+
+Even soft frontal studio lighting. Balanced lighting. Gentle ambient occlusion only. No dramatic shadows, no rim light, no cinematic contrast.
+
+Plain neutral dark-to-mid gray gradient studio background. No floor texture. No environment. No fog. No particles.
+
+Clean render. Stable anatomy. No extra fingers. No warped hands. No melted geometry.
+
+2048x2048 resolution. Output image to 2x size.
+
+NO COLORING!

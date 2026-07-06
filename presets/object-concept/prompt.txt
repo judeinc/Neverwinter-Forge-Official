@@ -1,0 +1,93 @@
+Clean isolated 3D prop render for AI-to-3D mesh generation, Blender cleanup, game asset creation, and Substance Painter workflow.
+
+Strict orthographic FRONT view.
+Zero perspective distortion.
+Flat camera.
+No 3/4 turn.
+No tilt.
+No angle change.
+
+This front view is the master turnaround reference for later back and side views.
+Build the object with clear left-right symmetry when the object type is naturally symmetrical.
+Keep the centerline, top height, bottom contact point, widest points, material boundaries, handle positions, rim positions, panels, bevels, and major edge landmarks easy to match from other orthographic views.
+Avoid asymmetrical details unless the user's object description explicitly asks for asymmetry.
+Do not invent hidden side/back-only features in the front concept; make the structure understandable enough to rotate into exact matching views.
+
+Full object centered and fully visible.
+Entire subject in frame.
+Clean margin around object.
+No cropping.
+No cut-off edges.
+Keep consistent framing.
+
+Stylized realism with controlled medium-to-high detail.
+Strong primary forms.
+Clear secondary forms.
+Clean and readable tertiary details.
+The object may contain good design detail, but it must not become overly intricate, noisy, cluttered, or mesh-hostile.
+
+Detail must look built and sculpted as solid forms, not noisy surface texture.
+Keep the design attractive, readable, and well-formed.
+Do not overly simplify the object into a blocky shape, but do simplify unclear or overly fine elements into cleaner, broader forms.
+If a detail is unclear, simplify rather than invent.
+
+Use clean PBR-style material definition with readable color and texture.
+Allow simple broad material textures such as wood grain, metal, stone, leather, cloth, bone, ceramic, or painted surfaces when requested.
+Textures must remain clean, broad, and readable.
+Texture should support the form, not overpower it.
+
+Allow tasteful non-specific decorative detail such as simple filigree, rustic ornament, carved trim, plain ornamental shaping, and generic fantasy design language.
+Do not include notable insignia, heraldic symbols, crests, faction marks, royal emblems, house symbols, military identifiers, religious identifiers, or any graphic element that suggests a specific affiliation.
+Avoid recognizable heraldic imagery such as lions, eagles, birds, wolves, dragons, crowns, shields, suns, moons, banners, or similar emblem-like motifs when they function as identifying symbols.
+Decoration should remain generic, ornamental, and non-identifying.
+
+No micro surface noise.
+No pores.
+No scratches.
+No dirt.
+No grime.
+No chipped paint.
+No heavy weathering.
+No noisy procedural texture.
+No tiny bolts.
+No tiny repeated ornament.
+No dangling parts.
+No floating pieces.
+No thin fragile elements.
+
+Object must feel structurally solid and suitable for 3D image-to-mesh conversion.
+No loose strands.
+No fragile overhangs.
+No messy negative space.
+No paper-thin details.
+No melted geometry.
+No warped forms.
+
+Studio product render presentation only.
+Plain neutral dark-to-mid gray gradient studio background.
+No environment.
+No room.
+No floor texture.
+No scenery.
+No extra props.
+No fog.
+No smoke.
+No particles.
+No text.
+No watermark.
+No labels.
+
+Even soft frontal studio lighting.
+Balanced lighting.
+Gentle ambient occlusion only.
+No dramatic shadows.
+No rim light.
+No cinematic contrast.
+No colored lighting.
+
+High resolution output.
+2048x2048.
+Clean render.
+Stable shape.
+Readable silhouette.
+Optimized for a clean structured 3D print or game prop layout.

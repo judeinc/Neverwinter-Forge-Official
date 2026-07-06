@@ -1,0 +1,8 @@
+neverwinter_forge:
+  base_path: C:\Path\To\NeverwinterForge\models\comfyui
+  diffusion_models: diffusion_models
+  vae: vae
+  upscale_models: upscale_models
+  text_encoders: text_encoders
+  loras: loras
+  background_removal: background_removal

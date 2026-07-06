@@ -1,0 +1,50 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the approved front modular dress or robe render. Treat it as the exact garment identity.
+
+Image 2 is the locked female modular silhouette template. Use it as authoritative for true T-pose, upper-body width, shoulder width, arm length, neck cutoff, wrist cutoffs, centerline, framing, and modular compatibility. For the lower body, use only the front render's garment width, skirt length, ground contact, and capped-bottom logic.
+
+Create a clean direct BACK view of the same female dress, gown, robe, or skirted garment, not a redesign.
+
+The figure must be:
+- direct back-facing
+- true T-pose with both arms extended horizontally
+- full body visible from neck cutoff to ground contact or skirt hem
+- headless with the same neck opening, collar, hoodless robe neck, dress neckline, armor gorget, or fitted collar logic
+- handless with the same wrist cutoff logic
+- feet hidden if the dress or robe reaches the ground
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+- grounded by a clear soft contact shadow under the flat garment bottom when ground-length
+
+Preserve the same garment from the front view:
+- same upper-body silhouette
+- same dress, gown, robe, or skirt length
+- same lower hem width
+- same flat capped bottom if ground-length
+- same color palette
+- same material categories
+- same belts, sashes, collars, cuffs, sleeves, trim, bodice logic, and broad cloth-panel logic
+- same clean PBR-readable material identity
+
+Continue the front design logically around the back with clean construction, readable seams, belt continuation, sash continuation, collar continuation, cuff continuation, broad garment folds, and simple PBR-readable cloth.
+
+Dress, skirt, and hem rules:
+- If the front view is ground-length, the back view must also be ground-length.
+- If the front view is knee-length or shorter, preserve that skirt length and keep visible legs/boots consistent.
+- For ground-length garments, the bottom must be capped: flatten the hem into a simple horizontal or very slightly curved ground-contact shape.
+- The ground-length hem should touch the ground plane with a visible contact shadow.
+- Do not show feet, boots, toes, heels, or separated legs under a ground-length dress or robe.
+- Do not show thighs, knees, calves, or a full mannequin leg through a ground-length dress opening.
+- Do not create high slits, open back gaps, parted skirt panels, or robe openings that reveal the lower body.
+- If the front render has a lower-body slit or exposed lower-body skin, close those panels in the back view and preserve the design through trim, color, seams, or layered cloth instead.
+- Do not create open interior cavities under the garment.
+- Do not let the image-to-3D viewer see inside the garment from below.
+- Keep the lower dress or robe as a clean closed volume, like a capped garment shell.
+- Avoid ragged trailing strips, loose dangling cloth, or wind-blown edges.
+
+Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long panels hanging from the shoulders. If the front view contains a cloak-like shape, discard it in the back view and continue only the dress, robe, skirted garment, or fitted garment body.
+
+Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic borders, or abstract panel geometry.
+
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open skirt gaps, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the garment identity.

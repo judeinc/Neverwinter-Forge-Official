@@ -1,0 +1,76 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the dress, robe, gown, or skirted outfit source. Use it for garment identity: dress shape, robe shape, gown shape, skirt length, broad cloth layering, collars, cuffs, belts, sashes, trim, color palette, material categories, and broad fantasy/medieval identity.
+
+Image 2 is the locked female modular silhouette template. Use it as authoritative for true T-pose, upper-body width, shoulder width, torso shape, waist, bust volume, arm length, arm thickness, neck cutoff, wrist cutoffs, centerline, full-body framing, and modular compatibility. For the lower body, use the template only for overall width and height; do not expose separated legs or feet when the dress or robe reaches the ground.
+
+Create a technical modular dress or robe reference for AI-to-3D conversion, not fantasy character art, fashion art, pin-up art, or a posed illustration.
+
+Output a clean full-body FRONT view of a female dress, gown, robe, or skirted garment on the locked upper-body T-pose.
+
+The figure must be:
+- true T-pose with both arms extended horizontally
+- full body visible from neck cutoff to ground contact or skirt hem
+- headless with a clean neck opening, collar, hoodless robe neck, dress neckline, armor gorget, or fitted collar finish
+- handless with clean wrist cuffs, bracers, sleeve cuffs, gauntlet cutoffs, or modular wrist openings
+- feet hidden if the dress or robe reaches the ground
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+- grounded by a clear soft contact shadow under the flat garment bottom when ground-length
+
+The silhouette template wins over the source whenever they conflict for pose, upper body, arm position, neck cutoff, wrist cutoffs, width, anatomy, and framing. Keep the garment centered and symmetrical enough for image-to-3D cleanup. Do not exaggerate anatomy, sexualize the garment, narrow the waist beyond the template, enlarge the bust beyond the template, or turn the render into character art.
+
+Dress, skirt, and hem rules:
+- If the source is a dress, gown, robe, ankle-length garment, floor-length garment, or skirt that goes significantly below the knees, convert it into a full ground-length dress or robe.
+- If the source skirt ends around the knees or above, keep it as a skirt and allow legs/boots to remain visible below the skirt.
+- If the garment is ground-length, the bottom must be capped: flatten the hem into a simple horizontal or very slightly curved ground-contact shape.
+- The ground-length hem should touch the ground plane with a visible contact shadow.
+- Do not show feet, boots, toes, heels, or separate legs under a ground-length dress or robe.
+- Do not show thighs, knees, calves, or a full mannequin leg through a ground-length dress opening.
+- Do not create high slits, open front gaps, parted skirt panels, or robe openings that reveal the lower body.
+- If the source has a high slit or exposed lower-body skin, close the dress or robe panels and preserve the design through trim, color, seams, or layered cloth instead.
+- Do not create open interior cavities under the garment.
+- Do not let the image-to-3D viewer see inside the garment from below.
+- Keep the lower dress or robe as a clean closed volume, like a capped garment shell.
+- Avoid ragged trailing strips, loose dangling cloth, or wind-blown edges.
+
+Belts, sashes, collars, cuffs, decorative trim, broad cloth panels, robe sleeves, dress sleeves, and fitted bodice construction are allowed. Keep them broad, clean, and PBR-readable.
+
+Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long panels hanging from the shoulders. If the source includes a cloak or cape, discard that cloak/cape completely and preserve only the dress, robe, skirted garment, or fitted clothing underneath.
+
+Clean PBR-readable materials only:
+- cloth reads as clean cloth with broad folds
+- leather reads as clean leather with controlled sheen
+- metal trim reads as clean smooth metal with broad highlights
+- fur trim reads as broad clean fur masses with simplified strand detail
+- embroidered trim reads as broad non-symbolic trim, not tiny noisy detail
+
+Remove all heraldry and identifiers:
+- no heraldic symbols
+- no faction marks
+- no family crests
+- no badges
+- no sigils
+- no emblems
+- no religious symbols
+- no readable icons
+- no logos
+- no text
+- no decals
+- no watermarks
+
+Remove or simplify mesh-hostile clutter:
+- tiny straps
+- dangling cords
+- dangling chains
+- loose trophies
+- small pouches unless essential
+- tiny buckles
+- dense filigree
+- weapons, shields, and handheld props
+- ragged cloth edges
+- cloaks, capes, mantles, and loose back-hanging cloth
+
+The final image should look like a clean production-friendly dress or robe asset reference that could be fed into image-to-3D, then cleaned in Blender, retopologized, decimated, baked, and used in a modular robe/dress system.
+
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open front skirt gaps, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or losing the locked upper-body T-pose.

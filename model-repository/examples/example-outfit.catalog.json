@@ -1,0 +1,27 @@
+{
+  "id": "example-outfit",
+  "name": "Example Outfit",
+  "status": "draft",
+  "sourceRoot": "model-repository/outfits/example-outfit",
+  "description": "Replace this template with a real outfit entry.",
+  "tags": [
+    "outfit",
+    "template"
+  ],
+  "parts": [
+    "body"
+  ],
+  "assets": {
+    "originalFront": "images/original-front.png",
+    "originalBack": "images/original-back.png",
+    "generatedFront": "images/generated-front.png",
+    "generatedBack": "images/generated-back.png",
+    "modelFiles": [
+      "models/P_HHM_CL_Body01.mdb"
+    ],
+    "textureFiles": [
+      "textures/P_HHM_CL_Body01.dds"
+    ],
+    "notes": "notes.md"
+  }
+}

@@ -1,0 +1,470 @@
+{
+  "presets": [
+    {
+      "id": "miniature",
+      "name": "D&D Miniature",
+      "description": "Orthographic monochrome resin miniature statue for 3D modeling.",
+      "prompt": "miniature/prompt.txt",
+      "kind": "main",
+      "provider": "gemini"
+    },
+    {
+      "id": "modular-outfit-male",
+      "name": "Modular Outfit - Male",
+      "description": "Headless, handless male T-pose outfit render using the locked NWN2-style silhouette.",
+      "prompt": "modular-outfit-male/prompt.txt",
+      "profile": "modular-outfit-male/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-outfit-male-back"
+      ]
+    },
+    {
+      "id": "modular-outfit-female",
+      "name": "Modular Outfit - Female",
+      "description": "Headless, handless female T-pose outfit render using the locked NWN2-style silhouette.",
+      "prompt": "modular-outfit-female/prompt.txt",
+      "profile": "modular-outfit-female/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-outfit-female-back"
+      ]
+    },
+    {
+      "id": "modular-armored-outfit-male",
+      "name": "Armored Outfit - Male",
+      "description": "Headless, handless male T-pose outfit render that preserves pauldrons, fur liners, belts, sashes, and structured coats when they fit the locked silhouette.",
+      "prompt": "modular-armored-outfit-male/prompt.txt",
+      "profile": "modular-armored-outfit-male/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-armored-outfit-male-back"
+      ]
+    },
+    {
+      "id": "modular-armored-outfit-female",
+      "name": "Armored Outfit - Female",
+      "description": "Headless, handless female T-pose outfit render that preserves pauldrons, fur liners, belts, sashes, and structured coats when they fit the locked silhouette.",
+      "prompt": "modular-armored-outfit-female/prompt.txt",
+      "profile": "modular-armored-outfit-female/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-armored-outfit-female-back"
+      ]
+    },
+    {
+      "id": "modular-robe-dress-male",
+      "name": "Robe / Dress - Male",
+      "description": "Headless, handless male T-pose robe render with hidden feet, capped ground-length bottoms, and contact shadows for image-to-3D.",
+      "prompt": "modular-robe-dress-male/prompt.txt",
+      "profile": "modular-robe-dress-male/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-robe-dress-male-back"
+      ]
+    },
+    {
+      "id": "modular-robe-dress-female",
+      "name": "Robe / Dress - Female",
+      "description": "Headless, handless female T-pose dress or robe render with skirt-length rules, capped ground-length bottoms, and contact shadows.",
+      "prompt": "modular-robe-dress-female/prompt.txt",
+      "profile": "modular-robe-dress-female/profile.json",
+      "kind": "main",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ],
+      "derivedViews": [
+        "modular-robe-dress-female-back"
+      ]
+    },
+    {
+      "id": "creature-dog-leg",
+      "name": "Dog Leg Creature",
+      "description": "Attached-head creature outfit render for gnoll, werewolf, catlike, lizardlike, and other dog-leg skeleton bodies. Requires a creature type in Misc.",
+      "prompt": "creature-dog-leg/prompt.txt",
+      "profile": "creature-dog-leg/profile.json",
+      "kind": "main",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-dog-leg/dog-leg-front.png",
+        "creature-dog-leg/dog-leg-profile.png",
+        "creature-dog-leg/dog-leg-three-quarter.png",
+        "creature-dog-leg/dog-leg-back.png",
+        "creature-dog-leg/dog-leg-tail-range.png"
+      ],
+      "exampleImages": [
+        "creature-dog-leg/dog-leg-front.png",
+        "creature-dog-leg/dog-leg-profile.png",
+        "creature-dog-leg/dog-leg-three-quarter.png",
+        "creature-dog-leg/dog-leg-back.png",
+        "creature-dog-leg/dog-leg-tail-range.png"
+      ],
+      "derivedViews": [
+        "creature-dog-leg-back",
+        "creature-dog-leg-side"
+      ]
+    },
+    {
+      "id": "creature-devil-scale",
+      "name": "Devil Scale Creature",
+      "description": "Attached-head creature outfit render for devilish skeleton bodies using the Devil Scale silhouette. Requires a creature type in Misc; reference head and horns are placement only.",
+      "prompt": "creature-devil-scale/prompt.txt",
+      "profile": "creature-devil-scale/profile.json",
+      "kind": "main",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-devil-scale/devil-scale-front.png"
+      ],
+      "exampleImages": [
+        "creature-devil-scale/devil-scale-front.png",
+        "creature-devil-scale/devil-scale-profile.png"
+      ],
+      "derivedViews": [
+        "creature-devil-scale-back",
+        "creature-devil-scale-side"
+      ]
+    },
+    {
+      "id": "object-concept",
+      "name": "Object Concept",
+      "description": "Text-to-image orthographic object render for AI-to-3D prop generation.",
+      "prompt": "object-concept/prompt.txt",
+      "kind": "text-to-image",
+      "provider": "openai",
+      "derivedViews": [
+        "object-concept-back",
+        "object-concept-side"
+      ]
+    },
+    {
+      "id": "open-prompt",
+      "name": "Open Prompt",
+      "description": "Freeform text-to-image or image-to-image generation without a preset prompt.",
+      "prompt": "open-prompt/prompt.txt",
+      "kind": "open",
+      "provider": "gemini"
+    },
+    {
+      "id": "bas-relief-emblem",
+      "name": "Bas-Relief Emblem",
+      "description": "Image-to-image fantasy bas-relief plate design. Works best with Gemini 3.1 Flash Image Preview.",
+      "prompt": "bas-relief-emblem/prompt.txt",
+      "kind": "main",
+      "provider": "gemini",
+      "recommendedModel": "gemini-3.1-flash-image-preview",
+      "referenceImages": [
+        "bas-relief-emblem/depth-references/bas-relief-depth-1.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-2.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-3.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-4.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-5.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-6.png"
+      ],
+      "exampleImages": [
+        "bas-relief-emblem/examples/emblem-prompt-1.png",
+        "bas-relief-emblem/examples/emblem-prompt-2.png",
+        "bas-relief-emblem/examples/emblem-prompt-3.png",
+        "bas-relief-emblem/examples/emblem-prompt-4.png",
+        "bas-relief-emblem/examples/emblem-prompt-5.png",
+        "bas-relief-emblem/examples/emblem-prompt-6.png",
+        "bas-relief-emblem/examples/emblem-prompt-7.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-1.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-2.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-3.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-4.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-5.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-6.png"
+      ]
+    },
+    {
+      "id": "bas-relief-emblem-concept",
+      "name": "Bas-Relief Concept",
+      "description": "Text-to-image fantasy bas-relief plate concept. Works best with Gemini 3.1 Flash Image Preview.",
+      "prompt": "bas-relief-emblem/concept.txt",
+      "kind": "text-to-image",
+      "provider": "gemini",
+      "recommendedModel": "gemini-3.1-flash-image-preview",
+      "referenceImages": [
+        "bas-relief-emblem/depth-references/bas-relief-depth-1.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-2.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-3.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-4.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-5.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-6.png"
+      ],
+      "exampleImages": [
+        "bas-relief-emblem/examples/emblem-prompt-1.png",
+        "bas-relief-emblem/examples/emblem-prompt-2.png",
+        "bas-relief-emblem/examples/emblem-prompt-3.png",
+        "bas-relief-emblem/examples/emblem-prompt-4.png",
+        "bas-relief-emblem/examples/emblem-prompt-5.png",
+        "bas-relief-emblem/examples/emblem-prompt-6.png",
+        "bas-relief-emblem/examples/emblem-prompt-7.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-1.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-2.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-3.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-4.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-5.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-6.png"
+      ]
+    },
+    {
+      "id": "shield-emblem",
+      "name": "Shield Emblem",
+      "description": "Image-to-image medieval fantasy shield that adapts the input motif into the inner shield face while preserving a separate rim and bevel.",
+      "prompt": "shield-emblem/prompt.txt",
+      "kind": "main",
+      "provider": "gemini",
+      "recommendedModel": "gemini-3.1-flash-image-preview",
+      "referenceImages": [
+        "bas-relief-emblem/depth-references/bas-relief-depth-1.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-2.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-3.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-4.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-5.png",
+        "bas-relief-emblem/depth-references/bas-relief-depth-6.png"
+      ],
+      "shapeReferenceImages": [
+        "shield-emblem/shape-references/shield-shape-1-01.png",
+        "shield-emblem/shape-references/shield-shape-1-02.png",
+        "shield-emblem/shape-references/shield-shape-1-03.png",
+        "shield-emblem/shape-references/shield-shape-1-04.png",
+        "shield-emblem/shape-references/shield-shape-1-05.png",
+        "shield-emblem/shape-references/shield-shape-1-06.png",
+        "shield-emblem/shape-references/shield-shape-1-07.png",
+        "shield-emblem/shape-references/shield-shape-1-08.png",
+        "shield-emblem/shape-references/shield-shape-1-09.png",
+        "shield-emblem/shape-references/shield-shape-1-10.png",
+        "shield-emblem/shape-references/shield-shape-1-11.png",
+        "shield-emblem/shape-references/shield-shape-1-12.png",
+        "shield-emblem/shape-references/shield-shape-1-13.png",
+        "shield-emblem/shape-references/shield-shape-1-14.png",
+        "shield-emblem/shape-references/shield-shape-1-15.png",
+        "shield-emblem/shape-references/shield-shape-1-16.png",
+        "shield-emblem/shape-references/shield-shape-1-17.png",
+        "shield-emblem/shape-references/shield-shape-1-18.png",
+        "shield-emblem/shape-references/shield-shape-1-19.png",
+        "shield-emblem/shape-references/shield-shape-1-20.png",
+        "shield-emblem/shape-references/shield-shape-1-21.png",
+        "shield-emblem/shape-references/shield-shape-1-22.png",
+        "shield-emblem/shape-references/shield-shape-1-23.png",
+        "shield-emblem/shape-references/shield-shape-1-24.png",
+        "shield-emblem/shape-references/shield-shape-1-25.png",
+        "shield-emblem/shape-references/shield-shape-2-01.png",
+        "shield-emblem/shape-references/shield-shape-2-02.png",
+        "shield-emblem/shape-references/shield-shape-2-03.png",
+        "shield-emblem/shape-references/shield-shape-2-04.png",
+        "shield-emblem/shape-references/shield-shape-2-05.png",
+        "shield-emblem/shape-references/shield-shape-2-06.png",
+        "shield-emblem/shape-references/shield-shape-2-07.png",
+        "shield-emblem/shape-references/shield-shape-2-08.png",
+        "shield-emblem/shape-references/shield-shape-2-09.png",
+        "shield-emblem/shape-references/shield-shape-2-10.png",
+        "shield-emblem/shape-references/shield-shape-2-11.png",
+        "shield-emblem/shape-references/shield-shape-2-12.png",
+        "shield-emblem/shape-references/shield-shape-2-13.png",
+        "shield-emblem/shape-references/shield-shape-2-14.png",
+        "shield-emblem/shape-references/shield-shape-2-15.png",
+        "shield-emblem/shape-references/shield-shape-2-16.png",
+        "shield-emblem/shape-references/shield-shape-2-17.png",
+        "shield-emblem/shape-references/shield-shape-2-18.png",
+        "shield-emblem/shape-references/shield-shape-2-19.png",
+        "shield-emblem/shape-references/shield-shape-2-20.png",
+        "shield-emblem/shape-references/shield-shape-2-21.png",
+        "shield-emblem/shape-references/shield-shape-2-22.png",
+        "shield-emblem/shape-references/shield-shape-2-23.png",
+        "shield-emblem/shape-references/shield-shape-2-24.png",
+        "shield-emblem/shape-references/shield-shape-2-25.png"
+      ]
+    },
+    {
+      "id": "miniature-back",
+      "name": "Back View",
+      "description": "Creates a matching orthographic rear view from the generated miniature.",
+      "prompt": "views/back-view.txt",
+      "kind": "derived",
+      "provider": "gemini"
+    },
+    {
+      "id": "miniature-three-quarter",
+      "name": "3/4 View",
+      "description": "Creates a matching front three-quarter view from the generated miniature.",
+      "prompt": "views/three-quarter-view.txt",
+      "kind": "derived",
+      "provider": "gemini"
+    },
+    {
+      "id": "modular-outfit-male-back",
+      "name": "Outfit Back",
+      "description": "Creates a direct rear view from the approved front modular outfit render.",
+      "prompt": "modular-outfit-male/back-view.txt",
+      "profile": "modular-outfit-male/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "modular-outfit-female-back",
+      "name": "Outfit Back",
+      "description": "Creates a direct rear view from the approved front modular female outfit render.",
+      "prompt": "modular-outfit-female/back-view.txt",
+      "profile": "modular-outfit-female/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "modular-armored-outfit-male-back",
+      "name": "Armored Outfit Back",
+      "description": "Creates a direct rear view from the approved front modular armored male outfit render.",
+      "prompt": "modular-armored-outfit-male/back-view.txt",
+      "profile": "modular-armored-outfit-male/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "modular-armored-outfit-female-back",
+      "name": "Armored Outfit Back",
+      "description": "Creates a direct rear view from the approved front modular armored female outfit render.",
+      "prompt": "modular-armored-outfit-female/back-view.txt",
+      "profile": "modular-armored-outfit-female/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "modular-robe-dress-male-back",
+      "name": "Robe Back",
+      "description": "Creates a direct rear view from the approved front modular male robe render.",
+      "prompt": "modular-robe-dress-male/back-view.txt",
+      "profile": "modular-robe-dress-male/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-male/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "modular-robe-dress-female-back",
+      "name": "Robe / Dress Back",
+      "description": "Creates a direct rear view from the approved front modular female dress or robe render.",
+      "prompt": "modular-robe-dress-female/back-view.txt",
+      "profile": "modular-robe-dress-female/profile.json",
+      "kind": "derived",
+      "provider": "openai",
+      "referenceImages": [
+        "modular-outfit-female/locked-silhouette.png"
+      ]
+    },
+    {
+      "id": "creature-dog-leg-back",
+      "name": "Dog Leg Creature Back",
+      "description": "Creates a direct rear view from the approved front Dog Leg creature outfit render.",
+      "prompt": "creature-dog-leg/back-view.txt",
+      "profile": "creature-dog-leg/profile.json",
+      "kind": "derived",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-dog-leg/dog-leg-front.png",
+        "creature-dog-leg/dog-leg-profile.png",
+        "creature-dog-leg/dog-leg-three-quarter.png",
+        "creature-dog-leg/dog-leg-back.png",
+        "creature-dog-leg/dog-leg-tail-range.png"
+      ]
+    },
+    {
+      "id": "creature-dog-leg-side",
+      "name": "Dog Leg Creature Side",
+      "description": "Creates a direct orthographic profile side view from the approved front Dog Leg creature outfit render, including the full tail when enabled.",
+      "prompt": "creature-dog-leg/side-view.txt",
+      "profile": "creature-dog-leg/profile.json",
+      "kind": "derived",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-dog-leg/dog-leg-front.png",
+        "creature-dog-leg/dog-leg-profile.png",
+        "creature-dog-leg/dog-leg-three-quarter.png",
+        "creature-dog-leg/dog-leg-back.png",
+        "creature-dog-leg/dog-leg-tail-range.png"
+      ]
+    },
+    {
+      "id": "creature-devil-scale-back",
+      "name": "Devil Scale Creature Back",
+      "description": "Creates a direct rear view from the approved front Devil Scale creature outfit render.",
+      "prompt": "creature-devil-scale/back-view.txt",
+      "profile": "creature-devil-scale/profile.json",
+      "kind": "derived",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-devil-scale/devil-scale-front.png",
+        "creature-devil-scale/devil-scale-profile.png"
+      ]
+    },
+    {
+      "id": "creature-devil-scale-side",
+      "name": "Devil Scale Creature Side",
+      "description": "Creates a direct orthographic profile side view from the approved front Devil Scale creature outfit render.",
+      "prompt": "creature-devil-scale/side-view.txt",
+      "profile": "creature-devil-scale/profile.json",
+      "kind": "derived",
+      "group": "Creatures",
+      "provider": "openai",
+      "referenceImages": [
+        "creature-devil-scale/devil-scale-front.png",
+        "creature-devil-scale/devil-scale-profile.png"
+      ]
+    },
+    {
+      "id": "object-concept-back",
+      "name": "Object Back",
+      "description": "Creates a matching direct rear view from the approved front object render.",
+      "prompt": "object-concept/back-view.txt",
+      "kind": "derived",
+      "provider": "openai"
+    },
+    {
+      "id": "object-concept-side",
+      "name": "Object Side",
+      "description": "Creates a matching direct side view from the approved front object render.",
+      "prompt": "object-concept/side-view.txt",
+      "kind": "derived",
+      "provider": "openai"
+    }
+  ]
+}

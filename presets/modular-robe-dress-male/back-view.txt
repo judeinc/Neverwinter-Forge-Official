@@ -1,0 +1,49 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the approved front modular robe render. Treat it as the exact robe identity.
+
+Image 2 is the locked male modular silhouette template. Use it as authoritative for true T-pose, upper-body width, shoulder width, arm length, neck cutoff, wrist cutoffs, centerline, framing, and modular compatibility. For the lower body, use only the front render's robe width, ground contact, and capped-bottom logic.
+
+Create a clean direct BACK view of the same male robe or long garment, not a redesign.
+
+The figure must be:
+- direct back-facing
+- true T-pose with both arms extended horizontally
+- full body visible from neck cutoff to ground contact
+- headless with the same neck opening, collar, hoodless robe neck, armor gorget, or fitted collar logic
+- handless with the same wrist cutoff logic
+- feet hidden if the robe reaches the ground
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+- grounded by a clear soft contact shadow under the flat garment bottom
+
+Preserve the same robe from the front view:
+- same upper-body silhouette
+- same robe length
+- same lower hem width
+- same flat capped bottom
+- same color palette
+- same material categories
+- same belts, sashes, collars, cuffs, sleeves, trim, and broad cloth-panel logic
+- same clean PBR-readable material identity
+
+Continue the front design logically around the back with clean construction, readable seams, belt continuation, sash continuation, collar continuation, cuff continuation, broad robe folds, and simple PBR-readable cloth.
+
+Robe and hem rules:
+- If the front view is ground-length, the back view must also be ground-length.
+- The bottom must be capped: flatten the hem into a simple horizontal or very slightly curved ground-contact shape.
+- The hem should touch the ground plane with a visible contact shadow.
+- Do not show feet, boots, toes, heels, or separated legs under a ground-length robe.
+- Do not show thighs, knees, calves, or a full mannequin leg through a ground-length robe opening.
+- Do not create high slits, open back gaps, parted robe panels, or robe openings that reveal the lower body.
+- If the front render has exposed lower-body skin or leg openings, close those panels in the back view and preserve the design through trim, color, seams, or layered cloth instead.
+- Do not create open interior cavities under the robe.
+- Do not let the image-to-3D viewer see inside the robe from below.
+- Keep the lower robe as a clean closed volume, like a capped garment shell.
+- Avoid ragged trailing strips, loose dangling cloth, or wind-blown edges.
+
+Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long panels hanging from the shoulders. If the front view contains a cloak-like shape, discard it in the back view and continue only the robe or fitted garment body.
+
+Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic borders, or abstract panel geometry.
+
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length robes, visible boots under ground-length robes, visible thighs or full mannequin legs under ground-length robes, high robe slits, open robe gaps, separated legs under ground-length robes, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the robe identity.

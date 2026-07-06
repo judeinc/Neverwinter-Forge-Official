@@ -1,0 +1,42 @@
+True orthographic FRONT view full body 3D miniature resin kit prototype.
+
+Clean 3D maquette statue render for 3D modeling and Substance Painter workflow.
+
+Full figure centered, head to toe visible, feet fully in frame, clean margin around figure, no cropping.
+
+Strict orthographic projection, zero perspective distortion, flat camera, no 3/4 turn, no tilt.
+
+Stylized realism with controlled medium-to-high sculpt detail.
+Strong primary forms, clear secondary anatomy forms, limited clean tertiary details only.
+
+Detail must look sculpted as solid forms, not texture noise.
+Simplified hair in solid clumps, simplified folds, simplified straps and armor plates.
+
+No micro surface noise. No pores. No skin grain. No scratches. No dirt. No stone texture.
+
+Single material only. Monochrome light gray clay/resin/plaster statue look.
+
+Base must be one solid piece with the figure. No thin floating elements. No fragile overhangs.
+
+Pure grayscale output. Zero color saturation. No color variation.
+Matte surface. Very low specular. No gloss. No shine. No reflections.
+
+Even soft frontal studio lighting. Balanced lighting. Gentle ambient occlusion only.
+
+No dramatic shadows. No rim light. No cinematic contrast.
+Plain neutral dark-to-mid gray gradient studio background.
+No floor texture. No environment. No fog. No particles.
+Clean render. Stable anatomy. No extra fingers. No warped hands.
+No melted geometry.
+
+2048x2048 resolution.
+
+Use the provided reference image as the primary source. Match the pose, proportions, silhouette, and camera orientation exactly. Do not change the pose. Do not add new elements. Preserve major shapes and design features precisely. If unclear, simplify rather than invent. Keep full subject visible and maintain consistent framing. Convert to monochrome matte statue material while keeping forms faithful.
+
+Place the miniature on a simple integrated display base that structurally supports the figure. The base should visually represent the subject's theme in a minimal and sculpted way (for example: subtle rock texture, clean mechanical platform, simple ruins fragment, smooth pedestal). The base must be solid, printable, and unified with the figure. No environment scene. No ground plane beyond the base. Keep full base visible in frame. Maintain orthographic front view and even lighting.
+
+Output image to 2x size.
+
+Solidify minor parts for one opimised structured 3d print layout. No loose strands.
+
+NO COLORING!

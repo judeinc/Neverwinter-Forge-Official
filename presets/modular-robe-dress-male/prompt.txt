@@ -1,0 +1,77 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the robe or long garment source. Use it for garment identity: robe shape, long tunic shape, long skirt-like garment shape, broad cloth layering, collars, cuffs, belts, sashes, trim, color palette, material categories, and broad fantasy/medieval identity.
+
+Image 2 is the locked male modular silhouette template. Use it as authoritative for true T-pose, upper-body width, shoulder width, torso width, arm length, arm thickness, neck cutoff, wrist cutoffs, centerline, full-body framing, and modular compatibility. For the lower body, use the template only for overall width and height; do not expose separated legs or feet when the robe reaches the ground.
+
+Create a technical modular robe reference for AI-to-3D conversion, not fantasy character art and not a posed illustration.
+
+Output a clean full-body FRONT view of a male robe or long garment on the locked upper-body T-pose.
+
+The figure must be:
+- true T-pose with both arms extended horizontally
+- full body visible from neck cutoff to ground contact
+- headless with a clean neck opening, collar, hoodless robe neck, armor gorget, or fitted collar finish
+- handless with clean wrist cuffs, bracers, sleeve cuffs, gauntlet cutoffs, or modular wrist openings
+- feet hidden if the robe reaches the ground
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+- grounded by a clear soft contact shadow under the flat garment bottom
+
+The silhouette template wins over the source whenever they conflict for pose, upper body, arm position, neck cutoff, wrist cutoffs, width, and framing. Keep the robe centered and symmetrical enough for image-to-3D cleanup.
+
+Robe and hem rules:
+- If the source is a robe, ankle-length garment, floor-length garment, or skirt-like lower garment that goes well past the knees, convert it into a full ground-length robe.
+- The bottom must be capped: flatten the hem into a simple horizontal or very slightly curved ground-contact shape.
+- The hem should touch the ground plane with a visible contact shadow.
+- Do not show feet, boots, toes, heels, or separate legs under a ground-length robe.
+- Do not show thighs, knees, calves, or a full mannequin leg through a ground-length robe opening.
+- Do not create high slits, open front gaps, parted robe panels, or robe openings that reveal the lower body.
+- If the source has exposed lower-body skin or leg openings, close the robe panels and preserve the design through trim, color, seams, or layered cloth instead.
+- Do not create open interior cavities under the robe.
+- Do not let the image-to-3D viewer see inside the robe from below.
+- Keep the lower robe as a clean closed volume, like a capped garment shell.
+- Avoid ragged trailing strips, loose dangling cloth, or wind-blown edges.
+
+If the source has a shorter tunic or knee-length garment, keep it as a shorter tunic only when it ends around the knees or above. If it clearly extends significantly below the knees, make it a full ground-length robe with hidden feet and a capped bottom.
+
+Belts, sashes, collars, cuffs, decorative trim, broad cloth panels, and robe sleeves are allowed. Keep them broad, clean, and PBR-readable.
+
+Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separate back-hanging cloth layers, cape-like shoulder drapes, trailing hoods, free-hanging physics cloth, or long panels hanging from the shoulders. If the source includes a cloak or cape, discard that cloak/cape completely and preserve only the robe or fitted clothing underneath.
+
+Clean PBR-readable materials only:
+- cloth reads as clean cloth with broad folds
+- leather reads as clean leather with controlled sheen
+- metal trim reads as clean smooth metal with broad highlights
+- fur trim reads as broad clean fur masses with simplified strand detail
+- embroidered trim reads as broad non-symbolic trim, not tiny noisy detail
+
+Remove all heraldry and identifiers:
+- no heraldic symbols
+- no faction marks
+- no family crests
+- no badges
+- no sigils
+- no emblems
+- no religious symbols
+- no readable icons
+- no logos
+- no text
+- no decals
+- no watermarks
+
+Remove or simplify mesh-hostile clutter:
+- tiny straps
+- dangling cords
+- dangling chains
+- loose trophies
+- small pouches unless essential
+- tiny buckles
+- dense filigree
+- weapons, shields, and handheld props
+- ragged cloth edges
+- cloaks, capes, mantles, and loose back-hanging cloth
+
+The final image should look like a clean production-friendly robe asset reference that could be fed into image-to-3D, then cleaned in Blender, retopologized, decimated, baked, and used in a modular robe system.
+
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length robes, visible boots under ground-length robes, visible thighs or full mannequin legs under ground-length robes, high robe slits, open front robe gaps, separated legs under ground-length robes, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or losing the locked upper-body T-pose.

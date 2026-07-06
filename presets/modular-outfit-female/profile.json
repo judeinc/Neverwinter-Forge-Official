@@ -1,0 +1,61 @@
+{
+  "profileName": "NWN2 Modular Outfit - Female",
+  "profileVersion": "3.0_compact_runtime",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert outfit reference images into clean headless and handless female T-pose modular outfit renders for AI-to-3D workflows.",
+  "referenceImages": [
+    {
+      "role": "locked_silhouette",
+      "path": "locked-silhouette.png",
+      "description": "Authoritative female T-pose body, limb length, width, cutoff, and framing template."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Female Outfit Front",
+      "description": "Front-facing technical modular outfit render on the locked female silhouette."
+    },
+    "back": {
+      "label": "Female Outfit Back",
+      "description": "Direct rear view continuing the same modular outfit from the approved front view."
+    }
+  },
+  "designPolicy": {
+    "preserve": [
+      "major outfit identity",
+      "large armor zones",
+      "main garment layering",
+      "color palette",
+      "material categories",
+      "large readable belts, panels, cuffs, collars, boots, and armor plates",
+      "tasteful broad ornament when it defines the outfit"
+    ],
+    "simplify": [
+      "micro ornament",
+      "tiny straps",
+      "dangling accessories",
+      "small pouches",
+      "dense filigree",
+      "ragged edge noise",
+      "weathering",
+      "scratches",
+      "surface dirt",
+      "mesh-hostile clutter"
+    ],
+    "forbid": [
+      "head",
+      "face",
+      "hair",
+      "hands",
+      "fingers",
+      "weapons",
+      "shields",
+      "held props",
+      "sexualized costume redesign",
+      "pin-up pose",
+      "non-T-pose",
+      "portrait or character illustration framing"
+    ]
+  }
+}

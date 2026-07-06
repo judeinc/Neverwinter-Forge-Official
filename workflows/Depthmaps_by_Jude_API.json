@@ -1,0 +1,598 @@
+{
+  "18": {
+    "inputs": {
+      "seed": 236,
+      "per_batch": 1,
+      "keep_model_loaded": false,
+      "lotus_unet": [
+        "19",
+        0
+      ],
+      "samples": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "LotusSampler",
+    "_meta": {
+      "title": "Lotus Sampler"
+    }
+  },
+  "19": {
+    "inputs": {
+      "model": "lotus-depth-g-v2-1-disparity-fp16.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "LoadLotusModel",
+    "_meta": {
+      "title": "Load Lotus Model"
+    }
+  },
+  "20": {
+    "inputs": {
+      "blend_factor": 1,
+      "blend_mode": "multiply",
+      "image1": [
+        "21",
+        0
+      ],
+      "image2": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "ImageBlend",
+    "_meta": {
+      "title": "Image Blend"
+    }
+  },
+  "21": {
+    "inputs": {
+      "blend_factor": 0.5,
+      "blend_mode": "normal",
+      "image1": [
+        "41",
+        0
+      ],
+      "image2": [
+        "56",
+        0
+      ]
+    },
+    "class_type": "ImageBlend",
+    "_meta": {
+      "title": "Image Blend"
+    }
+  },
+  "23": {
+    "inputs": {
+      "pixels": [
+        "104",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "24": {
+    "inputs": {
+      "vae_name": "vae-ft-mse-840000-ema-pruned.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "25": {
+    "inputs": {
+      "samples": [
+        "18",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "26": {
+    "inputs": {
+      "images": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "27": {
+    "inputs": {
+      "model": "lotus-depth-g-v1-0.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "LoadLotusModel",
+    "_meta": {
+      "title": "Load Lotus Model"
+    }
+  },
+  "28": {
+    "inputs": {
+      "seed": 236,
+      "per_batch": 1,
+      "keep_model_loaded": false,
+      "lotus_unet": [
+        "27",
+        0
+      ],
+      "samples": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "LotusSampler",
+    "_meta": {
+      "title": "Lotus Sampler"
+    }
+  },
+  "29": {
+    "inputs": {
+      "samples": [
+        "28",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "30": {
+    "inputs": {
+      "images": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "31": {
+    "inputs": {
+      "image": [
+        "29",
+        0
+      ]
+    },
+    "class_type": "ImageInvert",
+    "_meta": {
+      "title": "Invert Image"
+    }
+  },
+  "32": {
+    "inputs": {
+      "model": "lotus-depth-g-v1-0-fp16.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "LoadLotusModel",
+    "_meta": {
+      "title": "Load Lotus Model"
+    }
+  },
+  "33": {
+    "inputs": {
+      "seed": 236,
+      "per_batch": 1,
+      "keep_model_loaded": false,
+      "lotus_unet": [
+        "32",
+        0
+      ],
+      "samples": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "LotusSampler",
+    "_meta": {
+      "title": "Lotus Sampler"
+    }
+  },
+  "34": {
+    "inputs": {
+      "samples": [
+        "33",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "35": {
+    "inputs": {
+      "images": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "36": {
+    "inputs": {
+      "images": [
+        "41",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "37": {
+    "inputs": {
+      "image": [
+        "34",
+        0
+      ]
+    },
+    "class_type": "ImageInvert",
+    "_meta": {
+      "title": "Invert Image"
+    }
+  },
+  "38": {
+    "inputs": {
+      "model": "lotus-depth-d-v-1-1-fp16.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "LoadLotusModel",
+    "_meta": {
+      "title": "Load Lotus Model"
+    }
+  },
+  "39": {
+    "inputs": {
+      "seed": 236,
+      "per_batch": 1,
+      "keep_model_loaded": false,
+      "lotus_unet": [
+        "38",
+        0
+      ],
+      "samples": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "LotusSampler",
+    "_meta": {
+      "title": "Lotus Sampler"
+    }
+  },
+  "40": {
+    "inputs": {
+      "samples": [
+        "39",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "41": {
+    "inputs": {
+      "image": [
+        "40",
+        0
+      ]
+    },
+    "class_type": "ImageInvert",
+    "_meta": {
+      "title": "Invert Image"
+    }
+  },
+  "55": {
+    "inputs": {
+      "seed": 236,
+      "per_batch": 1,
+      "keep_model_loaded": false,
+      "lotus_unet": [
+        "60",
+        0
+      ],
+      "samples": [
+        "61",
+        0
+      ]
+    },
+    "class_type": "LotusSampler",
+    "_meta": {
+      "title": "Lotus Sampler"
+    }
+  },
+  "56": {
+    "inputs": {
+      "samples": [
+        "55",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "59": {
+    "inputs": {
+      "images": [
+        "56",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "60": {
+    "inputs": {
+      "model": "lotus-normal-g-v1-1-fp16.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "LoadLotusModel",
+    "_meta": {
+      "title": "Load Lotus Model"
+    }
+  },
+  "61": {
+    "inputs": {
+      "pixels": [
+        "104",
+        0
+      ],
+      "vae": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "63": {
+    "inputs": {
+      "images": [
+        "66",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "66": {
+    "inputs": {
+      "factor": 1,
+      "method": "luminance (Rec.601)",
+      "image": [
+        "89",
+        0
+      ]
+    },
+    "class_type": "ImageDesaturate+",
+    "_meta": {
+      "title": "🔧 Image Desaturate"
+    }
+  },
+  "89": {
+    "inputs": {
+      "factor": 1.1,
+      "images": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "AdjustContrast",
+    "_meta": {
+      "title": "Adjust Contrast"
+    }
+  },
+  "90": {
+    "inputs": {
+      "colors": 256,
+      "dither": "bayer-8",
+      "image": [
+        "91",
+        0
+      ]
+    },
+    "class_type": "ImageQuantize",
+    "_meta": {
+      "title": "ImageQuantize"
+    }
+  },
+  "91": {
+    "inputs": {
+      "blend_factor": 0.2,
+      "blend_mode": "soft_light",
+      "image1": [
+        "20",
+        0
+      ],
+      "image2": [
+        "104",
+        0
+      ]
+    },
+    "class_type": "ImageBlend",
+    "_meta": {
+      "title": "Image Blend"
+    }
+  },
+  "92": {
+    "inputs": {
+      "images": [
+        "93",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "93": {
+    "inputs": {
+      "image": "ComfyUI_00129_.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "104": {
+    "inputs": {
+      "image": [
+        "93",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "megapixels": 1.0,
+      "resolution_steps": 64
+    },
+    "class_type": "ImageScaleToTotalPixels",
+    "_meta": {
+      "title": "Scale Depth Source"
+    }
+  },
+  "94": {
+    "inputs": {
+      "model_name": "RealESRGAN_x4plus.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "96": {
+    "inputs": {
+      "images": [
+        "98",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "98": {
+    "inputs": {
+      "upscale_model": [
+        "94",
+        0
+      ],
+      "image": [
+        "66",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "99": {
+    "inputs": {
+      "model_name": "RealESRGAN_x4plus.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "100": {
+    "inputs": {
+      "upscale_model": [
+        "99",
+        0
+      ],
+      "image": [
+        "103",
+        1
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Upscale Image (using Model)"
+    }
+  },
+  "101": {
+    "inputs": {
+      "images": [
+        "100",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "103": {
+    "inputs": {
+      "invert_R": true,
+      "invert_G": true,
+      "invert_B": false,
+      "invert_A": false,
+      "device": "Original",
+      "RGBA_or_RGB": [
+        "56",
+        0
+      ]
+    },
+    "class_type": "invert_channel_adv",
+    "_meta": {
+      "title": "invert channel adv"
+    }
+  }
+}

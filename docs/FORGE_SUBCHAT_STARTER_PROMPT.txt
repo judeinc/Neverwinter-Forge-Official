@@ -1,0 +1,101 @@
+NEVERWINTER FORGE OFFICIAL - SUB-CHAT STARTER
+
+This chat is a sub-process of the consolidated Neverwinter Forge project.
+
+Canonical project folder:
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official
+
+Root project purpose:
+Neverwinter Forge is the primary Forge project for Neverwinter Nights 2 mod creation. It is the canonical hub for AI image workflows, ComfyUI workflows, MDB model tools, shader/graphics utilities, tutorial workflows, documentation, packaging, and future NWN2 modding tools.
+
+Important rule:
+Do not create a permanent separate standalone app unless I explicitly request it. Any MDB configurator, MDB cloner/editor, AI image workflow, ComfyUI workflow, shader/graphics utility, tutorial workflow, or future Forge utility should ultimately fold into Neverwinter Forge as a module, page, route, preset, workflow, tool, documentation section, or packaged asset.
+
+Prototype rule:
+It is okay to build a temporary prototype outside Forge when isolation helps. If a prototype is created, treat it as Forge-bound from the start. Leave Forge Migration Notes explaining what should move into Neverwinter Forge Official, what should be discarded, where it belongs, and what verification was completed.
+
+Relationship to root chat:
+This chat extends the main Neverwinter Forge consolidation/root chat. Work done here should eventually consolidate back into:
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official
+
+Start by reading:
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\PROJECT_HANDOFF.md
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\docs\FORGE_NEXT_SESSION_CONSOLIDATED_HANDOFF.md
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\docs\FORGE_CHAT_SYSTEM.md
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\docs\FORGE_PROTOTYPE_TO_FORGE_WORKFLOW.md
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\README.md
+C:\Users\Raymond Arellano\Documents\Neverwinter Forge Official\CHANGELOG.md
+
+Main source files to inspect as needed:
+app.py
+mdb_tools.py
+public\index.html
+public\app.js
+public\model-tools.html
+public\model-tools.js
+public\model-editor.html
+public\model-editor.js
+public\model-edit-clone.html
+public\styles.css
+presets\presets.json
+Neverwinter Forge.spec
+
+Supporting/reference material:
+C:\Users\Raymond Arellano\Documents\Codex\2026-05-27
+
+That folder contains MDBConfig/MDBCloner research, tutorial assets, demo MDBs, and reference material. It is not the primary app. Use it only as reference unless I explicitly ask to import something from it.
+
+Project architecture:
+Neverwinter Forge is one local Python/PyInstaller app with static HTML/CSS/JS pages. New tools should usually follow this pattern:
+- backend logic in app.py or a focused Python module
+- static page under public\
+- JS under public\
+- styling in public\styles.css
+- presets or workflows under presets\ or workflows\
+- docs in README.md / CHANGELOG.md / docs\
+- packaging through Neverwinter Forge.spec
+
+Current major modules:
+- AI Forge image workflows
+- Open Prompt
+- Bas-Relief Emblem and Bas-Relief Concept
+- Local Real-ESRGAN upscaler
+- ComfyUI Depth & Normal Maps
+- Model Batch Tools
+- Model Batch Editor
+- Model Edit + Clone
+
+Style and identity:
+Preserve the NWN2-first identity, dark Forge UI, gold trim, tool-like workflow, and single-app architecture. This is not a generic SaaS app or generic game-dev tool. It is primarily for NWN2 mod creators.
+
+Safety rules:
+- Preserve user/source files.
+- Do not rewrite unrelated project areas.
+- Do not copy texture files during MDB cloning.
+- Do not split Forge into permanent separate apps.
+- Treat external research folders as reference, not runtime source.
+- Keep generated outputs, local config, and builds out of normal source edits unless packaging is the task.
+
+Expected workflow:
+1. Read the handoff docs.
+2. Inspect only the files relevant to this sub-task.
+3. Decide whether to work directly in Neverwinter Forge Official or create a temporary Forge-bound prototype.
+4. Make scoped changes.
+5. Run appropriate verification.
+6. Summarize what changed and what should consolidate back into the root project.
+
+Forge Migration Notes template:
+- Prototype or sub-task name:
+- What was built:
+- What should move into Forge:
+- What should be discarded:
+- Target Forge page/module/route:
+- Backend files affected:
+- Frontend files affected:
+- Assets or dependencies to copy:
+- Documentation/changelog updates needed:
+- Verification completed:
+- Remaining risks:
+
+For this sub-chat, focus on:
+[PASTE THE SPECIFIC TASK HERE]

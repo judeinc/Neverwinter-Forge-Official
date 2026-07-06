@@ -1,0 +1,67 @@
+{
+  "profileName": "NWN2 Modular Outfit - Male",
+  "profileVersion": "3.0_compact_runtime",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert outfit reference images into clean headless and handless male T-pose modular outfit renders for AI-to-3D workflows.",
+  "referenceImages": [
+    {
+      "role": "locked_silhouette",
+      "path": "locked-silhouette.png",
+      "description": "Authoritative male T-pose body, limb length, width, cutoff, and framing template."
+    }
+  ],
+  "runtimePromptOrder": [
+    "reference_image_roles",
+    "locked_silhouette_contract",
+    "view_template",
+    "material_and_detail_policy",
+    "failure_avoidance"
+  ],
+  "views": {
+    "front": {
+      "label": "Male Outfit Front",
+      "description": "Front-facing technical modular outfit render on the locked male silhouette."
+    },
+    "back": {
+      "label": "Male Outfit Back",
+      "description": "Direct rear view continuing the same modular outfit from the approved front view."
+    }
+  },
+  "designPolicy": {
+    "preserve": [
+      "major outfit identity",
+      "large armor zones",
+      "main garment layering",
+      "color palette",
+      "material categories",
+      "large readable belts, panels, cuffs, collars, boots, and armor plates",
+      "tasteful broad ornament when it defines the outfit"
+    ],
+    "simplify": [
+      "micro ornament",
+      "tiny straps",
+      "dangling accessories",
+      "small pouches",
+      "dense filigree",
+      "ragged edge noise",
+      "weathering",
+      "scratches",
+      "surface dirt",
+      "mesh-hostile clutter"
+    ],
+    "forbid": [
+      "head",
+      "face",
+      "hair",
+      "hands",
+      "fingers",
+      "weapons",
+      "shields",
+      "held props",
+      "wide heroic body proportions",
+      "non-T-pose",
+      "portrait or character illustration framing"
+    ]
+  }
+}

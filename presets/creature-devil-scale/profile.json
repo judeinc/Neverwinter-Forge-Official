@@ -1,0 +1,33 @@
+{
+  "profileName": "NWN2 Creature - Devil Scale",
+  "profileVersion": "1.0",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert outfit reference images into clean attached-head creature outfit renders that preserve the Devil Scale skeleton pose, upright plantigrade stance, hand alignment, optional tail handling, and user-specified creature identity without copying the reference mannequin head.",
+  "referenceImages": [
+    {
+      "role": "devil_scale_front_pose",
+      "path": "devil-scale-front.png",
+      "description": "Authoritative front pose, widened arm spacing, closed hand grouping, upright leg stance, broad upper-body scale, and full-body framing reference. Head silhouette is placement guidance only and must not be copied."
+    },
+    {
+      "role": "devil_scale_profile_pose",
+      "path": "devil-scale-profile.png",
+      "description": "Authoritative profile silhouette for hunched upper back, forward neck/head placement, long arms, low hands, upright plantigrade legs, and foot contact. Head silhouette is placement guidance only and must not be copied."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Devil Scale Creature Front",
+      "description": "Front-facing creature outfit render on the Devil Scale skeleton pose."
+    },
+    "back": {
+      "label": "Devil Scale Creature Back",
+      "description": "Direct rear view continuing the same Devil Scale creature outfit from the approved front view."
+    },
+    "side": {
+      "label": "Devil Scale Creature Side",
+      "description": "Direct profile side view continuing the same Devil Scale creature outfit."
+    }
+  }
+}

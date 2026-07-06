@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neverwinter Forge</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div id="splashScreen" class="splash-screen" role="status" aria-live="polite" aria-label="Neverwinter Forge is loading">
+      <div class="splash-content">
+        <div class="splash-logo-wrap">
+          <img class="splash-logo" src="/assets/neverwinterforge-main-header.png" alt="The Neverwinter Forge">
+        </div>
+        <div class="splash-line" aria-hidden="true">
+          <span></span>
+        </div>
+        <p id="splashStatus">Warming the forge...</p>
+      </div>
+    </div>
+    <main class="app">
+      <section class="workspace">
+        <header class="topbar">
+          <div class="brand">
+            <img class="brand-mark" src="/assets/neverwinterforge-main-header.png" alt="The Neverwinter Forge">
+          </div>
+          <nav class="main-nav" aria-label="Main tools">
+            <a href="/" aria-current="page">AI Forge</a>
+            <a href="/model-tools">Model Batch Tools</a>
+            <a href="/model-editor">Model Batch Editor</a>
+            <a href="/model-edit-clone">Edit + Clone</a>
+          </nav>
+          <div class="mode-group" role="radiogroup" aria-label="Generation mode">
+            <label><input type="radio" name="mode" value="mock" checked> Mock</label>
+            <label><input type="radio" name="mode" value="gemini"> Gemini</label>
+            <label><input type="radio" name="mode" value="openai"> OpenAI</label>
+          </div>
+        </header>
+
+        <div class="grid">
+          <section class="panel">
+            <h2 id="inputTitle">Input</h2>
+            <label class="dropzone image-shell" id="dropzone">
+              <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp">
+              <span>Choose or drop an image</span>
+              <img id="inputPreview" class="preview" alt="">
+            </label>
+            <section id="shieldShapePicker" class="shield-shape-picker hidden" aria-label="Shield shape">
+              <div class="shield-shape-header">
+                <h3>Shield Shape</h3>
+                <button id="clearShieldShape" type="button">Random</button>
+              </div>
+              <p id="shieldShapeStatus" class="shield-shape-status">Random shape</p>
+              <div id="shieldShapeGrid" class="shield-shape-grid"></div>
+            </section>
+            <div id="textInputPanel" class="text-input-panel hidden">
+              <label class="field text-prompt-field">
+                <span id="objectPromptLabel">What object would you like to generate?</span>
+                <textarea id="objectPrompt" spellcheck="true" placeholder="Example: ornate dwarven hammer, ancient spellbook, gothic lantern, sci-fi healing device"></textarea>
+              </label>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2>Output</h2>
+            <div class="output-shell image-shell">
+              <img id="outputPreview" class="preview" alt="">
+              <span id="outputEmpty">Generated image will appear here</span>
+            </div>
+            <div class="view-actions">
+              <button id="generateBackView" type="button" disabled>Back View</button>
+              <button id="generateThreeQuarterView" type="button" disabled>3/4 View</button>
+            </div>
+            <div id="autosavePanel" class="autosave-panel hidden">
+              <div>
+                <strong>Auto-saved to Outputs</strong>
+                <span id="autosaveFile">No output saved yet.</span>
+              </div>
+              <button id="openOutputsFolder" type="button">Open Outputs Folder</button>
+            </div>
+            <a id="downloadLink" class="download" download="neverwinter-forge-output.png">Save Browser Copy</a>
+          </section>
+        </div>
+
+        <section class="post-panel">
+          <div class="post-panel-copy">
+            <h2>Post-Production</h2>
+            <p>Upscale, then create local mesh-support maps after you are happy with the generated image.</p>
+            <div class="utility-launch">
+              <h2>Utility Mode</h2>
+              <button id="openPromptMode" type="button">Open Prompt</button>
+              <p>Run a direct prompt with optional image input and the current provider settings.</p>
+            </div>
+          </div>
+          <div class="post-stack">
+          <section class="tool-panel">
+            <div class="upscale-head">
+              <div>
+                <h2>Upscaler</h2>
+                <p id="upscalerStatus">Checking local upscaler...</p>
+              </div>
+              <button id="downloadUpscaler" type="button">Download Upscaler</button>
+            </div>
+            <label class="upscale-dropzone" id="upscaleDropzone">
+              <input id="upscaleImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+              <span>Choose image to upscale</span>
+              <img id="upscaleInputPreview" alt="">
+            </label>
+            <div class="upscale-secondary-actions">
+              <button id="useCurrentOutput" type="button" disabled>Use Current Output</button>
+              <button id="clearUpscaler" type="button" disabled>Clear</button>
+            </div>
+            <div id="upscalerProgress" class="progress hidden">
+              <div class="progress-bar">
+                <span id="upscalerProgressFill"></span>
+              </div>
+              <p id="upscalerProgressText">0% - 0 MB / 0 MB</p>
+            </div>
+            <div class="upscale-actions">
+              <button id="upscale2x" type="button" disabled>Upscale 2x</button>
+              <button id="upscale4x" type="button" disabled>Upscale 4x</button>
+            </div>
+            <div id="comparePanel" class="compare-panel hidden">
+              <div class="compare-grid">
+                <figure class="compare-card">
+                  <figcaption>Original</figcaption>
+                  <img id="compareOriginal" alt="">
+                </figure>
+                <figure class="compare-card">
+                  <figcaption>Upscaled</figcaption>
+                  <img id="compareUpscaled" alt="">
+                </figure>
+              </div>
+              <a id="saveUpscaledLink" class="download upscale-download" download="neverwinter-forge-upscaled.png">Save Upscaled</a>
+            </div>
+          </section>
+          <section class="tool-panel">
+            <div class="upscale-head">
+              <div>
+                <h2>Depth &amp; Normal Maps</h2>
+                <p id="depthStatus">Checking ComfyUI workflow...</p>
+              </div>
+              <button id="refreshDepthStatus" type="button">Refresh</button>
+            </div>
+            <label class="upscale-dropzone" id="depthDropzone">
+              <input id="depthImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+              <span>Choose image for depth maps</span>
+              <img id="depthInputPreview" alt="">
+            </label>
+            <button id="useCurrentForDepth" type="button" disabled>Use Current Output</button>
+            <details class="dependency-details">
+              <summary>
+                <span>Model dependencies</span>
+                <strong id="depthDependencySummary">Checking...</strong>
+              </summary>
+              <div id="depthModelList" class="dependency-list"></div>
+            </details>
+            <p id="depthSetupHint" class="setup-hint hidden"></p>
+            <button id="generateDepthMaps" type="button" disabled>Generate Depth / Normal Maps</button>
+            <div id="depthResultPanel" class="compare-panel hidden">
+              <div class="compare-grid">
+                <figure class="compare-card">
+                  <figcaption>Depth</figcaption>
+                  <img id="depthPreview" alt="">
+                </figure>
+                <figure class="compare-card">
+                  <figcaption>Normal</figcaption>
+                  <img id="normalPreview" alt="">
+                </figure>
+              </div>
+              <div class="result-actions">
+                <a id="saveDepthLink" class="download upscale-download" download="neverwinter-forge-depth-map.png">Save Depth</a>
+                <a id="saveNormalLink" class="download upscale-download" download="neverwinter-forge-normal-map.png">Save Normal</a>
+              </div>
+            </div>
+          </section>
+          </div>
+        </section>
+
+      </section>
+
+      <aside class="settings">
+        <h2>Preset Prompts</h2>
+        <div id="presetButtons" class="preset-buttons" aria-label="Preset prompts"></div>
+        <p id="presetDescription" class="preset-description"></p>
+        <section id="presetReferences" class="preset-references hidden" aria-label="Preset references">
+          <h2>Preset References</h2>
+          <div id="presetReferenceGrid" class="preset-reference-grid"></div>
+        </section>
+
+        <label class="field">
+          <span>Prompt Mode</span>
+          <select id="promptMode">
+            <option value="preset-extra">Preset + Misc</option>
+            <option value="preset-only">Preset Only</option>
+            <option value="extra-override">Misc Override Only</option>
+          </select>
+        </label>
+
+        <label id="skinSurfaceField" class="field checkbox-field hidden">
+          <input id="preserveSkinSurface" type="checkbox">
+          <span>Source outfit has visible skin-like areas</span>
+        </label>
+
+        <label id="extremeSimplifyField" class="field checkbox-field hidden">
+          <input id="extremeSimplify" type="checkbox">
+          <span>Extreme Simplify</span>
+        </label>
+
+        <label id="creatureTailField" class="field checkbox-field hidden">
+          <input id="creatureHasTail" type="checkbox">
+          <span>Creature has tail</span>
+        </label>
+
+        <label class="field">
+          <span id="extraPromptLabel">Misc / Extra Prompt</span>
+          <textarea id="extraPrompt" spellcheck="true" placeholder="Optional extra instructions, or full override when selected above."></textarea>
+        </label>
+        <button id="saveExtraPrompt" type="button">Save Misc</button>
+
+        <h2>Provider</h2>
+        <div id="geminiSettings" class="provider-settings">
+        <label class="field">
+          <span>API Key</span>
+          <input id="apiKey" type="password" autocomplete="off" placeholder="Stored in this browser only">
+        </label>
+        <label class="field">
+          <span>Gemini Model</span>
+          <select id="model">
+            <option value="gemini-2.5-flash-image">gemini-2.5-flash-image</option>
+            <option value="gemini-3.1-flash-image-preview">gemini-3.1-flash-image-preview</option>
+            <option value="gemini-3-pro-image-preview">gemini-3-pro-image-preview</option>
+          </select>
+        </label>
+        <label id="geminiOutputSizeField" class="field hidden">
+          <span id="geminiOutputSizeLabel">Gemini Output Size</span>
+          <select id="geminiOutputSize">
+            <option value="2K">2K recommended</option>
+            <option value="1K">1K lower cost</option>
+            <option value="4K">4K high detail</option>
+          </select>
+        </label>
+        <label id="basReliefAspectRatioField" class="field hidden">
+          <span id="geminiAspectRatioLabel">Gemini Aspect Ratio</span>
+          <select id="basReliefAspectRatio">
+            <option value="2:3">2:3 vertical recommended</option>
+            <option value="3:4">3:4 vertical</option>
+            <option value="4:5">4:5 vertical</option>
+            <option value="9:16">9:16 tall plate</option>
+            <option value="1:1">1:1 square plate</option>
+            <option value="4:3">4:3 landscape</option>
+            <option value="16:9">16:9 wide landscape</option>
+          </select>
+        </label>
+        </div>
+
+        <div id="openaiSettings" class="provider-settings hidden">
+          <label class="field">
+            <span>OpenAI API Key</span>
+            <input id="openaiApiKey" type="password" autocomplete="off" placeholder="Stored in this browser only">
+          </label>
+          <label class="field">
+            <span>OpenAI Model</span>
+            <select id="openaiModel">
+              <option value="gpt-image-2">gpt-image-2</option>
+              <option value="gpt-image-1.5">gpt-image-1.5</option>
+              <option value="gpt-image-1-mini">gpt-image-1-mini</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>OpenAI Size</span>
+            <select id="openaiSize">
+              <option value="1024x1024">1024x1024</option>
+              <option value="1024x1536">1024x1536</option>
+              <option value="1536x1024">1536x1024</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>OpenAI Quality</span>
+            <select id="openaiQuality">
+              <option value="medium">medium</option>
+              <option value="low">low</option>
+              <option value="high">high</option>
+            </select>
+          </label>
+        </div>
+
+        <section class="cost-panel" aria-label="Session cost estimate">
+          <div>
+            <span>Estimated Next</span>
+            <strong id="estimatedCost">$0.000</strong>
+          </div>
+          <div>
+            <span>Session Total</span>
+            <strong id="sessionCost">$0.000</strong>
+          </div>
+          <div>
+            <span>Paid Generations</span>
+            <strong id="sessionCount">0</strong>
+          </div>
+          <p id="pricingNote">Pricing estimate loads from local app data.</p>
+        </section>
+
+        <button id="generate" class="primary" type="button">Generate</button>
+        <div class="settings-divider"></div>
+        <section class="local-tools">
+          <h2>Local Tools</h2>
+          <a class="tool-link" href="/model-tools">Open Model Batch Tools</a>
+          <button id="scrollDepthTool" type="button">Depth / Normal Maps</button>
+          <p id="localToolStatus">Checking local workflow...</p>
+        </section>
+        <p id="status" class="status">Ready.</p>
+      </aside>
+    </main>
+
+    <script src="/vendor/jquery-3.7.1.min.js"></script>
+    <script>
+      document.documentElement.dataset.jqueryVersion = window.jQuery ? window.jQuery.fn.jquery : "";
+      document.documentElement.dataset.jqueryEffects = window.jQuery && window.jQuery.fn.fadeIn ? "ready" : "";
+    </script>
+    <script src="/app.js"></script>
+  </body>
+</html>

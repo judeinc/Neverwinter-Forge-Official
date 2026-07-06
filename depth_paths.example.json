@@ -1,0 +1,6 @@
+{
+  "comfyUrl": "http://127.0.0.1:8000",
+  "comfyRoot": "C:\\ComfyUI\\ComfyUI",
+  "modelsRoot": "C:\\ComfyUI\\ComfyUI\\models",
+  "customNodesRoot": "C:\\ComfyUI\\ComfyUI\\custom_nodes"
+}

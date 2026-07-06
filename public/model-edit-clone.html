@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Model Edit + Clone - Neverwinter Forge</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body data-editor-mode="clone-out">
+    <main class="model-page">
+      <header class="topbar model-topbar">
+        <div class="brand">
+          <img class="brand-mark" src="/assets/neverwinterforge-main-header.png" alt="The Neverwinter Forge">
+        </div>
+        <nav class="main-nav" aria-label="Main tools">
+          <a href="/">AI Forge</a>
+          <a href="/model-tools">Model Batch Tools</a>
+          <a href="/model-editor">Model Batch Editor</a>
+          <a href="/model-edit-clone" aria-current="page">Edit + Clone</a>
+        </nav>
+      </header>
+
+      <section id="modelBatchEditor" class="model-batch-panel model-batch-page model-editor-page clone-out-page">
+        <div class="model-batch-head">
+          <div>
+            <p class="eyebrow">Neverwinter Nights 2 Models</p>
+            <h1>Model Edit + Clone</h1>
+            <p>Drop an MDB, adjust its flags, textures, or material settings, then write a separate changed copy. Select up to 3 at a time.</p>
+          </div>
+          <button id="scanEditorFolder" type="button">Scan Models</button>
+        </div>
+
+        <div class="model-path-grid">
+          <label class="field">
+            <span>Model Folder</span>
+            <input id="editorRootPath" type="text" spellcheck="false" placeholder="Optional: scan a folder instead of dropping an MDB">
+          </label>
+          <div class="model-source-actions">
+            <button id="chooseEditorFolder" type="button">Choose Folder</button>
+            <label class="model-check">
+              <input id="editorRecursive" type="checkbox" checked>
+              <span class="check-visual" aria-hidden="true"></span>
+              <span>Scan subfolders</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="clone-out-grid">
+          <label class="field output-folder-field">
+            <span>Default Output Folder</span>
+            <button id="chooseCloneOutputFolder" type="button">Choose Output</button>
+            <input id="cloneOutputPath" type="text" spellcheck="false" placeholder="Blank uses each source folder">
+          </label>
+          <div class="clone-name-slots" aria-label="Clone names">
+            <label class="field">
+              <span data-clone-name-label>Name 1</span>
+              <input data-clone-name-slot="0" type="text" maxlength="31" spellcheck="false" placeholder="Select a model" disabled>
+            </label>
+            <label class="field">
+              <span data-clone-name-label>Name 2</span>
+              <input data-clone-name-slot="1" type="text" maxlength="31" spellcheck="false" placeholder="Select a model" disabled>
+            </label>
+            <label class="field">
+              <span data-clone-name-label>Name 3</span>
+              <input data-clone-name-slot="2" type="text" maxlength="31" spellcheck="false" placeholder="Select a model" disabled>
+            </label>
+          </div>
+          <label class="field compact-field">
+            <span>Conflict</span>
+            <select id="cloneConflictMode">
+              <option value="auto">Auto-number</option>
+              <option value="skip">Skip</option>
+              <option value="overwrite">Overwrite</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="editorDropzone" class="model-dropzone clone-out-dropzone" role="button" tabindex="0">
+          <input id="editorFileInput" type="file" accept=".mdb" multiple>
+          <strong>Drop MDB files here</strong>
+          <span>Best for one source model. Originals are not overwritten.</span>
+          <button id="importEditorFiles" type="button">Import MDB Files</button>
+        </div>
+
+        <div id="editorSummary" class="mdb-summary hidden"></div>
+
+        <div class="model-workbench editor-workbench">
+          <div class="model-list-column">
+            <div class="model-filter-bar">
+              <label class="field">
+                <span>Search Loaded Models</span>
+                <input id="editorSearch" type="search" spellcheck="false" placeholder="Search by name, type, texture">
+              </label>
+              <label class="field compact-field">
+                <span>Type</span>
+                <select id="editorTypeFilter">
+                  <option value="">All</option>
+                </select>
+              </label>
+              <label class="model-check">
+                <input id="editorSelectedOnly" type="checkbox">
+                <span class="check-visual" aria-hidden="true"></span>
+                <span>Selected only</span>
+              </label>
+              <label class="model-check">
+                <input id="editorChangedOnly" type="checkbox">
+                <span class="check-visual" aria-hidden="true"></span>
+                <span>Changed only</span>
+              </label>
+            </div>
+
+            <div class="selection-actions">
+              <button id="editorSelectAll" type="button" disabled>Select All</button>
+              <button id="editorClearSelection" type="button" disabled>Clear Selection</button>
+              <span id="editorSelectionSummary">No models selected.</span>
+            </div>
+
+            <div class="model-table-wrap">
+              <table class="model-table editor-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Model</th>
+                    <th>Type</th>
+                    <th>Textures</th>
+                  </tr>
+                </thead>
+                <tbody id="editorModelRows">
+                  <tr>
+                    <td colspan="4">Drop an MDB or scan a folder to begin.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <aside class="model-editor-side">
+            <section id="flagEditorPanel" class="flag-editor-panel">
+              <h2>Clone Editor</h2>
+              <p>Select one model, edit it, then create a changed copy.</p>
+            </section>
+            <section id="savePreviewPanel" class="save-preview-panel hidden"></section>
+            <section id="editorResultSummary" class="batch-result hidden"></section>
+          </aside>
+        </div>
+      </section>
+
+      <p id="editorStatus" class="status model-status">Ready.</p>
+    </main>
+
+    <script src="/model-editor.js"></script>
+  </body>
+</html>

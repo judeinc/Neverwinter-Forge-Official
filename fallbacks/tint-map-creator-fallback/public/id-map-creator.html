@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ID Map Creator - Neverwinter Forge</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="model-page">
+      <header class="topbar model-topbar">
+        <div class="brand">
+          <img class="brand-mark" src="/assets/neverwinterforge-main-header.png" alt="The Neverwinter Forge">
+        </div>
+        <nav class="main-nav" aria-label="Main tools">
+          <a href="/">AI Forge</a>
+          <a href="/model-tools">Model Batch Tools</a>
+          <a href="/model-editor">Model Batch Editor</a>
+          <a href="/model-edit-clone">Edit + Clone</a>
+          <a href="/id-map-creator" aria-current="page">ID Map Creator</a>
+        </nav>
+      </header>
+
+      <section id="idMapCreator" class="model-batch-panel model-batch-page id-map-page">
+        <div class="model-batch-head">
+          <div>
+            <p class="eyebrow">Tint Map Maker</p>
+            <h1>ID Map Creator</h1>
+            <p>Create hard-edged color ID maps from an MDB model's UV layout.</p>
+          </div>
+          <button id="exportIdMap" type="button" disabled>Export PNG</button>
+        </div>
+
+        <div class="id-map-source-grid">
+          <div id="idMapDropzone" class="model-dropzone id-map-dropzone" role="button" tabindex="0">
+            <input id="idMapMdbInput" type="file" accept=".mdb,.obj,.fbx,.zip">
+            <strong>Drop one MDB, OBJ, FBX, or ZIP here</strong>
+            <span>Forge extracts UVs and can load packaged diffuse/normal DDS underlays.</span>
+            <button id="chooseIdMapMdb" type="button">Choose Model / ZIP</button>
+          </div>
+
+          <section class="id-map-underlays" aria-label="Texture underlays">
+            <label id="diffuseDropzone" class="texture-dropbox">
+              <input id="diffuseInput" type="file" accept=".dds,.tga,.png,.jpg,.jpeg,.webp,.bmp,image/png,image/jpeg,image/webp,image/bmp">
+              <strong>Diffuse / Albedo</strong>
+              <span>Choose file, or drop into this box</span>
+              <small id="diffuseStatus">No texture loaded</small>
+            </label>
+            <label id="normalDropzone" class="texture-dropbox">
+              <input id="normalInput" type="file" accept=".dds,.tga,.png,.jpg,.jpeg,.webp,.bmp,image/png,image/jpeg,image/webp,image/bmp">
+              <strong>Normal Map</strong>
+              <span>Choose file, or drop into this box</span>
+              <small id="normalStatus">No texture loaded</small>
+            </label>
+            <label class="field compact-field">
+              <span>Underlay</span>
+              <select id="underlayMode">
+                <option value="diffuse">Diffuse</option>
+                <option value="normal">Normal</option>
+                <option value="both">Diffuse + Normal</option>
+                <option value="none">None</option>
+              </select>
+            </label>
+          </section>
+        </div>
+
+        <div id="idMapSummary" class="mdb-summary hidden"></div>
+
+        <div class="id-map-workbench">
+          <section class="id-map-canvas-panel" aria-label="UV canvas">
+            <div class="id-map-toolbar">
+              <label class="field compact-field">
+                <span>Texture Size</span>
+                <select id="textureSize">
+                  <option value="512">512</option>
+                  <option value="1024" selected>1024</option>
+                  <option value="2048">2048</option>
+                  <option value="4096">4096</option>
+                </select>
+              </label>
+              <label class="field compact-field">
+                <span>Unused Pixels</span>
+                <select id="unusedPixels">
+                  <option value="transparent">Transparent</option>
+                  <option value="black">Black</option>
+                </select>
+              </label>
+              <label class="field compact-field">
+                <span>View</span>
+                <select id="idMapPreviewView">
+                  <option value="3d">3D View</option>
+                  <option value="uv">UV View</option>
+                </select>
+              </label>
+              <label id="idMapNormalModeField" class="field compact-field">
+                <span>Normals</span>
+                <select id="idMapNormalMode">
+                  <option value="two-sided" selected>Two-sided</option>
+                  <option value="source">OBJ</option>
+                  <option value="auto">Auto</option>
+                  <option value="flip">Flip</option>
+                </select>
+              </label>
+              <label class="model-check">
+                <input id="showUvWire" type="checkbox" checked>
+                <span class="check-visual" aria-hidden="true"></span>
+                <span>UV wire</span>
+              </label>
+              <label class="model-check">
+                <input id="showIdOverlay" type="checkbox" checked>
+                <span class="check-visual" aria-hidden="true"></span>
+                <span>ID overlay</span>
+              </label>
+            </div>
+
+            <div id="idMapCanvasWrap" class="id-map-canvas-wrap">
+              <canvas id="idMapCanvas" width="1024" height="1024" aria-label="UV layout editor"></canvas>
+              <p id="idMapEmpty">Drop an MDB, OBJ, FBX, or ZIP to show its UV layout.</p>
+            </div>
+            <div id="idMap3dWrap" class="id-map-3d-wrap" hidden>
+              <canvas id="idMap3dCanvas" class="id-map-3d-canvas" aria-label="3D model preview"></canvas>
+              <p id="idMap3dEmpty">Drop an OBJ to preview the model in 3D space.</p>
+            </div>
+          </section>
+
+          <aside class="id-map-side">
+            <section class="flag-editor-panel">
+              <h2>Palette</h2>
+              <div id="idPalette" class="id-palette" aria-label="ID color palette"></div>
+              <div class="id-map-actions">
+                <button id="autoColorIslands" type="button" disabled>Auto Color Islands</button>
+                <button id="clearSelectedIsland" type="button" disabled>Clear Selected</button>
+                <button id="clearIdMap" type="button" disabled>Clear Map</button>
+                <button id="undoIdMap" type="button" disabled>Undo</button>
+                <button id="redoIdMap" type="button" disabled>Redo</button>
+              </div>
+            </section>
+
+            <section class="flag-editor-panel">
+              <h2>Selected Island</h2>
+              <div id="selectedIslandInfo" class="id-map-info">
+                <p>Select a UV island to assign a color.</p>
+              </div>
+            </section>
+
+            <section class="flag-editor-panel">
+              <h2>Method</h2>
+              <label class="field compact-field">
+                <span>Workflow</span>
+                <select id="idMapWorkflowMethod">
+                  <option value="tripo">Tripo AI Segmentation</option>
+                  <option value="local-blender">Local Blender Helper Bake</option>
+                  <option value="uv-manual">UV Island / Image Pass</option>
+                </select>
+              </label>
+              <p id="idMapWorkflowNote" class="id-map-note"></p>
+            </section>
+
+            <section id="tripoStagingPanel" class="flag-editor-panel">
+              <h2>Tripo AI</h2>
+              <label class="field">
+                <span>API Key</span>
+                <input id="tripoApiKey" type="password" autocomplete="off" placeholder="Stored in this browser only">
+              </label>
+              <label class="field">
+                <span>Model Task ID</span>
+                <input id="tripoModelTaskId" type="text" autocomplete="off" placeholder="Import a model, or paste an existing task id">
+              </label>
+              <div class="id-map-ai-grid">
+                <label class="field compact-field">
+                  <span>Segment Model</span>
+                  <select id="tripoSegmentModel">
+                    <option value="v1.0-20250506">v1.0-20250506</option>
+                    <option value="">Default</option>
+                  </select>
+                </label>
+                <label class="field compact-field">
+                  <span>Texture Model</span>
+                  <select id="tripoTextureModel">
+                    <option value="v3.0-20250812">v3.0</option>
+                    <option value="v2.5-20250123">v2.5</option>
+                    <option value="">Default</option>
+                  </select>
+                </label>
+              </div>
+              <label class="field compact-field">
+                <span>Texture Quality</span>
+                <select id="tripoTextureQuality">
+                  <option value="standard">standard</option>
+                  <option value="detailed">detailed</option>
+                </select>
+              </label>
+              <div class="id-map-ai-grid">
+                <label class="field compact-field">
+                  <span>Prompt Recipe</span>
+                  <select id="tripoPromptRecipe">
+                    <option value="flat-id-mask">Flat ID Mask</option>
+                    <option value="material-blockout">Material Blockout</option>
+                    <option value="review-texture">Readable Texture</option>
+                  </select>
+                </label>
+                <button id="buildTripoPrompt" type="button">Build Prompt</button>
+              </div>
+              <div id="tripoZoneChecklist" class="tripo-zone-checklist" aria-label="Tripo target zones"></div>
+              <label class="field">
+                <span>Texture Prompt</span>
+                <textarea id="tripoTexturePrompt" rows="5" spellcheck="false"></textarea>
+              </label>
+              <div class="tripo-reference-grid" aria-label="Tripo image references">
+                <label id="tripoFrontReferenceDropzone" class="texture-dropbox">
+                  <input id="tripoFrontReferenceInput" type="file" accept="image/png,image/jpeg,image/webp">
+                  <strong>Front Reference</strong>
+                  <span>Drop AI Forge front color guide</span>
+                  <small>No reference loaded</small>
+                </label>
+                <label id="tripoBackReferenceDropzone" class="texture-dropbox">
+                  <input id="tripoBackReferenceInput" type="file" accept="image/png,image/jpeg,image/webp">
+                  <strong>Back Reference</strong>
+                  <span>Drop AI Forge back color guide</span>
+                  <small>No reference loaded</small>
+                </label>
+              </div>
+              <details class="tripo-advanced">
+                <summary>Advanced Tripo Overrides</summary>
+                <label class="field">
+                  <span>Segment JSON</span>
+                  <textarea id="tripoSegmentOverrides" rows="4" spellcheck="false" placeholder='{"model_version":"v1.0-20250506"}'></textarea>
+                </label>
+                <label class="field">
+                  <span>Texture JSON</span>
+                  <textarea id="tripoTextureOverrides" rows="5" spellcheck="false" placeholder='{"pbr":false,"texture_alignment":"geometry"}'></textarea>
+                </label>
+              </details>
+              <div class="id-map-actions">
+                <button id="checkTripoKey" type="button">Check Key</button>
+                <button id="importTripoModel" type="button" disabled>Import Model</button>
+                <button id="segmentTripoModel" type="button" disabled>Segment Model</button>
+                <button id="textureTripoModel" type="button" disabled>Texture Model</button>
+                <button id="refreshTripoTask" type="button" disabled>Refresh Task</button>
+                <button id="saveTripoResult" type="button" disabled>Save Result</button>
+              </div>
+              <p id="tripoStatus" class="id-map-note">Use Import Model first, or paste a Tripo model task id, then run segmentation and texturing experiments.</p>
+              <div id="tripoTaskList" class="tripo-task-list"></div>
+              <div id="tripoAssetGallery" class="tripo-asset-gallery"></div>
+              <pre id="tripoResult" class="tripo-result" hidden></pre>
+            </section>
+
+            <section id="localAiPrepassPanel" class="flag-editor-panel">
+              <h2>AI Pre-Pass</h2>
+              <label class="field">
+                <span>OpenAI API Key</span>
+                <input id="idMapOpenaiApiKey" type="password" autocomplete="off" placeholder="Stored in this browser only">
+              </label>
+              <div class="id-map-ai-grid">
+                <label class="field compact-field">
+                  <span>Model</span>
+                  <select id="idMapOpenaiModel">
+                    <option value="gpt-image-2">gpt-image-2</option>
+                    <option value="gpt-image-1.5">gpt-image-1.5</option>
+                    <option value="gpt-image-1-mini">gpt-image-1-mini</option>
+                  </select>
+                </label>
+                <label class="field compact-field">
+                  <span>Quality</span>
+                  <select id="idMapOpenaiQuality">
+                    <option value="medium">medium</option>
+                    <option value="low">low</option>
+                    <option value="high">high</option>
+                  </select>
+                </label>
+              </div>
+              <div class="id-map-actions">
+                <button id="suggestIdMap" type="button" disabled>Suggest Regions</button>
+                <button id="copyAiPrompt" type="button">Copy Prompt</button>
+              </div>
+              <p id="aiPromptStatus" class="id-map-note">Prompt is tuned for broad tintable regions such as tunic, pants, boots, gloves, belts, armor, and large accessories.</p>
+            </section>
+
+            <section id="localBlenderPanel" class="flag-editor-panel">
+              <h2>Blender 3D Bake</h2>
+              <label class="field">
+                <span>Blender Path</span>
+                <input id="blenderPath" type="text" autocomplete="off" placeholder="Auto-detect, or paste blender.exe">
+              </label>
+              <div class="id-map-ai-grid">
+                <label class="field compact-field">
+                  <span>Vision Model</span>
+                  <input id="chunkVisionModel" type="text" autocomplete="off" placeholder="gpt-5.5">
+                </label>
+                <label class="field compact-field">
+                  <span>Chunking</span>
+                  <select id="blenderChunkStrategy">
+                    <option value="spatial_grid">Stable Grid</option>
+                    <option value="surface_regions">Surface Regions Exp.</option>
+                  </select>
+                </label>
+              </div>
+              <div class="id-map-actions">
+                <button id="checkBlender" type="button">Check Setup</button>
+                <button id="runBlenderBake" type="button" disabled>Run 3D Bake</button>
+                <button id="analyzeBlenderChunks" type="button" disabled>Analyze 3D Chunks</button>
+                <button id="applyChunkLabels" type="button" disabled>Apply AI Labels</button>
+              </div>
+              <p id="blenderStatus" class="id-map-note">Advanced mode for OBJ/FBX: Blender renders 3D references and bakes a starter ID map from surface regions.</p>
+              <div id="blenderResultGallery" class="id-map-result-gallery"></div>
+              <div id="chunkAnalysisResults" class="chunk-analysis-results"></div>
+            </section>
+
+            <section class="flag-editor-panel">
+              <h2>UV Islands</h2>
+              <div id="islandList" class="id-island-list"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <p id="idMapStatus" class="status model-status">Ready.</p>
+    </main>
+
+    <script src="/vendor/babylon.js"></script>
+    <script src="/vendor/babylonjs.loaders.min.js"></script>
+    <script src="/id-map-creator.js"></script>
+  </body>
+</html>

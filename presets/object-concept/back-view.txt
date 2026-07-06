@@ -1,0 +1,93 @@
+Use Image 1 as the approved FRONT orthographic object render. Create a matching direct BACK orthographic view of the exact same object.
+
+Treat this as a strict turnaround-sheet continuation. The back view must look like the approved front object rotated exactly 180 degrees on a vertical axis, not a new design inspired by the front.
+
+This is for AI-to-3D mesh generation, Blender cleanup, game asset creation, and Substance Painter workflow.
+
+Strict orthographic BACK view.
+Zero perspective distortion.
+Flat camera.
+No 3/4 turn.
+No tilt.
+No angle change.
+
+Preserve the same object identity:
+- same silhouette and proportions
+- same scale and framing
+- same primary forms
+- same material categories
+- same color palette
+- same broad ornament language
+- same structural logic
+
+Turnaround matching rules:
+- match the front view's total height exactly
+- match the front view's total width exactly
+- match the top, bottom, left, and right silhouette landmarks
+- match handle, rim, blade, body, lid, base, legs, spout, guard, knob, strap, hinge, or panel positions when present
+- preserve the same centerline and vertical alignment
+- preserve matching left-right symmetry when the object is symmetrical
+- preserve matching material boundaries and color zones around the back
+- do not move major features higher, lower, wider, narrower, or off center
+- do not change proportions, thickness, taper, curvature, or stance
+- do not add extra rear protrusions unless they are a logical continuation of visible front-side structure
+- if a rear detail is unknown, use a simple mirrored continuation of the front form rather than inventing decoration
+
+Infer unseen rear details minimally and logically. Do not redesign the object. Do not add new parts, new props, new symbols, or a different theme. If the back side is unclear, simplify rather than invent.
+
+Full object centered and fully visible.
+Entire subject in frame.
+Clean margin around object.
+No cropping.
+No cut-off edges.
+
+Detail must look built and sculpted as solid forms, not noisy surface texture.
+Keep details clean, broad, readable, and mesh-friendly.
+
+Allow tasteful non-specific decoration only: simple filigree, carved trim, plain ornamental shaping, generic fantasy design language, panel lines, bevels, borders, and broad engravings.
+No notable insignia, heraldic symbols, crests, faction marks, royal emblems, house symbols, military identifiers, religious identifiers, readable icons, logos, text, decals, labels, or watermarks.
+
+No micro surface noise.
+No scratches.
+No dirt.
+No grime.
+No chipped paint.
+No heavy weathering.
+No noisy procedural texture.
+No tiny bolts.
+No tiny repeated ornament.
+No dangling parts.
+No floating pieces.
+No thin fragile elements.
+No loose strands.
+No fragile overhangs.
+No messy negative space.
+No paper-thin details.
+No melted geometry.
+No warped forms.
+
+Studio product render presentation only.
+Plain neutral dark-to-mid gray gradient studio background.
+No environment.
+No room.
+No floor texture.
+No scenery.
+No extra props.
+No fog.
+No smoke.
+No particles.
+
+Even soft frontal studio lighting.
+Balanced lighting.
+Gentle ambient occlusion only.
+No dramatic shadows.
+No rim light.
+No cinematic contrast.
+No colored lighting.
+
+High resolution output.
+2048x2048.
+Clean render.
+Stable shape.
+Readable silhouette.
+Optimized for a clean structured 3D print or game prop layout.

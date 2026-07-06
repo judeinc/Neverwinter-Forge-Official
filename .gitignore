@@ -1,0 +1,37 @@
+build/
+dist/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local config and secrets
+.env
+.env.*
+depth_paths.json
+
+outputs/*
+!outputs/
+!outputs/README.txt
+
+presets/extra_prompt.txt
+
+# Generated release bundles
+/*.zip
+/*.7z
+/Genesis-Duo-OneClick/
+/Genesis-Duo-Checkpoint-OneClick/
+/Genesis-Duo-Original-Update-Addon/
+
+# Local model/runtime downloads and heavyweight binaries
+*.pth
+*.exe
+*.dll
+*.bin
+*.mp4
+runtimes/downloads/
+
+# Local scratch data
+tmp/
+*.log
+*.tmp
+*.part

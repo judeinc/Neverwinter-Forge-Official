@@ -1,0 +1,44 @@
+Use the uploaded reference images with these roles:
+
+Image 1 is the approved front modular outfit render. Treat it as the exact outfit identity.
+
+Image 2 is the locked male modular silhouette template. This template remains authoritative for body proportions, true T-pose, width, limb length, neck cutoff, wrist cutoffs, and modular compatibility.
+
+Create a clean direct BACK view of the same modular outfit, not a redesign.
+
+The figure must be:
+- direct back-facing
+- true T-pose with both arms extended horizontally
+- full body visible with arms, wrist cutoffs, legs, and boots fully in frame
+- headless with the same neck opening or collar logic
+- handless with the same wrist cutoff logic
+- centered on a dark neutral studio background
+- lit with clean direct studio lighting
+
+Preserve the same outfit from the front view:
+- same silhouette
+- same garment length
+- same color palette
+- same material categories
+- same armor zones
+- same belts and strap logic
+- same belt height, belt width, buckle scale, sash layering, side-strap placement, and waistline position
+- same boots
+- same collar and wrist cutoff style
+- same clean PBR-readable material identity
+
+Continue the front design logically around the back with clean construction, readable seams, belt continuation, armor continuation, cloth panels, leather zones, metal zones, and simplified chainmail zones when applicable.
+
+For belts, sashes, waist straps, cross straps, tabard edges, and armor bands, preserve the front-view placement exactly as if the garment were being rotated in 3D. Do not move the belt higher or lower on the body. Do not change the belt thickness, number of layers, material, color, buckle scale, or strap count. Back-facing belt and strap details should line up with the visible front design at the sides and continue cleanly around the waist.
+
+Infer unseen back details minimally. Do not invent new props, new weapons, new symbols, new large ornaments, or a different outfit.
+
+Do not add or restore cloaks, capes, mantles, trailing hoods, loose shoulder drapes, back-hanging cloth, or long flowing outer garments. If a cloak-like element appears in the front render, convert it into fitted panels, short tabard logic, clean shoulder armor, a collar, or simple rig-friendly torso-attached cloth.
+
+Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic engraved borders, or abstract panel geometry.
+
+Simplify decoration, not material identity. Preserve structural ornament and non-symbolic design language, but reduce micro-detail into clean broad forms suitable for image-to-3D conversion.
+
+No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
+
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.

@@ -1,0 +1,24 @@
+{
+  "profileName": "NWN2 Modular Robe - Male",
+  "profileVersion": "1.0",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert robe and long garment reference images into clean headless and handless male T-pose modular robe renders with hidden feet, capped ground-length bottoms, and contact shadows for image-to-3D workflows.",
+  "referenceImages": [
+    {
+      "role": "locked_silhouette",
+      "path": "../modular-outfit-male/locked-silhouette.png",
+      "description": "Authoritative male upper-body T-pose, arm length, width, cutoff, and framing template."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Male Robe Front",
+      "description": "Front-facing technical modular robe render using the locked male upper-body silhouette."
+    },
+    "back": {
+      "label": "Male Robe Back",
+      "description": "Direct rear view continuing the same capped-bottom robe from the approved front view."
+    }
+  }
+}

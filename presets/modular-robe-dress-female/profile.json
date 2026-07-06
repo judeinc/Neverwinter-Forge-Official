@@ -1,0 +1,24 @@
+{
+  "profileName": "NWN2 Modular Robe / Dress - Female",
+  "profileVersion": "1.0",
+  "provider": "openai",
+  "defaultView": "front",
+  "purpose": "Convert dress, robe, gown, and skirted reference images into clean headless and handless female T-pose modular renders with ground-length capped bottoms when appropriate.",
+  "referenceImages": [
+    {
+      "role": "locked_silhouette",
+      "path": "../modular-outfit-female/locked-silhouette.png",
+      "description": "Authoritative female upper-body T-pose, arm length, width, cutoff, anatomy, and framing template."
+    }
+  ],
+  "views": {
+    "front": {
+      "label": "Female Robe / Dress Front",
+      "description": "Front-facing technical modular dress or robe render using the locked female upper-body silhouette."
+    },
+    "back": {
+      "label": "Female Robe / Dress Back",
+      "description": "Direct rear view continuing the same capped-bottom dress or robe from the approved front view."
+    }
+  }
+}

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Model Batch Tools - Neverwinter Forge</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="model-page">
+      <header class="topbar model-topbar">
+        <div class="brand">
+          <img class="brand-mark" src="/assets/neverwinterforge-main-header.png" alt="The Neverwinter Forge">
+        </div>
+        <nav class="main-nav" aria-label="Main tools">
+          <a href="/">AI Forge</a>
+          <a href="/model-tools" aria-current="page">Model Batch Tools</a>
+          <a href="/model-editor">Model Batch Editor</a>
+          <a href="/model-edit-clone">Edit + Clone</a>
+        </nav>
+      </header>
+
+      <section id="modelBatchTools" class="model-batch-panel model-batch-page">
+        <div class="model-batch-head">
+          <div>
+            <p class="eyebrow">Neverwinter Nights 2 Models</p>
+            <h1>Model Batch Tools</h1>
+            <p>Scan model folders, inspect flags, and prepare safe cloned copies.</p>
+          </div>
+          <button id="scanMdbFolder" type="button">Scan Models</button>
+        </div>
+        <div class="model-path-grid">
+          <label class="field">
+            <span>Model Folder</span>
+            <input id="mdbRootPath" type="text" spellcheck="false" placeholder="Example: E:\NWN2 Modding">
+          </label>
+          <div class="model-source-actions">
+            <button id="chooseMdbFolder" type="button">Choose Folder</button>
+            <label class="model-check">
+              <input id="mdbRecursive" type="checkbox" checked>
+              <span class="check-visual" aria-hidden="true"></span>
+              <span>Scan subfolders</span>
+            </label>
+          </div>
+        </div>
+        <div id="mdbDropzone" class="model-dropzone" role="button" tabindex="0">
+          <input id="mdbFileInput" type="file" accept=".mdb" multiple>
+          <strong>Drop MDB files or folders here</strong>
+          <span>or import loose model files for a quick scan.</span>
+          <button id="importMdbFiles" type="button">Import MDB Files</button>
+        </div>
+        <div id="mdbSummary" class="mdb-summary hidden"></div>
+        <section class="batch-panel" aria-label="Batch clone and rename">
+          <div class="batch-head">
+            <div>
+              <h2>Batch Clone / Rename</h2>
+              <p>Preview internal names before writing copies. Originals stay untouched.</p>
+            </div>
+            <button id="cloneSelectedModels" type="button" disabled>Clone Selected</button>
+          </div>
+          <div class="batch-grid">
+            <label class="field output-folder-field">
+              <span>Output Folder</span>
+              <button id="chooseMdbOutput" type="button">Choose Output</button>
+              <input id="mdbOutputPath" type="text" spellcheck="false" placeholder="Choose where edited copies will be created">
+            </label>
+            <fieldset class="clone-mode">
+              <legend>Clone Mode</legend>
+              <label><input type="radio" name="mdbCloneMode" value="race" checked> Race</label>
+              <label><input type="radio" name="mdbCloneMode" value="manual"> Manual</label>
+            </fieldset>
+            <label class="field compact-field">
+              <span>Existing Files</span>
+              <select id="mdbConflictMode">
+                <option value="auto">Auto-number</option>
+                <option value="skip">Skip</option>
+                <option value="overwrite">Overwrite</option>
+              </select>
+            </label>
+          </div>
+          <div id="raceCloneOptions" class="race-clone-options">
+            <fieldset class="race-targets">
+              <legend>Send To Race</legend>
+              <div id="mdbRaceTargets" class="race-target-grid"></div>
+              <label class="field custom-race-field">
+                <span>Custom Race Code</span>
+                <input id="mdbCustomRace" type="text" maxlength="3" spellcheck="false" placeholder="Example: EEM">
+              </label>
+            </fieldset>
+            <label class="field compact-field">
+              <span>Part Preset</span>
+              <select id="mdbPartPreset">
+                <option value="">Keep original</option>
+                <option value="CL">Cloth (CL)</option>
+                <option value="CP">Cloth Padded (CP)</option>
+                <option value="LE">Leather (LE)</option>
+                <option value="LS">Studded Leather (LS)</option>
+                <option value="CH">Chain (CH)</option>
+                <option value="SC">Scale (SC)</option>
+                <option value="BA">Banded (BA)</option>
+                <option value="PH">Half Plate (PH)</option>
+                <option value="PF">Full Plate (PF)</option>
+                <option value="HD">Hide (HD)</option>
+                <option value="NK">Naked (NK)</option>
+                <option value="custom">Custom</option>
+              </select>
+            </label>
+            <label class="field compact-field">
+              <span>Custom Code</span>
+              <input id="mdbPartCode" type="text" maxlength="4" spellcheck="false" placeholder="Keep original">
+            </label>
+            <label class="field compact-field">
+              <span>Number Override</span>
+              <input id="mdbRaceStartNumber" type="number" min="0" placeholder="Keep">
+            </label>
+            <label class="model-check">
+              <input id="mdbUseNumberOverride" type="checkbox">
+              <span class="check-visual" aria-hidden="true"></span>
+              <span>Use number override</span>
+            </label>
+          </div>
+          <div id="manualCloneOptions" class="manual-clone-options hidden">
+            <label class="field">
+              <span>New Name Pattern</span>
+              <input id="mdbNamePattern" type="text" spellcheck="false" placeholder="Example: P_HHM_CL_Body{###}">
+            </label>
+            <label class="field compact-field">
+              <span>Start #</span>
+              <input id="mdbStartNumber" type="number" min="0" value="1">
+            </label>
+          </div>
+          <div class="selection-actions">
+            <button id="selectAllModels" type="button" disabled>Select All</button>
+            <button id="clearModelSelection" type="button" disabled>Clear Selection</button>
+            <button id="removeSelectedModels" type="button" disabled>Remove Selected</button>
+            <span id="selectionSummary">No models selected.</span>
+          </div>
+          <div id="renamePreview" class="rename-preview hidden"></div>
+          <div id="batchResultSummary" class="batch-result hidden"></div>
+        </section>
+        <div class="model-workbench">
+          <div class="model-list-column">
+            <div class="model-filter-bar">
+              <button id="viewFocusedModel" class="view-model-button" type="button" disabled>View Model</button>
+              <label class="field">
+                <span>Search Loaded Models</span>
+                <input id="modelSearch" type="search" spellcheck="false" placeholder="Search by name, race, type, texture">
+              </label>
+              <label class="field compact-field">
+                <span>Type</span>
+                <select id="modelTypeFilter">
+                  <option value="">All</option>
+                </select>
+              </label>
+              <label class="model-check">
+                <input id="showSelectedOnly" type="checkbox">
+                <span class="check-visual" aria-hidden="true"></span>
+                <span>Selected only</span>
+              </label>
+            </div>
+            <div class="model-table-wrap">
+              <table class="model-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Model</th>
+                    <th>Type</th>
+                    <th>Textures</th>
+                    <th>Texture Files</th>
+                  </tr>
+                </thead>
+                <tbody id="mdbModelRows">
+                  <tr>
+                    <td colspan="5">Choose a model folder and scan to begin.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside id="modelDetails" class="model-details">
+            <h2>Model Details</h2>
+            <p>Select a model to inspect its editable game fields.</p>
+          </aside>
+        </div>
+      </section>
+
+      <div id="modelViewerOverlay" class="model-viewer-overlay" aria-hidden="true">
+        <div class="model-viewer-panel" role="dialog" aria-modal="true" aria-labelledby="modelViewerTitle">
+          <div class="model-viewer-head">
+            <div>
+              <span id="modelViewerType" class="model-viewer-type">Model Preview</span>
+              <h2 id="modelViewerTitle">Model Preview</h2>
+            </div>
+            <button id="closeModelViewer" class="model-viewer-close" type="button" aria-label="Close model preview">X</button>
+          </div>
+          <div class="model-viewer-body">
+            <div id="modelViewerStage" class="model-viewer-stage" aria-live="polite"></div>
+            <aside class="model-viewer-side">
+              <div id="modelViewerTextureList" class="viewer-texture-list"></div>
+              <div class="model-viewer-controls" aria-label="Model preview controls">
+                <button id="viewerRotateToggle" type="button" data-active="true">Rotate</button>
+                <button id="viewerTextureToggle" type="button" data-active="true">Texture</button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+      <p id="status" class="status model-status">Ready.</p>
+    </main>
+
+    <script src="/vendor/babylon.js"></script>
+    <script src="/model-tools.js"></script>
+  </body>
+</html>
