@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0A Release - Tint Map Color Guide
+## 1.3.0A Release
 
 ### Added
 - Added the ID Map Color Guide outfit preset for generating flat exact-palette tint/material region guides from front and back outfit renders.
