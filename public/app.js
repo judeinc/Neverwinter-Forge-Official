@@ -4,6 +4,11 @@ const inputTitle = document.querySelector("#inputTitle");
 const textInputPanel = document.querySelector("#textInputPanel");
 const objectPromptField = document.querySelector("#objectPrompt");
 const objectPromptLabel = document.querySelector("#objectPromptLabel");
+const colorGuidePairPanel = document.querySelector("#colorGuidePairPanel");
+const colorGuideBackDropzone = document.querySelector("#colorGuideBackDropzone");
+const colorGuideBackInput = document.querySelector("#colorGuideBackInput");
+const colorGuideBackPreview = document.querySelector("#colorGuideBackPreview");
+const clearColorGuideBackButton = document.querySelector("#clearColorGuideBack");
 const outputPreview = document.querySelector("#outputPreview");
 const outputEmpty = document.querySelector("#outputEmpty");
 const downloadLink = document.querySelector("#downloadLink");
@@ -95,6 +100,8 @@ let selectedImage = null;
 let currentOutputImage = null;
 let frontReferenceImage = null;
 let frontReferencesByPreset = {};
+let colorGuideBackImage = null;
+let colorGuideFrontSourceImage = null;
 let upscaleInputImage = null;
 let depthInputImage = null;
 let upscalerInstalled = false;
@@ -108,6 +115,7 @@ let sessionPaidGenerations = Number(sessionStorage.getItem("neverwinterForge.ses
 let selectedPresetId = localStorage.getItem("neverwinterForge.presetId") || "miniature";
 let selectedShieldShapePath = localStorage.getItem("neverwinterForge.shieldShapePath") || "";
 let generateButtonBaseLabel = "Generate";
+const COLOR_GUIDE_PRESET_ID = "id-map-color-guide";
 const splashMessages = [
   "Warming the forge...",
   "Loading presets...",
@@ -274,6 +282,26 @@ dropzone.addEventListener("drop", (event) => {
   if (file) setImage(file);
 });
 
+colorGuideBackInput.addEventListener("change", () => {
+  const file = colorGuideBackInput.files[0];
+  if (file) setColorGuideBackImage(file);
+});
+
+colorGuideBackDropzone.addEventListener("dragover", (event) => {
+  event.preventDefault();
+});
+
+colorGuideBackDropzone.addEventListener("drop", (event) => {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file) setColorGuideBackImage(file);
+});
+
+clearColorGuideBackButton.addEventListener("click", () => {
+  clearColorGuideBackImage();
+  setStatus("Back source cleared.");
+});
+
 generateButton.addEventListener("click", async () => {
   const selected = getSelectedPreset();
   if (isOpenPromptPreset(selected)) {
@@ -322,17 +350,25 @@ generateButton.addEventListener("click", async () => {
     return;
   }
 
-  await runGeneration({
+  const result = await runGeneration({
     image: selectedImage,
+    additionalImages: getColorGuideFrontAdditionalImages(selected),
     prompt: buildPrompt(),
-    viewId: "front",
-    busyLabel: "Generating front view...",
-    statusLabel: "Front view complete.",
+    viewId: isColorGuidePreset(selected) ? "color-guide-front" : "front",
+    busyLabel: isColorGuidePreset(selected) ? "Generating front color guide..." : "Generating front view...",
+    statusLabel: isColorGuidePreset(selected) ? "Front color guide complete." : "Front view complete.",
     useResultAsFrontReference: true
   });
+  if (result && isColorGuidePreset(selected)) {
+    colorGuideFrontSourceImage = cloneImageForPayload(selectedImage, "front-source");
+  }
 });
 
 generateBackViewButton.addEventListener("click", async () => {
+  if (isColorGuidePreset(getSelectedPreset())) {
+    await runColorGuideBackView();
+    return;
+  }
   await runDerivedView(getBackViewPresetId(), "Generating back view...", "Back view complete.");
 });
 
@@ -456,7 +492,7 @@ openPromptModeButton.addEventListener("click", () => {
   activatePreset("open-prompt", { promptMode: "preset-extra", scrollToInput: true });
 });
 
-async function runGeneration({ image, prompt, textPrompt = "", generationPresetId = selectedPresetId, viewId, busyLabel, statusLabel, useResultAsFrontReference = false }) {
+async function runGeneration({ image, additionalImages = [], prompt, textPrompt = "", generationPresetId = selectedPresetId, viewId, busyLabel, statusLabel, useResultAsFrontReference = false }) {
   const mode = document.querySelector("input[name='mode']:checked").value;
   if (mode === "gemini" && !apiKeyField.value.trim()) {
     setStatus("Paste a Gemini API key or switch to Mock mode.", true);
@@ -496,6 +532,7 @@ async function runGeneration({ image, prompt, textPrompt = "", generationPresetI
       sourceName: image?.name || objectPromptField.value.trim() || "text-object",
       imageData: image?.base64 || "",
       mimeType: image?.mimeType || "image/png",
+      additionalImages,
       shieldShapeReference: getSelectedShieldShapeReference(generationPresetId)
     };
     const response = await fetch("/api/generate", {
@@ -537,8 +574,10 @@ async function runGeneration({ image, prompt, textPrompt = "", generationPresetI
     const promptDetail = result.promptLength ? ` Prompt: ${result.promptLength} characters.` : "";
     const saveDetail = result.savedPath ? ` Auto-saved to outputs: ${fileNameFromPath(result.savedPath)}.` : "";
     setStatus(`${result.note || statusLabel}${promptDetail}${saveDetail}`);
+    return result;
   } catch (error) {
     setStatus(error.message, true);
+    return null;
   } finally {
     setGenerateBusy(false);
     setGenerationDisabled(false);
@@ -576,6 +615,46 @@ async function runDerivedView(presetId, busyLabel, statusLabel) {
     viewId: presetId.replace("miniature-", ""),
     busyLabel,
     statusLabel
+  });
+}
+
+async function runColorGuideBackView() {
+  const frontGuide = getFrontReferenceForSelectedPreset();
+  if (!frontGuide) {
+    setStatus("Generate a front color guide first.", true);
+    return;
+  }
+  if (!colorGuideBackImage) {
+    setStatus("Choose a back source image first.", true);
+    return;
+  }
+
+  const frontSource = colorGuideFrontSourceImage || selectedImage;
+  if (!frontSource) {
+    setStatus("Choose a front source image first.", true);
+    return;
+  }
+
+  const preset = presets.find((item) => item.id === "id-map-color-guide-back") || getSelectedPreset();
+  const sourceRoutingPrompt = [
+    "Color guide back-view routing:",
+    "Image 1 is the back source render to recolor.",
+    "Image 2 is the original front source render for matching labels.",
+    "Image 3 is the approved front flat color guide and is the color-label authority for continuing regions around the back.",
+    "Generate only the matching back flat color guide."
+  ].join("\n");
+
+  await runGeneration({
+    image: colorGuideBackImage,
+    additionalImages: [
+      cloneImageForPayload(frontSource, "front-source"),
+      cloneImageForPayload(frontGuide, "front-color-guide")
+    ],
+    prompt: [sourceRoutingPrompt, preset.prompt.trim(), extraPromptField.value.trim()].filter(Boolean).join("\n\n"),
+    generationPresetId: preset.id,
+    viewId: "color-guide-back",
+    busyLabel: "Generating back color guide...",
+    statusLabel: "Back color guide complete."
   });
 }
 
@@ -646,6 +725,9 @@ function setImage(file) {
     currentOutputImage = null;
     frontReferenceImage = null;
     delete frontReferencesByPreset[selectedPresetId];
+    if (isColorGuidePreset(getSelectedPreset())) {
+      colorGuideFrontSourceImage = null;
+    }
     inputPreview.src = dataUrl;
     dropzone.classList.add("has-image");
     revealImageShell(dropzone);
@@ -664,6 +746,37 @@ function setImage(file) {
     setStatus(`Loaded ${file.name}.`);
   };
   reader.readAsDataURL(file);
+}
+
+function setColorGuideBackImage(file) {
+  if (!file.type.startsWith("image/")) {
+    setStatus("Please choose an image file.", true);
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = reader.result;
+    const [, base64] = dataUrl.split(",");
+    colorGuideBackImage = { base64, mimeType: file.type, name: file.name };
+    colorGuideBackPreview.src = dataUrl;
+    colorGuideBackDropzone.classList.add("has-image");
+    revealImageShell(colorGuideBackDropzone);
+    clearColorGuideBackButton.disabled = false;
+    updateDerivedButtons();
+    setStatus(`Loaded ${file.name} as back source.`);
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearColorGuideBackImage() {
+  colorGuideBackImage = null;
+  colorGuideBackInput.value = "";
+  colorGuideBackPreview.removeAttribute("src");
+  colorGuideBackDropzone.classList.remove("has-image");
+  colorGuideBackDropzone.querySelector("span").style.display = "";
+  clearColorGuideBackButton.disabled = true;
+  updateDerivedButtons();
 }
 
 function loadGeneratedImageIntoInput(image) {
@@ -1317,9 +1430,10 @@ function formatUsd(value) {
 }
 
 function setGenerationDisabled(isDisabled) {
+  const selected = getSelectedPreset();
   generateButton.disabled = isDisabled;
   const referenceImage = getFrontReferenceForSelectedPreset();
-  generateBackViewButton.disabled = isDisabled || !referenceImage;
+  generateBackViewButton.disabled = isDisabled || !referenceImage || (isColorGuidePreset(selected) && !colorGuideBackImage);
   generateThreeQuarterViewButton.disabled = isDisabled || !referenceImage || !getSecondViewPresetId();
 }
 
@@ -1330,11 +1444,12 @@ function updateDerivedButtons() {
   const hasBackView = selectedPresetId === "miniature" || derivedViews.some((viewId) => viewId.endsWith("-back"));
   const secondViewPresetId = getSecondViewPresetId();
   const hasSecondView = Boolean(secondViewPresetId);
+  const colorGuideMode = isColorGuidePreset(selected);
 
   viewActions.classList.toggle("hidden", !hasBackView && !hasSecondView);
-  generateBackViewButton.textContent = "Back View";
+  generateBackViewButton.textContent = colorGuideMode ? "Back Color Guide" : "Back View";
   generateThreeQuarterViewButton.textContent = secondViewPresetId?.endsWith("-side") ? "Side View" : "3/4 View";
-  generateBackViewButton.disabled = !referenceImage || !hasBackView;
+  generateBackViewButton.disabled = !referenceImage || !hasBackView || (colorGuideMode && !colorGuideBackImage);
   generateBackViewButton.style.display = hasBackView ? "" : "none";
   generateThreeQuarterViewButton.disabled = !referenceImage || !hasSecondView;
   generateThreeQuarterViewButton.style.display = hasSecondView ? "" : "none";
@@ -1460,8 +1575,25 @@ function isShieldPreset(preset) {
   return preset?.id === "shield-emblem";
 }
 
+function isColorGuidePreset(preset) {
+  return preset?.id === COLOR_GUIDE_PRESET_ID;
+}
+
 function isCreaturePreset(preset) {
   return preset?.id?.startsWith("creature-");
+}
+
+function getColorGuideFrontAdditionalImages(preset) {
+  if (!isColorGuidePreset(preset) || !colorGuideBackImage) return [];
+  return [cloneImageForPayload(colorGuideBackImage, "back-source")];
+}
+
+function cloneImageForPayload(image, fallbackName) {
+  return {
+    base64: image?.base64 || "",
+    mimeType: image?.mimeType || "image/png",
+    name: image?.name || fallbackName
+  };
 }
 
 function getSelectedShieldShapeReference(generationPresetId = selectedPresetId) {
@@ -1551,6 +1683,7 @@ function getBasReliefAspectLabel() {
 function getGenerateButtonLabel() {
   const selected = getSelectedPreset();
   if (isOpenPromptPreset(selected)) return "Generate Open Prompt";
+  if (isColorGuidePreset(selected)) return "Front Color Guide";
   const isTextMode = isTextToImagePreset(selected);
   const isBasReliefConcept = selectedPresetId === "bas-relief-emblem-concept";
   return isBasReliefConcept ? "Generate Emblem" : isTextMode ? "Generate Object" : "Generate";
@@ -1562,6 +1695,7 @@ function renderInputMode() {
   const isOpenMode = isOpenPromptPreset(selected);
   const isBasReliefConcept = selectedPresetId === "bas-relief-emblem-concept";
   const isCreatureMode = isCreaturePreset(selected);
+  const isColorGuideMode = isColorGuidePreset(selected);
   const showGeminiCanvasControls = usesGeminiCanvasControls(selected);
   const showOutfitOptionControls = usesOutfitOptionControls(selected);
   geminiOutputSizeField.classList.toggle("hidden", !showGeminiCanvasControls);
@@ -1580,7 +1714,7 @@ function renderInputMode() {
     : "Optional extra instructions, or full override when selected above.";
   geminiOutputSizeLabel.textContent = isShieldPreset(selected) ? "Shield Output Size" : isBasReliefPreset(selected) ? "Bas-Relief Output Size" : "Gemini Output Size";
   geminiAspectRatioLabel.textContent = isShieldPreset(selected) ? "Shield Aspect Ratio" : isBasReliefPreset(selected) ? "Bas-Relief Aspect Ratio" : "Gemini Aspect Ratio";
-  inputTitle.textContent = isOpenMode ? "Open Prompt" : isBasReliefConcept ? "Emblem Prompt" : isTextMode ? "Object Prompt" : "Input";
+  inputTitle.textContent = isOpenMode ? "Open Prompt" : isBasReliefConcept ? "Emblem Prompt" : isTextMode ? "Object Prompt" : isColorGuideMode ? "Front Source" : "Input";
   objectPromptLabel.textContent = isOpenMode ? "What would you like to generate?" : isBasReliefConcept ? "What bas-relief emblem would you like to generate?" : "What object would you like to generate?";
   objectPromptField.placeholder = isOpenMode
     ? "Describe the image you want. Add an optional input image above for image-to-image."
@@ -1588,8 +1722,9 @@ function renderInputMode() {
     ? "Example: ancient oak spirit mask, knightly sword and roses, dragon skull altar, elven moon priestess plaque"
     : "Example: ornate dwarven hammer, ancient spellbook, gothic lantern, sci-fi healing device";
   dropzone.classList.toggle("hidden", isTextMode && !isOpenMode);
+  colorGuidePairPanel.classList.toggle("hidden", !isColorGuideMode);
   textInputPanel.classList.toggle("hidden", !isTextMode && !isOpenMode);
-  dropzone.querySelector("span").textContent = isOpenMode ? "Optional image reference" : "Choose or drop an image";
+  dropzone.querySelector("span").textContent = isOpenMode ? "Optional image reference" : isColorGuideMode ? "Front source image" : "Choose or drop an image";
   openPromptModeButton.dataset.active = String(isOpenMode);
   if (!generateButton.classList.contains("is-busy")) {
     generateButton.textContent = getGenerateButtonLabel();

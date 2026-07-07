@@ -148,6 +148,19 @@
       ]
     },
     {
+      "id": "id-map-color-guide",
+      "name": "ID Map Color Guide",
+      "description": "Recolors front and back outfit renders into flat exact-palette color guides for tint and material region planning.",
+      "prompt": "id-map-color-guide/prompt.txt",
+      "kind": "main",
+      "group": "Outfits",
+      "provider": "openai",
+      "recommendedModel": "gpt-image-2",
+      "derivedViews": [
+        "id-map-color-guide-back"
+      ]
+    },
+    {
       "id": "object-concept",
       "name": "Object Concept",
       "description": "Text-to-image orthographic object render for AI-to-3D prop generation.",
@@ -449,6 +462,16 @@
         "creature-devil-scale/devil-scale-front.png",
         "creature-devil-scale/devil-scale-profile.png"
       ]
+    },
+    {
+      "id": "id-map-color-guide-back",
+      "name": "Color Guide Back",
+      "description": "Creates the matching rear flat color guide from the back source, front source, and approved front color guide.",
+      "prompt": "id-map-color-guide/prompt.txt",
+      "kind": "derived",
+      "group": "Outfits",
+      "provider": "openai",
+      "recommendedModel": "gpt-image-2"
     },
     {
       "id": "object-concept-back",

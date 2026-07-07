@@ -295,6 +295,50 @@ h2 {
   display: none;
 }
 
+.color-guide-pair {
+  margin-top: 12px;
+}
+
+.color-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.color-guide-head h3 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.color-guide-head button {
+  min-height: 32px;
+  padding: 5px 10px;
+  border-color: rgba(213, 168, 76, 0.36);
+  font-size: 13px;
+}
+
+.color-guide-dropzone {
+  min-height: 190px;
+  cursor: pointer;
+}
+
+.color-guide-dropzone input {
+  display: none;
+}
+
+.color-guide-dropzone.has-image {
+  min-height: 0;
+}
+
+.color-guide-dropzone.has-image span {
+  display: none;
+}
+
 .shield-shape-picker {
   margin-top: 12px;
 }

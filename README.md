@@ -120,6 +120,7 @@ If no ComfyUI install is detected, the installer stops and asks the user to inst
 - Modular Outfit - Female: image-to-image locked-silhouette outfit workflow.
 - Dog Leg Creature: image-to-image creature outfit workflow for gnoll, werewolf, catlike, lizardlike, and other dog-leg skeleton bodies with widened-arm front/back mannequin references and side-view tail/profile handling.
 - Devil Scale Creature: image-to-image creature outfit workflow for devilish skeleton bodies using the Devil Scale front/profile silhouette while letting Misc define the actual head, horns, face, and creature identity.
+- ID Map Color Guide: image-to-image tint/material region guide workflow for creating flat exact-palette front/back color maps from outfit renders.
 - Object Concept: text-to-image object workflow with front, back, and side views.
 - Post-Production: local 2x/4x upscaling.
 - Depth & Normal Maps: local ComfyUI workflow outputting depth and normal maps from an image.

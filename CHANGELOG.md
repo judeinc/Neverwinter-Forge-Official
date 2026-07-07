@@ -1,8 +1,16 @@
 # Changelog
 
-## Unreleased
+## 1.3.0A Release - Tint Map Color Guide
 
-- No unreleased changes yet.
+### Added
+- Added the ID Map Color Guide outfit preset for generating flat exact-palette tint/material region guides from front and back outfit renders.
+- Added a paired back-source image upload panel so the approved front color guide can drive consistent rear-view color assignments.
+- Added derived back color-guide generation that sends the back source, original front source, and approved front guide together for region continuity.
+- Added the July 2026 Model Repository storefront with dark catalog browsing, outfit front/back previews, public Google Drive download links, and Substance Painter workflow flags.
+
+### Changed
+- Updated the outfit repository naming from placeholder `Ashen` IDs to descriptive catalog names such as Ivory Court Gown, Azure Ward Plate, and Bronzewood Outrider Armor.
+- Renamed the July 2026 Google Drive outfit folders to match the published storefront IDs while preserving existing Drive folder links.
 
 ## 1.3.0 Release - Creature Forge Workflows
 
