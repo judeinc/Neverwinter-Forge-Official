@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-029-emberline-officer-coat",
+  "name": "Emberline Officer Coat",
+  "collection": "July 2026",
+  "description": "A red officer coat with gold trim and formal military bearing.",
+  "tags": [
+    "coat",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1MjXI7Iri2kw8SUtI-WyQJUHuSmSGA3ZZ",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Coat"
+}

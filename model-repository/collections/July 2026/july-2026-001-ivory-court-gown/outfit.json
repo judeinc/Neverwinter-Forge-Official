@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-001-ivory-court-gown",
+  "name": "Ivory Court Gown",
+  "collection": "July 2026",
+  "description": "An ornate ivory court gown with structured sleeves, gold filigree, and formal noble styling.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/15UJ8dkDuos7q4xv6bw1jCkbMn6PDgUrl",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

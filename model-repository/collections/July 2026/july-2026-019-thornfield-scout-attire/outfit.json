@@ -1,0 +1,22 @@
+{
+  "id": "july-2026-019-thornfield-scout-attire",
+  "name": "Thornfield Scout Attire",
+  "collection": "July 2026",
+  "description": "A green and brown leather scout outfit with layered panels and rugged field utility.",
+  "tags": [
+    "attire",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1IHGTaq0kG1vOdoqETATbLwbG_nAaCAMh",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": true,
+  "substancePainterWorkflowFolders": [
+    "P_HHF_CL_Body201"
+  ],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Attire"
+}

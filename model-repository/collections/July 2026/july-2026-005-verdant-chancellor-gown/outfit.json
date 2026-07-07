@@ -1,0 +1,22 @@
+{
+  "id": "july-2026-005-verdant-chancellor-gown",
+  "name": "Verdant Chancellor Gown",
+  "collection": "July 2026",
+  "description": "A deep green gown with gold vertical trim, suited to a court official or arcane advisor.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1qBQ3z8ogx03cv27Tmun5GtUl6wheo4Z_",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": true,
+  "substancePainterWorkflowFolders": [
+    "P_HHF_CL_Body206"
+  ],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

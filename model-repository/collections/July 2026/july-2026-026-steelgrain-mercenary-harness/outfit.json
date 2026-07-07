@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-026-steelgrain-mercenary-harness",
+  "name": "Steelgrain Mercenary Harness",
+  "collection": "July 2026",
+  "description": "A grey and brown mercenary harness with metal chest protection and layered field gear.",
+  "tags": [
+    "armor",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1rBLrytNDkEU7aoZRW2J7rg3d88khhPM4",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Armor"
+}

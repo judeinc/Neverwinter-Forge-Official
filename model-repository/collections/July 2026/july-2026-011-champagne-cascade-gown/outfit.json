@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-011-champagne-cascade-gown",
+  "name": "Champagne Cascade Gown",
+  "collection": "July 2026",
+  "description": "A champagne ball gown with layered cascading skirt panels and noble reception styling.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1E7l_CfVmofMmTXj2tQxLgUSlpH99gYZN",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

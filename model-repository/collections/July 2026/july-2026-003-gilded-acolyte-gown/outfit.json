@@ -1,0 +1,22 @@
+{
+  "id": "july-2026-003-gilded-acolyte-gown",
+  "name": "Gilded Acolyte Gown",
+  "collection": "July 2026",
+  "description": "A pale devotional gown with gold trim, a fitted bodice, and restrained temple elegance.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1wg0iZv1pOqXgR7H34b15j3f4RlXXF5z4",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": true,
+  "substancePainterWorkflowFolders": [
+    "P_HHF_CL_Body204"
+  ],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

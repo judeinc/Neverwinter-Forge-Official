@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-015-olive-hearth-dress",
+  "name": "Olive Hearth Dress",
+  "collection": "July 2026",
+  "description": "A white blouse and olive skirt outfit with warm household and provincial character.",
+  "tags": [
+    "dress",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1U0yIMtt0RAQA5O6M4j4ZI768T6C-pF1K",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Dress"
+}

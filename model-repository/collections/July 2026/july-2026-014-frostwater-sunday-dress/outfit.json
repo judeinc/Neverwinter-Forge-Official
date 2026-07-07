@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-014-frostwater-sunday-dress",
+  "name": "Frostwater Sunday Dress",
+  "collection": "July 2026",
+  "description": "A white blouse and frost-blue skirt ensemble with humble formalwear charm.",
+  "tags": [
+    "dress",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1HiRlxte5OUrMmJu3zXrJMi7oJXHGhaa_",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Dress"
+}

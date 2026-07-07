@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-022-copper-road-jerkin",
+  "name": "Copper Road Jerkin",
+  "collection": "July 2026",
+  "description": "A brown leather jerkin with practical travel wear proportions and worn-road character.",
+  "tags": [
+    "jerkin",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1As24MVQx_HqKJRiPE4kywWip4m2oJmVf",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Jerkin"
+}

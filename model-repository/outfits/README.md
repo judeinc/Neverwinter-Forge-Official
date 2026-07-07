@@ -1,13 +1,3 @@
-# Outfit Working Folders
+# Outfits
 
-Create one folder per curated outfit:
-
-```text
-outfits/<outfit-id>/
-  notes.md
-  images/
-  models/
-  textures/
-```
-
-Keep the `outfit-id` stable once it has been published so package URLs and Git history remain easy to follow.
+The public storefront outfits now live under `../collections/July 2026/`. This folder remains as a placeholder for older tooling that expected `model-repository/outfits/`.

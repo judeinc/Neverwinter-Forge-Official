@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-027-blackthorn-ranger-tunic",
+  "name": "Blackthorn Ranger Tunic",
+  "collection": "July 2026",
+  "description": "A dark leather ranger tunic with belted utility and a muted woodland profile.",
+  "tags": [
+    "tunic",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1grrh11nv7xU-zLQPNbSgMFgws3wPaTNA",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Tunic"
+}

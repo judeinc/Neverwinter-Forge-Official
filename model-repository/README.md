@@ -1,68 +1,42 @@
-# Model Repository
+# Neverwinter Forge Model Repository
 
-Model Repository is the source-controlled catalog for Neverwinter Forge outfit assets. It keeps each outfit's identity, original front/back images, generated views, model files, texture files, and package zip in one predictable place.
+This folder is the public storefront catalog for Neverwinter Forge outfit previews.
+Git tracks the lightweight preview images and metadata. The heavier outfit folders, zips, meshes, and texture work are hosted in Google Drive and linked from the storefront.
 
-The goal is to make the repository work like a small storefront:
-
-- each outfit has one catalog entry in `catalog.json`
-- each outfit can have a tracked working folder under `outfits/<outfit-id>/`
-- each outfit can produce one zip under `packages/<outfit-id>.zip`
-- every package includes a package manifest with file sizes and SHA-256 hashes
-
-## Folder Layout
+## Current Collection
 
 ```text
 model-repository/
+  index.html
   catalog.json
-  outfits/
-    <outfit-id>/
-      notes.md
-      images/
-      models/
-      textures/
-  packages/
-    <outfit-id>.zip
+  collections/
+    July 2026/
+      collection.json
+      <outfit-id>/
+        front.png
+        back.png
+        outfit.json
 ```
 
-Use `outfits/` for curated repository copies. Use `catalog.json` to point either to those curated files or to the original files in the folder structure you are consolidating from.
+Open `index.html` to browse the storefront locally. Each outfit card has front/back images, an information pane, a `Download outfit here` link, and a Substance Painter workflow flag.
 
-## Catalog Entries
+## Metadata
 
-Each outfit entry has a stable `id`, display `name`, source folder, asset paths, and tags. Paths may be absolute, relative to the repo root, or relative to the outfit's `sourceRoot`.
+Each `outfit.json` is public-safe and should not contain local machine paths. The important fields are:
 
-See `examples/example-outfit.catalog.json` for a copyable entry.
+- `id`
+- `name`
+- `collection`
+- `frontImage`
+- `backImage`
+- `downloadUrl`
+- `substancePainterWorkflow`
+- `substancePainterWorkflowFolders`
 
-Required for a storefront-ready outfit:
+## Hosting Pattern
 
-- `assets.originalFront`
-- `assets.originalBack`
+- GitHub: preview images, catalog metadata, and storefront page.
+- Google Drive: full model folders, zips, high/low poly files, extra maps, and Substance Painter workflow folders.
 
-Optional but supported:
-
-- `assets.generatedFront`
-- `assets.generatedBack`
-- `assets.modelFiles`
-- `assets.textureFiles`
-- `assets.notes`
-
-## Build Packages
-
-Preview package contents without writing zips:
-
-```powershell
-python tools/build_model_repository.py --dry-run
-```
-
-Build package zips:
-
-```powershell
-python tools/build_model_repository.py
-```
-
-Build one outfit:
-
-```powershell
-python tools/build_model_repository.py --outfit outfit-id
-```
-
-The builder never edits originals. It only reads the catalog assets and writes zip files into `model-repository/packages/`.
+For July 2026, the shared Drive folder is:
+https://drive.google.com/drive/folders/1Lu78j1oOc8_AZ879FXNBZtdTo-MY05Cx

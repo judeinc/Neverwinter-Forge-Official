@@ -1,0 +1,22 @@
+{
+  "id": "july-2026-006-willowglass-gown",
+  "name": "Willowglass Gown",
+  "collection": "July 2026",
+  "description": "A soft sage gown with a pale collar and quiet pastoral refinement.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1a4YrhcZlAh2eCnKeodd67FmNKcuNixwY",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": true,
+  "substancePainterWorkflowFolders": [
+    "P_HHF_CL_Body207"
+  ],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

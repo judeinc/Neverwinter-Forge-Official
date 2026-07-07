@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neverwinter Forge Model Repository</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1110;
+      --panel: #181b19;
+      --ink: #f0eee8;
+      --muted: #a7b0aa;
+      --line: #343b36;
+      --accent: #9d4a3b;
+      --accent-dark: #c96b58;
+      --ok-bg: #1f3b2b;
+      --ok: #9fe2b3;
+      --no-bg: #2b302c;
+      --no: #c4ccc6;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.36);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: #151816;
+    }
+    .wrap {
+      width: min(1520px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .topbar {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px 0 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2vw, 2.4rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .count {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+    .drive-link {
+      color: #fff;
+      background: var(--accent);
+      border: 1px solid var(--accent-dark);
+      border-radius: 6px;
+      padding: 10px 14px;
+      text-decoration: none;
+      white-space: nowrap;
+      font-weight: 650;
+    }
+    main.wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+      gap: 18px;
+      padding: 18px 0 28px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+    .card {
+      display: grid;
+      gap: 10px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      min-width: 0;
+    }
+    .card[aria-selected="true"] {
+      border-color: var(--accent);
+      outline: 2px solid rgba(138, 63, 50, 0.22);
+    }
+    .thumbs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      min-height: 185px;
+    }
+    .thumbs img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #242925;
+      display: block;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .badge {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .badge.yes { color: var(--ok); background: var(--ok-bg); }
+    .badge.no { color: var(--no); background: var(--no-bg); }
+    .pane {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .pane-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 10px;
+      background: #20241f;
+    }
+    .pane-images img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #242925;
+    }
+    .pane-body { padding: 16px; }
+    .pane h2 {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+      line-height: 1.15;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+    .pane-description {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.94rem;
+    }
+    dl {
+      display: grid;
+      grid-template-columns: 135px minmax(0, 1fr);
+      gap: 8px 12px;
+      margin: 0 0 16px;
+      font-size: 0.95rem;
+    }
+    dt { color: var(--muted); }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .download {
+      display: block;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      background: var(--accent);
+      border: 1px solid var(--accent-dark);
+      border-radius: 6px;
+      padding: 11px 12px;
+      text-decoration: none;
+      font-weight: 750;
+    }
+    .download:focus-visible, .drive-link:focus-visible, .card:focus-visible {
+      outline: 3px solid rgba(98, 43, 36, 0.35);
+      outline-offset: 2px;
+    }
+    @media (max-width: 900px) {
+      .topbar { align-items: start; flex-direction: column; }
+      main.wrap { grid-template-columns: 1fr; }
+      .pane { position: static; order: -1; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: min(100% - 20px, 1520px); }
+      .grid { grid-template-columns: 1fr; }
+      dl { grid-template-columns: 1fr; gap: 3px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div>
+        <h1>Neverwinter Forge Model Repository</h1>
+        <div class="count">July 2026 ? 30 outfits</div>
+      </div>
+      <a class="drive-link" href="https://drive.google.com/drive/folders/1Lu78j1oOc8_AZ879FXNBZtdTo-MY05Cx" target="_blank" rel="noopener">Open July 2026 Drive Folder</a>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="grid" id="outfit-grid" aria-label="July 2026 outfits"></section>
+    <aside class="pane" aria-label="Outfit information">
+      <div class="pane-images">
+        <img id="pane-front" alt="Selected outfit front">
+        <img id="pane-back" alt="Selected outfit back">
+      </div>
+      <div class="pane-body">
+        <h2 id="pane-title"></h2>
+        <p class="pane-description" id="pane-description"></p>
+        <dl>
+          <dt>Collection</dt><dd id="pane-collection"></dd>
+          <dt>Type</dt><dd id="pane-category"></dd>
+          <dt>Outfit ID</dt><dd id="pane-id"></dd>
+          <dt>Substance workflow</dt><dd id="pane-substance"></dd>
+          <dt>Workflow folder</dt><dd id="pane-workflow-folder"></dd>
+          <dt>Package host</dt><dd id="pane-host"></dd>
+        </dl>
+        <a class="download" id="pane-download" target="_blank" rel="noopener">Download outfit here</a>
+      </div>
+    </aside>
+  </main>
+  <script type="application/json" id="catalog-data">{"version": 2, "name": "Neverwinter Forge Model Repository", "description": "Public storefront catalog for Neverwinter Forge outfit previews with Google Drive download links.", "collections": [{"id": "july-2026", "name": "July 2026", "folder": "collections/July 2026", "driveFolderUrl": "https://drive.google.com/drive/folders/1Lu78j1oOc8_AZ879FXNBZtdTo-MY05Cx", "outfitCount": 30, "outfits": [{"id": "july-2026-001-ivory-court-gown", "name": "Ivory Court Gown", "collection": "July 2026", "description": "An ornate ivory court gown with structured sleeves, gold filigree, and formal noble styling.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/15UJ8dkDuos7q4xv6bw1jCkbMn6PDgUrl", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-001-ivory-court-gown", "frontImagePath": "collections/July 2026/july-2026-001-ivory-court-gown/front.png", "backImagePath": "collections/July 2026/july-2026-001-ivory-court-gown/back.png", "metadataPath": "collections/July 2026/july-2026-001-ivory-court-gown/outfit.json"}, {"id": "july-2026-002-silver-vow-gown", "name": "Silver Vow Gown", "collection": "July 2026", "description": "A white ceremonial gown with a silver armored bodice and clean highborn silhouette.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/14gryLU5nmu9eo87cXvjWFFTvy7RkGbQH", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body203"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-002-silver-vow-gown", "frontImagePath": "collections/July 2026/july-2026-002-silver-vow-gown/front.png", "backImagePath": "collections/July 2026/july-2026-002-silver-vow-gown/back.png", "metadataPath": "collections/July 2026/july-2026-002-silver-vow-gown/outfit.json"}, {"id": "july-2026-003-gilded-acolyte-gown", "name": "Gilded Acolyte Gown", "collection": "July 2026", "description": "A pale devotional gown with gold trim, a fitted bodice, and restrained temple elegance.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1wg0iZv1pOqXgR7H34b15j3f4RlXXF5z4", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body204"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-003-gilded-acolyte-gown", "frontImagePath": "collections/July 2026/july-2026-003-gilded-acolyte-gown/front.png", "backImagePath": "collections/July 2026/july-2026-003-gilded-acolyte-gown/back.png", "metadataPath": "collections/July 2026/july-2026-003-gilded-acolyte-gown/outfit.json"}, {"id": "july-2026-004-obsidian-procession-gown", "name": "Obsidian Procession Gown", "collection": "July 2026", "description": "A black and gold processional gown with dramatic draped sleeves and formal contrast panels.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/132jIE0nlQW9m36MJ3ON3Mp97LvvXnWS_", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body205"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-004-obsidian-procession-gown", "frontImagePath": "collections/July 2026/july-2026-004-obsidian-procession-gown/front.png", "backImagePath": "collections/July 2026/july-2026-004-obsidian-procession-gown/back.png", "metadataPath": "collections/July 2026/july-2026-004-obsidian-procession-gown/outfit.json"}, {"id": "july-2026-005-verdant-chancellor-gown", "name": "Verdant Chancellor Gown", "collection": "July 2026", "description": "A deep green gown with gold vertical trim, suited to a court official or arcane advisor.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1qBQ3z8ogx03cv27Tmun5GtUl6wheo4Z_", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body206"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-005-verdant-chancellor-gown", "frontImagePath": "collections/July 2026/july-2026-005-verdant-chancellor-gown/front.png", "backImagePath": "collections/July 2026/july-2026-005-verdant-chancellor-gown/back.png", "metadataPath": "collections/July 2026/july-2026-005-verdant-chancellor-gown/outfit.json"}, {"id": "july-2026-006-willowglass-gown", "name": "Willowglass Gown", "collection": "July 2026", "description": "A soft sage gown with a pale collar and quiet pastoral refinement.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1a4YrhcZlAh2eCnKeodd67FmNKcuNixwY", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body207"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-006-willowglass-gown", "frontImagePath": "collections/July 2026/july-2026-006-willowglass-gown/front.png", "backImagePath": "collections/July 2026/july-2026-006-willowglass-gown/back.png", "metadataPath": "collections/July 2026/july-2026-006-willowglass-gown/outfit.json"}, {"id": "july-2026-007-crimson-reliquary-dress", "name": "Crimson Reliquary Dress", "collection": "July 2026", "description": "A rich crimson dress with gold accents and a ceremonial, reliquary-inspired silhouette.", "tags": ["dress", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1sk03wgb1k8bIe6Gc7NgPSs2TH27-DfKE", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body208"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Dress", "folder": "collections/July 2026/july-2026-007-crimson-reliquary-dress", "frontImagePath": "collections/July 2026/july-2026-007-crimson-reliquary-dress/front.png", "backImagePath": "collections/July 2026/july-2026-007-crimson-reliquary-dress/back.png", "metadataPath": "collections/July 2026/july-2026-007-crimson-reliquary-dress/outfit.json"}, {"id": "july-2026-008-bloodwine-magistrate-robe", "name": "Bloodwine Magistrate Robe", "collection": "July 2026", "description": "A black robe with blood-red panels, gold trim, and a stern magistrate presence.", "tags": ["robe", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1Lui8p6e0gOzDb1CWwGMMnluLvIZP_0ks", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body209"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Robe", "folder": "collections/July 2026/july-2026-008-bloodwine-magistrate-robe", "frontImagePath": "collections/July 2026/july-2026-008-bloodwine-magistrate-robe/front.png", "backImagePath": "collections/July 2026/july-2026-008-bloodwine-magistrate-robe/back.png", "metadataPath": "collections/July 2026/july-2026-008-bloodwine-magistrate-robe/outfit.json"}, {"id": "july-2026-009-moonlit-herald-gown", "name": "Moonlit Herald Gown", "collection": "July 2026", "description": "A white and pale blue heraldic gown with bright formal trim and courtly polish.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1vgW4WGOj76PJPqhdgM9QQs3SNIGE2DlC", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-009-moonlit-herald-gown", "frontImagePath": "collections/July 2026/july-2026-009-moonlit-herald-gown/front.png", "backImagePath": "collections/July 2026/july-2026-009-moonlit-herald-gown/back.png", "metadataPath": "collections/July 2026/july-2026-009-moonlit-herald-gown/outfit.json"}, {"id": "july-2026-010-sunlit-temple-gown", "name": "Sunlit Temple Gown", "collection": "July 2026", "description": "A white ceremonial gown with gold detailing and a luminous temple attendant profile.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1iXx-6_puaif0YJvrjupXUZW1H7Qj4tnX", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-010-sunlit-temple-gown", "frontImagePath": "collections/July 2026/july-2026-010-sunlit-temple-gown/front.png", "backImagePath": "collections/July 2026/july-2026-010-sunlit-temple-gown/back.png", "metadataPath": "collections/July 2026/july-2026-010-sunlit-temple-gown/outfit.json"}, {"id": "july-2026-011-champagne-cascade-gown", "name": "Champagne Cascade Gown", "collection": "July 2026", "description": "A champagne ball gown with layered cascading skirt panels and noble reception styling.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1E7l_CfVmofMmTXj2tQxLgUSlpH99gYZN", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-011-champagne-cascade-gown", "frontImagePath": "collections/July 2026/july-2026-011-champagne-cascade-gown/front.png", "backImagePath": "collections/July 2026/july-2026-011-champagne-cascade-gown/back.png", "metadataPath": "collections/July 2026/july-2026-011-champagne-cascade-gown/outfit.json"}, {"id": "july-2026-012-celadon-petal-gown", "name": "Celadon Petal Gown", "collection": "July 2026", "description": "A pale celadon gown with petal-like side ruffles and a delicate garden-court shape.", "tags": ["gown", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1E8E1bYQ0KXU7wXBeMz3QXULUBM6ZdZs1", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Gown", "folder": "collections/July 2026/july-2026-012-celadon-petal-gown", "frontImagePath": "collections/July 2026/july-2026-012-celadon-petal-gown/front.png", "backImagePath": "collections/July 2026/july-2026-012-celadon-petal-gown/back.png", "metadataPath": "collections/July 2026/july-2026-012-celadon-petal-gown/outfit.json"}, {"id": "july-2026-013-pearl-parish-dress", "name": "Pearl Parish Dress", "collection": "July 2026", "description": "A modest pearl dress with simple trim and a clean parish or village noble feel.", "tags": ["dress", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1DfeeYiFYKW5S5FCV0NsUckHEHj4vHBub", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Dress", "folder": "collections/July 2026/july-2026-013-pearl-parish-dress", "frontImagePath": "collections/July 2026/july-2026-013-pearl-parish-dress/front.png", "backImagePath": "collections/July 2026/july-2026-013-pearl-parish-dress/back.png", "metadataPath": "collections/July 2026/july-2026-013-pearl-parish-dress/outfit.json"}, {"id": "july-2026-014-frostwater-sunday-dress", "name": "Frostwater Sunday Dress", "collection": "July 2026", "description": "A white blouse and frost-blue skirt ensemble with humble formalwear charm.", "tags": ["dress", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1HiRlxte5OUrMmJu3zXrJMi7oJXHGhaa_", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Dress", "folder": "collections/July 2026/july-2026-014-frostwater-sunday-dress", "frontImagePath": "collections/July 2026/july-2026-014-frostwater-sunday-dress/front.png", "backImagePath": "collections/July 2026/july-2026-014-frostwater-sunday-dress/back.png", "metadataPath": "collections/July 2026/july-2026-014-frostwater-sunday-dress/outfit.json"}, {"id": "july-2026-015-olive-hearth-dress", "name": "Olive Hearth Dress", "collection": "July 2026", "description": "A white blouse and olive skirt outfit with warm household and provincial character.", "tags": ["dress", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1U0yIMtt0RAQA5O6M4j4ZI768T6C-pF1K", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Dress", "folder": "collections/July 2026/july-2026-015-olive-hearth-dress", "frontImagePath": "collections/July 2026/july-2026-015-olive-hearth-dress/front.png", "backImagePath": "collections/July 2026/july-2026-015-olive-hearth-dress/back.png", "metadataPath": "collections/July 2026/july-2026-015-olive-hearth-dress/outfit.json"}, {"id": "july-2026-016-mossbound-matron-dress", "name": "Mossbound Matron Dress", "collection": "July 2026", "description": "A moss-green high-waisted dress with a formal collar and mature civic styling.", "tags": ["dress", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1v5z8z0SiZkPI2utQNHe7I6oT9QVfTMHn", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Dress", "folder": "collections/July 2026/july-2026-016-mossbound-matron-dress", "frontImagePath": "collections/July 2026/july-2026-016-mossbound-matron-dress/front.png", "backImagePath": "collections/July 2026/july-2026-016-mossbound-matron-dress/back.png", "metadataPath": "collections/July 2026/july-2026-016-mossbound-matron-dress/outfit.json"}, {"id": "july-2026-017-azure-ward-plate", "name": "Azure Ward Plate", "collection": "July 2026", "description": "A blue steel plate outfit with silver shoulders and compact knightly proportions.", "tags": ["plate", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1AjwBOSaVupEGQVdigsbgcu7IcIS2vFMN", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Plate Armor", "folder": "collections/July 2026/july-2026-017-azure-ward-plate", "frontImagePath": "collections/July 2026/july-2026-017-azure-ward-plate/front.png", "backImagePath": "collections/July 2026/july-2026-017-azure-ward-plate/back.png", "metadataPath": "collections/July 2026/july-2026-017-azure-ward-plate/outfit.json"}, {"id": "july-2026-018-cobalt-lion-plate", "name": "Cobalt Lion Plate", "collection": "July 2026", "description": "A cobalt plate ensemble with polished metal shoulders and a martial champion profile.", "tags": ["plate", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1oDeQZhWw6U8_RUeFopHllNnvQaytPWwa", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Plate Armor", "folder": "collections/July 2026/july-2026-018-cobalt-lion-plate", "frontImagePath": "collections/July 2026/july-2026-018-cobalt-lion-plate/front.png", "backImagePath": "collections/July 2026/july-2026-018-cobalt-lion-plate/back.png", "metadataPath": "collections/July 2026/july-2026-018-cobalt-lion-plate/outfit.json"}, {"id": "july-2026-019-thornfield-scout-attire", "name": "Thornfield Scout Attire", "collection": "July 2026", "description": "A green and brown leather scout outfit with layered panels and rugged field utility.", "tags": ["attire", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1IHGTaq0kG1vOdoqETATbLwbG_nAaCAMh", "packageHost": "google-drive", "substancePainterWorkflow": true, "substancePainterWorkflowFolders": ["P_HHF_CL_Body201"], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Attire", "folder": "collections/July 2026/july-2026-019-thornfield-scout-attire", "frontImagePath": "collections/July 2026/july-2026-019-thornfield-scout-attire/front.png", "backImagePath": "collections/July 2026/july-2026-019-thornfield-scout-attire/back.png", "metadataPath": "collections/July 2026/july-2026-019-thornfield-scout-attire/outfit.json"}, {"id": "july-2026-020-nightwatch-leather-tunic", "name": "Nightwatch Leather Tunic", "collection": "July 2026", "description": "A dark fitted leather tunic with blue-black tones and a watchman silhouette.", "tags": ["tunic", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1R_BpxCCaXfwlt-2Ll5fbH5hycPBnIX5L", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Tunic", "folder": "collections/July 2026/july-2026-020-nightwatch-leather-tunic", "frontImagePath": "collections/July 2026/july-2026-020-nightwatch-leather-tunic/front.png", "backImagePath": "collections/July 2026/july-2026-020-nightwatch-leather-tunic/back.png", "metadataPath": "collections/July 2026/july-2026-020-nightwatch-leather-tunic/outfit.json"}, {"id": "july-2026-021-crimson-watch-captain-coat", "name": "Crimson Watch Captain Coat", "collection": "July 2026", "description": "A black captain coat with crimson sleeves and trim, built for command presence.", "tags": ["coat", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1EN6GPhNFrMdo-5c1vWsCiQQz9ojNteTv", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Coat", "folder": "collections/July 2026/july-2026-021-crimson-watch-captain-coat", "frontImagePath": "collections/July 2026/july-2026-021-crimson-watch-captain-coat/front.png", "backImagePath": "collections/July 2026/july-2026-021-crimson-watch-captain-coat/back.png", "metadataPath": "collections/July 2026/july-2026-021-crimson-watch-captain-coat/outfit.json"}, {"id": "july-2026-022-copper-road-jerkin", "name": "Copper Road Jerkin", "collection": "July 2026", "description": "A brown leather jerkin with practical travel wear proportions and worn-road character.", "tags": ["jerkin", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1As24MVQx_HqKJRiPE4kywWip4m2oJmVf", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Jerkin", "folder": "collections/July 2026/july-2026-022-copper-road-jerkin", "frontImagePath": "collections/July 2026/july-2026-022-copper-road-jerkin/front.png", "backImagePath": "collections/July 2026/july-2026-022-copper-road-jerkin/back.png", "metadataPath": "collections/July 2026/july-2026-022-copper-road-jerkin/outfit.json"}, {"id": "july-2026-023-redmark-duelist-coat", "name": "Redmark Duelist Coat", "collection": "July 2026", "description": "A red long coat with dark tailoring and duelist styling for a sharp noble combatant.", "tags": ["coat", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/13j-uy0xZ3-slaz1YxK4k74MGp3j_v2wt", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Coat", "folder": "collections/July 2026/july-2026-023-redmark-duelist-coat", "frontImagePath": "collections/July 2026/july-2026-023-redmark-duelist-coat/front.png", "backImagePath": "collections/July 2026/july-2026-023-redmark-duelist-coat/back.png", "metadataPath": "collections/July 2026/july-2026-023-redmark-duelist-coat/outfit.json"}, {"id": "july-2026-024-ironvale-padded-tunic", "name": "Ironvale Padded Tunic", "collection": "July 2026", "description": "A grey padded tunic with belts and subdued mercenary practicality.", "tags": ["tunic", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1bvLx0f5oM4GL-2sAf8EhtlkXrh46ztHi", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Tunic", "folder": "collections/July 2026/july-2026-024-ironvale-padded-tunic", "frontImagePath": "collections/July 2026/july-2026-024-ironvale-padded-tunic/front.png", "backImagePath": "collections/July 2026/july-2026-024-ironvale-padded-tunic/back.png", "metadataPath": "collections/July 2026/july-2026-024-ironvale-padded-tunic/outfit.json"}, {"id": "july-2026-025-dustroad-wayfarer-tunic", "name": "Dustroad Wayfarer Tunic", "collection": "July 2026", "description": "A tan-brown wayfarer tunic with simple travel-ready leatherwork.", "tags": ["tunic", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1NlQeP4YysYtU0G1Op5RyfAjbCHcb05o7", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Tunic", "folder": "collections/July 2026/july-2026-025-dustroad-wayfarer-tunic", "frontImagePath": "collections/July 2026/july-2026-025-dustroad-wayfarer-tunic/front.png", "backImagePath": "collections/July 2026/july-2026-025-dustroad-wayfarer-tunic/back.png", "metadataPath": "collections/July 2026/july-2026-025-dustroad-wayfarer-tunic/outfit.json"}, {"id": "july-2026-026-steelgrain-mercenary-harness", "name": "Steelgrain Mercenary Harness", "collection": "July 2026", "description": "A grey and brown mercenary harness with metal chest protection and layered field gear.", "tags": ["armor", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1rBLrytNDkEU7aoZRW2J7rg3d88khhPM4", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Armor", "folder": "collections/July 2026/july-2026-026-steelgrain-mercenary-harness", "frontImagePath": "collections/July 2026/july-2026-026-steelgrain-mercenary-harness/front.png", "backImagePath": "collections/July 2026/july-2026-026-steelgrain-mercenary-harness/back.png", "metadataPath": "collections/July 2026/july-2026-026-steelgrain-mercenary-harness/outfit.json"}, {"id": "july-2026-027-blackthorn-ranger-tunic", "name": "Blackthorn Ranger Tunic", "collection": "July 2026", "description": "A dark leather ranger tunic with belted utility and a muted woodland profile.", "tags": ["tunic", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1grrh11nv7xU-zLQPNbSgMFgws3wPaTNA", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Tunic", "folder": "collections/July 2026/july-2026-027-blackthorn-ranger-tunic", "frontImagePath": "collections/July 2026/july-2026-027-blackthorn-ranger-tunic/front.png", "backImagePath": "collections/July 2026/july-2026-027-blackthorn-ranger-tunic/back.png", "metadataPath": "collections/July 2026/july-2026-027-blackthorn-ranger-tunic/outfit.json"}, {"id": "july-2026-028-stormglass-scholar-coat", "name": "Stormglass Scholar Coat", "collection": "July 2026", "description": "A blue-grey long scholar coat over brown trousers, suited to an educated traveler.", "tags": ["coat", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1JOxmOOUEOZOamszkqyf5MmD5_m4DK_na", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Coat", "folder": "collections/July 2026/july-2026-028-stormglass-scholar-coat", "frontImagePath": "collections/July 2026/july-2026-028-stormglass-scholar-coat/front.png", "backImagePath": "collections/July 2026/july-2026-028-stormglass-scholar-coat/back.png", "metadataPath": "collections/July 2026/july-2026-028-stormglass-scholar-coat/outfit.json"}, {"id": "july-2026-029-emberline-officer-coat", "name": "Emberline Officer Coat", "collection": "July 2026", "description": "A red officer coat with gold trim and formal military bearing.", "tags": ["coat", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1MjXI7Iri2kw8SUtI-WyQJUHuSmSGA3ZZ", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Coat", "folder": "collections/July 2026/july-2026-029-emberline-officer-coat", "frontImagePath": "collections/July 2026/july-2026-029-emberline-officer-coat/front.png", "backImagePath": "collections/July 2026/july-2026-029-emberline-officer-coat/back.png", "metadataPath": "collections/July 2026/july-2026-029-emberline-officer-coat/outfit.json"}, {"id": "july-2026-030-bronzewood-outrider-armor", "name": "Bronzewood Outrider Armor", "collection": "July 2026", "description": "A bronze leather outrider armor set with rugged straps and frontier combat styling.", "tags": ["armor", "outfit", "july-2026"], "frontImage": "front.png", "backImage": "back.png", "downloadText": "Download outfit here", "downloadUrl": "https://drive.google.com/drive/folders/1H9I79MFfNMpc0dY6dELXLk2qx0NHnnSK", "packageHost": "google-drive", "substancePainterWorkflow": false, "substancePainterWorkflowFolders": [], "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.", "category": "Armor", "folder": "collections/July 2026/july-2026-030-bronzewood-outrider-armor", "frontImagePath": "collections/July 2026/july-2026-030-bronzewood-outrider-armor/front.png", "backImagePath": "collections/July 2026/july-2026-030-bronzewood-outrider-armor/back.png", "metadataPath": "collections/July 2026/july-2026-030-bronzewood-outrider-armor/outfit.json"}]}]}</script>
+  <script>
+    const catalog = JSON.parse(document.getElementById('catalog-data').textContent);
+    const collection = catalog.collections[0];
+    const outfits = collection.outfits;
+    const grid = document.getElementById('outfit-grid');
+    const cards = new Map();
+
+    function pathFor(path) {
+      return path.split('/').map(encodeURIComponent).join('/');
+    }
+
+    function workflowLabel(outfit) {
+      return outfit.substancePainterWorkflow ? 'Yes' : 'No';
+    }
+
+    function selectOutfit(outfit) {
+      for (const [id, card] of cards) {
+        card.setAttribute('aria-selected', id === outfit.id ? 'true' : 'false');
+      }
+      document.getElementById('pane-front').src = pathFor(outfit.frontImagePath);
+      document.getElementById('pane-back').src = pathFor(outfit.backImagePath);
+      document.getElementById('pane-front').alt = `${outfit.name} front`;
+      document.getElementById('pane-back').alt = `${outfit.name} back`;
+      document.getElementById('pane-title').textContent = outfit.name;
+      document.getElementById('pane-description').textContent = outfit.description;
+      document.getElementById('pane-collection').textContent = outfit.collection;
+      document.getElementById('pane-category').textContent = outfit.category || 'Outfit';
+      document.getElementById('pane-id').textContent = outfit.id;
+      document.getElementById('pane-substance').textContent = workflowLabel(outfit);
+      document.getElementById('pane-workflow-folder').textContent = outfit.substancePainterWorkflowFolders.length ? outfit.substancePainterWorkflowFolders.join(', ') : 'None';
+      document.getElementById('pane-host').textContent = 'Google Drive';
+      const link = document.getElementById('pane-download');
+      link.href = outfit.downloadUrl;
+      link.textContent = outfit.downloadText;
+    }
+
+    for (const outfit of outfits) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'card';
+      card.setAttribute('aria-selected', 'false');
+      card.innerHTML = `
+        <div class="thumbs">
+          <img src="${pathFor(outfit.frontImagePath)}" alt="${outfit.name} front">
+          <img src="${pathFor(outfit.backImagePath)}" alt="${outfit.name} back">
+        </div>
+        <h3 class="card-title">${outfit.name}</h3>
+        <div class="meta-row">
+          <span>${outfit.id.replace('july-2026-', '')}</span>
+          <span class="badge ${outfit.substancePainterWorkflow ? 'yes' : 'no'}">SP ${workflowLabel(outfit)}</span>
+        </div>`;
+      card.addEventListener('click', () => selectOutfit(outfit));
+      cards.set(outfit.id, card);
+      grid.appendChild(card);
+    }
+
+    selectOutfit(outfits[0]);
+  </script>
+</body>
+</html>

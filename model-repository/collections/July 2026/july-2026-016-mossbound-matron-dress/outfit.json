@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-016-mossbound-matron-dress",
+  "name": "Mossbound Matron Dress",
+  "collection": "July 2026",
+  "description": "A moss-green high-waisted dress with a formal collar and mature civic styling.",
+  "tags": [
+    "dress",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1v5z8z0SiZkPI2utQNHe7I6oT9QVfTMHn",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Dress"
+}

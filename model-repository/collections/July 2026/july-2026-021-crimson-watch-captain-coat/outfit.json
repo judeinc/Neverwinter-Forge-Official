@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-021-crimson-watch-captain-coat",
+  "name": "Crimson Watch Captain Coat",
+  "collection": "July 2026",
+  "description": "A black captain coat with crimson sleeves and trim, built for command presence.",
+  "tags": [
+    "coat",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1EN6GPhNFrMdo-5c1vWsCiQQz9ojNteTv",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Coat"
+}

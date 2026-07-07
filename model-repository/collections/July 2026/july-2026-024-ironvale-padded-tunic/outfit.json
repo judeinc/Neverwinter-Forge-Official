@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-024-ironvale-padded-tunic",
+  "name": "Ironvale Padded Tunic",
+  "collection": "July 2026",
+  "description": "A grey padded tunic with belts and subdued mercenary practicality.",
+  "tags": [
+    "tunic",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1bvLx0f5oM4GL-2sAf8EhtlkXrh46ztHi",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Tunic"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-023-redmark-duelist-coat",
+  "name": "Redmark Duelist Coat",
+  "collection": "July 2026",
+  "description": "A red long coat with dark tailoring and duelist styling for a sharp noble combatant.",
+  "tags": [
+    "coat",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/13j-uy0xZ3-slaz1YxK4k74MGp3j_v2wt",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Coat"
+}

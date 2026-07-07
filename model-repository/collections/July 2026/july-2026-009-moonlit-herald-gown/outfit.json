@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-009-moonlit-herald-gown",
+  "name": "Moonlit Herald Gown",
+  "collection": "July 2026",
+  "description": "A white and pale blue heraldic gown with bright formal trim and courtly polish.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1vgW4WGOj76PJPqhdgM9QQs3SNIGE2DlC",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-028-stormglass-scholar-coat",
+  "name": "Stormglass Scholar Coat",
+  "collection": "July 2026",
+  "description": "A blue-grey long scholar coat over brown trousers, suited to an educated traveler.",
+  "tags": [
+    "coat",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1JOxmOOUEOZOamszkqyf5MmD5_m4DK_na",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Coat"
+}

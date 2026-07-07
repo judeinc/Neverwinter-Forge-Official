@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-018-cobalt-lion-plate",
+  "name": "Cobalt Lion Plate",
+  "collection": "July 2026",
+  "description": "A cobalt plate ensemble with polished metal shoulders and a martial champion profile.",
+  "tags": [
+    "plate",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1oDeQZhWw6U8_RUeFopHllNnvQaytPWwa",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Plate Armor"
+}

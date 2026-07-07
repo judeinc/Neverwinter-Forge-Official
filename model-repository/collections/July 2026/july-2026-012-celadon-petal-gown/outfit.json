@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-012-celadon-petal-gown",
+  "name": "Celadon Petal Gown",
+  "collection": "July 2026",
+  "description": "A pale celadon gown with petal-like side ruffles and a delicate garden-court shape.",
+  "tags": [
+    "gown",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1E8E1bYQ0KXU7wXBeMz3QXULUBM6ZdZs1",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Gown"
+}

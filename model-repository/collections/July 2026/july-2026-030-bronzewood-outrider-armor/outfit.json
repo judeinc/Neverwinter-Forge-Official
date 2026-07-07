@@ -1,0 +1,20 @@
+{
+  "id": "july-2026-030-bronzewood-outrider-armor",
+  "name": "Bronzewood Outrider Armor",
+  "collection": "July 2026",
+  "description": "A bronze leather outrider armor set with rugged straps and frontier combat styling.",
+  "tags": [
+    "armor",
+    "outfit",
+    "july-2026"
+  ],
+  "frontImage": "front.png",
+  "backImage": "back.png",
+  "downloadText": "Download outfit here",
+  "downloadUrl": "https://drive.google.com/drive/folders/1H9I79MFfNMpc0dY6dELXLk2qx0NHnnSK",
+  "packageHost": "google-drive",
+  "substancePainterWorkflow": false,
+  "substancePainterWorkflowFolders": [],
+  "notes": "Preview images are tracked in Git. Outfit files are hosted in Google Drive.",
+  "category": "Armor"
+}
