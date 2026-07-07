@@ -2,6 +2,12 @@
 
 Standalone local multi-tool app for fixed-prompt AI image generation, view generation, post-production upscaling, ComfyUI-backed depth/normal map generation, and Neverwinter Nights 2 MDB model workflows.
 
+## Model Repository Storefront
+
+Browse the public outfit storefront:
+
+https://judeinc.github.io/Neverwinter-Forge-Official/model-repository/
+
 ## Run
 
 For the packaged release, double-click:
