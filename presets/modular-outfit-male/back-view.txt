@@ -29,6 +29,15 @@ Preserve the same outfit from the front view:
 
 Continue the front design logically around the back with clean construction, readable seams, belt continuation, armor continuation, cloth panels, leather zones, metal zones, and simplified chainmail zones when applicable.
 
+Garment wraparound rules:
+- Treat visible front panel edges, front openings, apron edges, tunic splits, tabard edges, skirt splits, and coat-front edges as front-facing construction features, not permanent side strips.
+- When rotating to the back, infer how each cloth or armor layer wraps around the torso, hips, and skirt area as a coherent garment volume.
+- If a front layer opens at the front, close or simplify that layer across the back unless the front clearly proves there is also a rear opening.
+- Continue side seams around the body so panels meet cleanly at the rear centerline or rear side seams.
+- Do not mirror front openings onto the back by default.
+- Do not create two isolated side wings, chaps-like panels, detached curtain strips, or floating front-edge remnants on the back.
+- Preserve underlayer and outer-layer relationships as complete wrapped layers, not as unrelated left and right pieces.
+
 For belts, sashes, waist straps, cross straps, tabard edges, and armor bands, preserve the front-view placement exactly as if the garment were being rotated in 3D. Do not move the belt higher or lower on the body. Do not change the belt thickness, number of layers, material, color, buckle scale, or strap count. Back-facing belt and strap details should line up with the visible front design at the sides and continue cleanly around the waist.
 
 Infer unseen back details minimally. Do not invent new props, new weapons, new symbols, new large ornaments, or a different outfit.
@@ -41,4 +50,4 @@ Simplify decoration, not material identity. Preserve structural ornament and non
 
 No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
 
-Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, mirrored front openings on the back, chaps-like rear side panels, detached side wings, incomplete wraparound cloth, broken underlayer/outer-layer continuity, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.

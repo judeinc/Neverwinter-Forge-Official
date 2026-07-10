@@ -234,6 +234,78 @@ h2 {
   color: var(--accent-strong);
 }
 
+.update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgba(36, 42, 48, 0.96), rgba(24, 28, 32, 0.96));
+  border: 1px solid rgba(213, 168, 76, 0.42);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+.update-banner[data-state="installed"] {
+  border-color: rgba(112, 194, 131, 0.46);
+}
+
+.update-banner[data-state="error"] {
+  border-color: rgba(255, 122, 122, 0.46);
+}
+
+.update-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.update-copy strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.update-copy span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.update-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.update-actions button {
+  min-height: 34px;
+  padding: 6px 12px;
+}
+
+.update-actions button:first-child {
+  color: #17130a;
+  background: var(--accent-strong);
+  border-color: rgba(255, 225, 139, 0.72);
+}
+
+.update-progress {
+  width: min(360px, 52vw);
+  height: 7px;
+  overflow: hidden;
+  background: #0b0d0f;
+  border: 1px solid rgba(200, 195, 183, 0.18);
+  border-radius: 999px;
+}
+
+.update-progress span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: var(--gold-trim);
+  transition: width 180ms ease;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -381,15 +453,46 @@ h2 {
 }
 
 .shield-shape-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
-  gap: 7px;
   max-height: 210px;
   padding: 8px;
   overflow: auto;
   background: #111417;
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+.shield-shape-section + .shield-shape-section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(200, 195, 183, 0.12);
+}
+
+.shield-shape-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.shield-shape-section-header h4 {
+  margin: 0;
+  color: #d8d1c3;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.shield-shape-section-header span {
+  color: #ffe18b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.shield-shape-section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+  gap: 7px;
 }
 
 .shield-shape-tile {
@@ -400,6 +503,10 @@ h2 {
   background: #f4f1ea;
   border-color: rgba(200, 195, 183, 0.24);
   overflow: hidden;
+}
+
+.shield-shape-tile[data-aspect="2:3"] {
+  aspect-ratio: 2 / 3;
 }
 
 .shield-shape-tile img {

@@ -29,6 +29,16 @@ Preserve the same garment from the front view:
 
 Continue the front design logically around the back with clean construction, readable seams, belt continuation, sash continuation, collar continuation, cuff continuation, broad garment folds, and simple PBR-readable cloth.
 
+Layer and wraparound rules:
+- Treat visible front panel edges, front skirt openings, overdress edges, apron edges, robe-front edges, split-front trim, and lace borders as front-facing construction features, not permanent side strips.
+- When rotating to the back, infer how each dress, robe, gown, overskirt, overdress, apron layer, or skirt layer wraps around the hips and rear as a coherent garment volume.
+- A front-open overdress, robe front, split overskirt, or decorative skirt overlay should usually become a continuous rear overdress or rear skirt shell.
+- Preserve the underdress and overdress as two coherent layers: the underdress remains a continuous base volume, and the overdress wraps around it as one outer layer.
+- Do not turn an overdress, robe front, or split skirt into two isolated side wings, chaps-like panels, detached curtain strips, or floating front-edge remnants on the back.
+- Do not mirror the front opening onto the back unless the front clearly proves there is also a rear opening.
+- Use creative license to close, join, or simplify rear panels so the back reads as a complete dress/gown/robe instead of a front design copied onto the rear.
+- Lace, trim, and embroidered borders may continue around rear seams or rear panel edges, but they should sit on coherent cloth layers, not on detached side flaps.
+
 Dress, skirt, and hem rules:
 - If the front view is ground-length, the back view must also be ground-length.
 - If the front view is knee-length or shorter, preserve that skirt length and keep visible legs/boots consistent.
@@ -37,6 +47,7 @@ Dress, skirt, and hem rules:
 - Do not show feet, boots, toes, heels, or separated legs under a ground-length dress or robe.
 - Do not show thighs, knees, calves, or a full mannequin leg through a ground-length dress opening.
 - Do not create high slits, open back gaps, parted skirt panels, or robe openings that reveal the lower body.
+- Do not create rear chaps, rear side wings, or two separated hanging skirt strips in place of a continuous rear skirt.
 - If the front render has a lower-body slit or exposed lower-body skin, close those panels in the back view and preserve the design through trim, color, seams, or layered cloth instead.
 - Do not create open interior cavities under the garment.
 - Do not let the image-to-3D viewer see inside the garment from below.
@@ -47,4 +58,4 @@ Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separat
 
 Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic borders, or abstract panel geometry.
 
-Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open skirt gaps, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the garment identity.
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open skirt gaps, mirrored front openings on the back, rear chaps, detached side wings, two isolated rear skirt strips, broken underdress/overdress continuity, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the garment identity.

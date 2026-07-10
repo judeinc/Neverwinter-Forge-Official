@@ -29,6 +29,16 @@ Preserve the same robe from the front view:
 
 Continue the front design logically around the back with clean construction, readable seams, belt continuation, sash continuation, collar continuation, cuff continuation, broad robe folds, and simple PBR-readable cloth.
 
+Layer and wraparound rules:
+- Treat visible front panel edges, front robe openings, overdress edges, apron edges, robe-front edges, split-front trim, and border trim as front-facing construction features, not permanent side strips.
+- When rotating to the back, infer how each robe, long garment, overskirt, overdress, apron layer, or skirt layer wraps around the hips and rear as a coherent garment volume.
+- A front-open robe, split overskirt, or decorative outer layer should usually become a continuous rear robe or rear skirt shell.
+- Preserve the under-robe and outer-robe as two coherent layers: the underlayer remains a continuous base volume, and the outer layer wraps around it as one garment.
+- Do not turn an outer robe front or split skirt into two isolated side wings, chaps-like panels, detached curtain strips, or floating front-edge remnants on the back.
+- Do not mirror the front opening onto the back unless the front clearly proves there is also a rear opening.
+- Use creative license to close, join, or simplify rear panels so the back reads as a complete robe or long garment instead of a front design copied onto the rear.
+- Trim and borders may continue around rear seams or rear panel edges, but they should sit on coherent cloth layers, not on detached side flaps.
+
 Robe and hem rules:
 - If the front view is ground-length, the back view must also be ground-length.
 - The bottom must be capped: flatten the hem into a simple horizontal or very slightly curved ground-contact shape.
@@ -36,6 +46,7 @@ Robe and hem rules:
 - Do not show feet, boots, toes, heels, or separated legs under a ground-length robe.
 - Do not show thighs, knees, calves, or a full mannequin leg through a ground-length robe opening.
 - Do not create high slits, open back gaps, parted robe panels, or robe openings that reveal the lower body.
+- Do not create rear chaps, rear side wings, or two separated hanging robe strips in place of a continuous rear robe.
 - If the front render has exposed lower-body skin or leg openings, close those panels in the back view and preserve the design through trim, color, seams, or layered cloth instead.
 - Do not create open interior cavities under the robe.
 - Do not let the image-to-3D viewer see inside the robe from below.
@@ -46,4 +57,4 @@ Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separat
 
 Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic borders, or abstract panel geometry.
 
-Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length robes, visible boots under ground-length robes, visible thighs or full mannequin legs under ground-length robes, high robe slits, open robe gaps, separated legs under ground-length robes, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the robe identity.
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length robes, visible boots under ground-length robes, visible thighs or full mannequin legs under ground-length robes, high robe slits, open robe gaps, mirrored front openings on the back, rear chaps, detached side wings, two isolated rear robe strips, broken under-robe/outer-robe continuity, separated legs under ground-length robes, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the robe identity.
