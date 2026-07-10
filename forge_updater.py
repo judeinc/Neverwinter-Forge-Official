@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-PRESERVE_NAMES = {"outputs", "updates", "runtimes", "ForgeUpdater.exe"}
+PRESERVE_NAMES = {"outputs", "updates", "runtimes"}
 PRESERVE_FILES = {"depth_paths.json", "presets/extra_prompt.txt"}
 
 

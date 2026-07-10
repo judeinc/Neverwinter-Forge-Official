@@ -8,6 +8,7 @@ import cgi
 import json
 import mimetypes
 import os
+import shutil
 import uuid
 import socket
 import subprocess
@@ -454,7 +455,15 @@ def can_install_updates():
 def updater_launch_command():
     if getattr(sys, "frozen", False):
         updater = ROOT / "ForgeUpdater.exe"
-        return [str(updater)] if updater.exists() else None
+        if not updater.exists():
+            return None
+        runner = UPDATES / "ForgeUpdater-runner.exe"
+        try:
+            UPDATES.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(updater, runner)
+        except Exception:
+            return [str(updater)]
+        return [str(runner)]
     updater = ROOT / "forge_updater.py"
     return [sys.executable, str(updater)] if updater.exists() else None
 
