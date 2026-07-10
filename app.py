@@ -8,6 +8,7 @@ import cgi
 import json
 import mimetypes
 import os
+import shutil
 import uuid
 import socket
 import subprocess
@@ -34,6 +35,10 @@ OUTPUTS = ROOT / "outputs"
 RUNTIMES = ROOT / "runtimes"
 UPSCALER_RUNTIME = RUNTIMES / "realesrgan"
 UPSCALER_DOWNLOADS = RUNTIMES / "downloads"
+UPDATES = ROOT / "updates"
+UPDATE_DOWNLOADS = UPDATES / "downloads"
+UPDATE_STATE_FILE = UPDATES / "update_state.json"
+VERSION_FILE = ROOT / "version.json"
 HOST = "127.0.0.1"
 PORT = 8765
 UPSCALER_PACKAGE_URL = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip"
@@ -65,7 +70,7 @@ DEPTH_REQUIRED_MODELS = [
     {"folder": "upscale_models", "name": "RealESRGAN_x4plus.pth", "sizeGb": 0.06}
 ]
 BAS_RELIEF_PRESETS = {"bas-relief-emblem", "bas-relief-emblem-concept"}
-SHIELD_PRESETS = {"shield-emblem"}
+SHIELD_PRESETS = {"shield-emblem", "shield-emblem-back"}
 OPEN_PROMPT_PRESET = "open-prompt"
 BAS_RELIEF_AND_OPEN_PROMPT_PRESETS = BAS_RELIEF_PRESETS | SHIELD_PRESETS | {OPEN_PROMPT_PRESET}
 CREATURE_PRESET_PREFIX = "creature-"
@@ -322,6 +327,228 @@ UPSCALER_DOWNLOAD_STATE = {
     "message": ""
 }
 UPSCALER_LOCK = threading.Lock()
+UPDATE_DOWNLOAD_STATE = {
+    "active": False,
+    "status": "idle",
+    "downloadedBytes": 0,
+    "totalBytes": 0,
+    "percent": 0,
+    "error": "",
+    "message": "",
+    "packagePath": "",
+    "release": None
+}
+UPDATE_LOCK = threading.Lock()
+
+
+def read_version_metadata():
+    fallback = {
+        "version": "0.0.0",
+        "releaseName": "Neverwinter Forge",
+        "repository": "judeinc/Neverwinter-Forge-Official",
+        "releaseApiUrl": "https://api.github.com/repos/judeinc/Neverwinter-Forge-Official/releases/latest",
+        "releasePageUrl": "https://github.com/judeinc/Neverwinter-Forge-Official/releases/latest"
+    }
+    if not VERSION_FILE.exists():
+        return fallback
+    try:
+        data = json.loads(VERSION_FILE.read_text(encoding="utf-8"))
+        return {**fallback, **data}
+    except Exception:
+        return fallback
+
+
+def normalize_version(version):
+    text = str(version or "").strip().lower()
+    if text.startswith("v"):
+        text = text[1:]
+    parts = []
+    suffix = ""
+    current = ""
+    for char in text:
+        if char.isdigit() or char == ".":
+            current += char
+        else:
+            suffix += char
+    for item in current.split("."):
+        if item:
+            parts.append(int(item))
+    while len(parts) < 3:
+        parts.append(0)
+    suffix_rank = 0
+    if suffix:
+        suffix_rank = sum((ord(char) - 96) for char in suffix if "a" <= char <= "z")
+    return (*parts[:3], suffix_rank)
+
+
+def is_newer_version(candidate, current):
+    return normalize_version(candidate) > normalize_version(current)
+
+
+def release_request(url):
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "Neverwinter-Forge-Updater"
+    }
+    req = request.Request(url, headers=headers)
+    with request.urlopen(req, timeout=18) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def select_release_asset(release):
+    assets = release.get("assets") or []
+    zip_assets = [asset for asset in assets if str(asset.get("name", "")).lower().endswith(".zip")]
+    preferred = [
+        asset for asset in zip_assets
+        if "neverwinterforge" in str(asset.get("name", "")).replace(" ", "").lower()
+        or "neverwinter-forge" in str(asset.get("name", "")).lower()
+    ]
+    candidates = preferred or zip_assets
+    return candidates[0] if candidates else None
+
+
+def fetch_latest_release():
+    version_info = read_version_metadata()
+    release = release_request(version_info["releaseApiUrl"])
+    asset = select_release_asset(release)
+    tag = str(release.get("tag_name") or release.get("name") or "").strip()
+    version = tag[1:] if tag.lower().startswith("v") else tag
+    return {
+        "version": version,
+        "tag": tag,
+        "name": release.get("name") or tag,
+        "body": release.get("body") or "",
+        "htmlUrl": release.get("html_url") or version_info["releasePageUrl"],
+        "publishedAt": release.get("published_at") or "",
+        "assetName": asset.get("name") if asset else "",
+        "assetUrl": asset.get("browser_download_url") if asset else "",
+        "assetSize": asset.get("size") if asset else 0
+    }
+
+
+def read_update_notice():
+    if not UPDATE_STATE_FILE.exists():
+        return None
+    try:
+        data = json.loads(UPDATE_STATE_FILE.read_text(encoding="utf-8"))
+        if data.get("status") in {"installed", "error"}:
+            return data
+    except Exception:
+        return None
+    return None
+
+
+def clear_update_notice():
+    if UPDATE_STATE_FILE.exists():
+        try:
+            UPDATE_STATE_FILE.unlink()
+        except OSError:
+            pass
+
+
+def can_install_updates():
+    if os.environ.get("FORGE_ALLOW_SOURCE_UPDATE") == "1":
+        return True
+    return bool(getattr(sys, "frozen", False))
+
+
+def updater_launch_command():
+    if getattr(sys, "frozen", False):
+        updater = ROOT / "ForgeUpdater.exe"
+        if not updater.exists():
+            return None
+        runner = UPDATES / "ForgeUpdater-runner.exe"
+        try:
+            UPDATES.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(updater, runner)
+        except Exception:
+            return [str(updater)]
+        return [str(runner)]
+    updater = ROOT / "forge_updater.py"
+    return [sys.executable, str(updater)] if updater.exists() else None
+
+
+def update_status(latest=None):
+    version_info = read_version_metadata()
+    with UPDATE_LOCK:
+        download = dict(UPDATE_DOWNLOAD_STATE)
+    if latest is None:
+        latest = download.get("release")
+    return {
+        "currentVersion": version_info["version"],
+        "releaseName": version_info["releaseName"],
+        "repository": version_info["repository"],
+        "releasePageUrl": version_info["releasePageUrl"],
+        "canInstall": can_install_updates() and updater_launch_command() is not None,
+        "isPackaged": bool(getattr(sys, "frozen", False)),
+        "latest": latest,
+        "download": download,
+        "notice": read_update_notice()
+    }
+
+
+def set_update_download_state(**updates):
+    with UPDATE_LOCK:
+        UPDATE_DOWNLOAD_STATE.update(updates)
+
+
+def download_update_package(release):
+    UPDATE_DOWNLOADS.mkdir(parents=True, exist_ok=True)
+    safe_name = str(release.get("assetName") or f"NeverwinterForge-{release['version']}.zip").replace("/", "-").replace("\\", "-")
+    package_path = UPDATE_DOWNLOADS / safe_name
+    temp_path = package_path.with_suffix(package_path.suffix + ".part")
+    headers = {"User-Agent": "Neverwinter-Forge-Updater"}
+    req = request.Request(release["assetUrl"], headers=headers)
+
+    try:
+        set_update_download_state(status="downloading", message=f"Downloading Neverwinter Forge {release['version']}...")
+        with request.urlopen(req, timeout=30) as response, temp_path.open("wb") as handle:
+            total = int(response.headers.get("Content-Length") or release.get("assetSize") or 0)
+            downloaded = 0
+            while True:
+                chunk = response.read(1024 * 512)
+                if not chunk:
+                    break
+                handle.write(chunk)
+                downloaded += len(chunk)
+                percent = int((downloaded / total) * 100) if total else 0
+                set_update_download_state(
+                    downloadedBytes=downloaded,
+                    totalBytes=total,
+                    percent=percent,
+                    message=f"Downloading Neverwinter Forge {release['version']}..."
+                )
+        temp_path.replace(package_path)
+        set_update_download_state(
+            active=False,
+            status="ready",
+            downloadedBytes=package_path.stat().st_size,
+            totalBytes=package_path.stat().st_size,
+            percent=100,
+            error="",
+            message=f"Update {release['version']} downloaded. Restart Forge to install.",
+            packagePath=str(package_path),
+            release=release
+        )
+    except Exception as exc:
+        if temp_path.exists():
+            temp_path.unlink(missing_ok=True)
+        set_update_download_state(
+            active=False,
+            status="error",
+            error=str(exc),
+            message="Update download failed.",
+            packagePath="",
+            release=release
+        )
+
+
+def shutdown_server_soon(server):
+    time.sleep(0.35)
+    try:
+        server.shutdown()
+    finally:
+        os._exit(0)
 
 
 class AppHandler(BaseHTTPRequestHandler):
@@ -353,6 +580,10 @@ class AppHandler(BaseHTTPRequestHandler):
 
         if route_path == "/api/upscaler/status":
             self._send_json(upscaler_status())
+            return
+
+        if route_path == "/api/update/status":
+            self._send_json(update_status())
             return
 
         if route_path == "/api/depth/status":
@@ -423,6 +654,22 @@ class AppHandler(BaseHTTPRequestHandler):
 
         if self.path == "/api/upscaler/download":
             self._start_upscaler_download()
+            return
+
+        if self.path == "/api/update/check":
+            self._check_for_update()
+            return
+
+        if self.path == "/api/update/download":
+            self._start_update_download()
+            return
+
+        if self.path == "/api/update/apply":
+            self._apply_update()
+            return
+
+        if self.path == "/api/update/dismiss":
+            self._dismiss_update_notice()
             return
 
         if self.path == "/api/upscaler/upscale":
@@ -552,6 +799,115 @@ class AppHandler(BaseHTTPRequestHandler):
         result["promptLength"] = len(prompt)
         result["estimatedCostUsd"] = estimate_generation_cost(mode, model, payload)
         self._send_json(result)
+
+    def _check_for_update(self):
+        try:
+            latest = fetch_latest_release()
+            current = read_version_metadata()
+            latest["available"] = is_newer_version(latest["version"], current["version"])
+            with UPDATE_LOCK:
+                UPDATE_DOWNLOAD_STATE["release"] = latest
+                if latest["available"]:
+                    UPDATE_DOWNLOAD_STATE["message"] = f"Update {latest['version']} is available."
+                elif UPDATE_DOWNLOAD_STATE["status"] in {"idle", "checked"}:
+                    UPDATE_DOWNLOAD_STATE["status"] = "checked"
+                    UPDATE_DOWNLOAD_STATE["message"] = "Neverwinter Forge is up to date."
+            self._send_json(update_status(latest))
+        except Exception as exc:
+            with UPDATE_LOCK:
+                UPDATE_DOWNLOAD_STATE.update({
+                    "active": False,
+                    "status": "error",
+                    "error": str(exc),
+                    "message": "Could not check for updates."
+                })
+            self._send_json(update_status(), status=502)
+
+    def _start_update_download(self):
+        payload = self._read_json(max_bytes=1024 * 1024)
+        with UPDATE_LOCK:
+            if UPDATE_DOWNLOAD_STATE["active"]:
+                self._send_json(update_status())
+                return
+            release = UPDATE_DOWNLOAD_STATE.get("release")
+
+        try:
+            if not release or payload.get("refresh"):
+                release = fetch_latest_release()
+                current = read_version_metadata()
+                release["available"] = is_newer_version(release["version"], current["version"])
+            if not release.get("available"):
+                self._send_json({"error": "No newer Forge release is available.", **update_status(release)}, status=400)
+                return
+            if not release.get("assetUrl"):
+                self._send_json({"error": "Latest release does not include a downloadable Forge ZIP asset.", **update_status(release)}, status=404)
+                return
+        except Exception as exc:
+            self._send_json({"error": str(exc), **update_status()}, status=502)
+            return
+
+        with UPDATE_LOCK:
+            UPDATE_DOWNLOAD_STATE.update({
+                "active": True,
+                "status": "starting",
+                "downloadedBytes": 0,
+                "totalBytes": int(release.get("assetSize") or 0),
+                "percent": 0,
+                "error": "",
+                "message": f"Starting download for Neverwinter Forge {release['version']}...",
+                "packagePath": "",
+                "release": release
+            })
+
+        thread = threading.Thread(target=download_update_package, args=(release,), daemon=True)
+        thread.start()
+        self._send_json(update_status(release))
+
+    def _apply_update(self):
+        status = update_status()
+        if not status["canInstall"]:
+            self._send_json({
+                "error": "Automatic install is disabled in source mode. Build the packaged Forge release to test install/restart.",
+                **status
+            }, status=400)
+            return
+        download = status["download"]
+        package_path = Path(download.get("packagePath", ""))
+        if download.get("status") != "ready" or not package_path.is_file():
+            self._send_json({"error": "No downloaded update package is ready to install.", **status}, status=400)
+            return
+
+        updater_command = updater_launch_command()
+        if not updater_command:
+            self._send_json({"error": "ForgeUpdater.exe was not found beside the Forge app.", **status}, status=500)
+            return
+
+        release = download.get("release") or {}
+        version = str(release.get("version") or "")
+        launch_path = Path(sys.executable).resolve() if getattr(sys, "frozen", False) else ROOT / "launch.py"
+        command = updater_command + [
+            "--package", str(package_path),
+            "--target", str(ROOT),
+            "--launch", str(launch_path),
+            "--parent-pid", str(os.getpid()),
+            "--version", version
+        ]
+
+        try:
+            subprocess.Popen(command, cwd=str(ROOT), close_fds=True)
+        except Exception as exc:
+            self._send_json({"error": f"Could not start Forge updater: {exc}", **status}, status=500)
+            return
+
+        self._send_json({
+            **status,
+            "message": "Forge is closing. The updater will install the latest version and relaunch Forge."
+        })
+        threading.Thread(target=shutdown_server_soon, args=(self.server,), daemon=True).start()
+
+    def _dismiss_update_notice(self):
+        clear_update_notice()
+        self._send_json(update_status())
 
     def _start_upscaler_download(self):
         status = upscaler_status()
@@ -1025,7 +1381,18 @@ def selected_shield_shape_asset(preset, payload):
         return None
 
     image_path = str(shape_reference.get("path", "")).strip()
-    return manifest_image_asset(preset, "shapeReferenceImages", image_path)
+    shape_preset = shield_shape_manifest_preset(preset)
+    return manifest_image_asset(shape_preset, "shapeReferenceImages", image_path)
+
+
+def shield_shape_manifest_preset(preset):
+    if not preset or not is_shield_preset(preset.get("id", "")):
+        return None
+    if preset.get("shapeReferenceImages"):
+        return preset
+    if preset.get("id") == "shield-emblem-back":
+        return get_preset("shield-emblem")
+    return preset
 
 
 def parse_pixel_size(value, default=(1024, 1024)):
@@ -1040,6 +1407,19 @@ def parse_pixel_size(value, default=(1024, 1024)):
     if width < 64 or height < 64:
         return default
     return width, height
+
+
+def gemini_control_pixel_size(payload):
+    long_side = {
+        "1K": 1024,
+        "2K": 1536,
+        "4K": 2048,
+    }.get(get_gemini_output_size(payload), 1536)
+    aspect_ratio = get_bas_relief_aspect_ratio(payload)
+    width_ratio, height_ratio = (int(part) for part in aspect_ratio.split(":"))
+    if width_ratio >= height_ratio:
+        return long_side, max(512, round(long_side * height_ratio / width_ratio))
+    return max(512, round(long_side * width_ratio / height_ratio)), long_side
 
 
 def cover_resize(image, target_size):
@@ -1182,25 +1562,30 @@ def build_shield_shape_request(preset_id, payload):
         return "No shield silhouette reference was selected. Choose a believable medieval or fantasy shield outline creatively."
     return (
         "Selected shield silhouette reference:\n"
-        "For OpenAI image edits with a selected shape, the uploaded image set is ordered deliberately: "
+        "For selected shield-shape generations, the uploaded image set is ordered deliberately when the provider supports multiple images: "
         "image 1 is a Forge-built shield layout control composite, image 2 is the original motif/source image, "
-        "and image 3 is the clean selected shield silhouette mask. Image 1 and image 3 control the final shield's "
+        "and image 3 is the clean selected shield silhouette mask. The layout control composite and mask control the final shield's "
         "outer outline. Image 2 controls the interior artwork, symbolic motif, and decorative subject matter.\n"
         "Use image 1 as the main structural guide. It is a muted grayscale layout-control composite only: it shows "
         "the chosen shield silhouette and approximate motif placement, not final color, not a decal, and not a pasted "
         "image to preserve. Redraw it into a polished 3D medieval fantasy shield, keep the same outer shield contour, "
         "and convert the interior motif into integrated shallow bas-relief with light brushed color or worn enamel on "
-        "top of the sculpted forms.\n"
+        "top of the sculpted forms. The selected shield silhouette is the mold: fit the artwork to that mold, never "
+        "stretch, widen, round, sharpen, or otherwise alter the shield outline to fit the artwork.\n"
         "The selected shield-shape reference is a high-contrast black silhouette mask on white. "
         "Use this selected mask as a non-negotiable outer contour constraint for the finished shield. The final "
         "shield's outside edge must visibly match the selected silhouette's top edge, shoulder corners, side curves, "
         "waist insets or bulges, bottom point or rounded base, total width-to-height proportion, and overall profile. "
+        "Do not add lobes, wings, points, flares, extra metalwork, cloth, glow, ornaments, or rim extensions outside "
+        "that selected silhouette. Anything outside the silhouette must remain neutral background only. "
         "The selected silhouette overrides random shield-shape invention. Do not fall back to a generic heater shield "
         "unless the selected silhouette itself is a heater shield. Treat the black fill as a shape mask only; do not "
         "make the final shield flat black unless the motif or material design calls for it. Build a new rim, bevel, "
         "rivets, material construction, thickness, and inner shield art around this exact chosen outline. The inner "
         "art should be sculpted into the shield face as shallow-to-medium bas-relief rather than stamped as an image. "
-        "It is a hard failure if the output uses a different outer shield silhouette than the selected reference."
+        "Clip, crop, simplify, compress, mirror, rearrange, or redesign the motif and ornament as needed so every "
+        "design element stays within the selected shield boundary. It is a hard failure if the output uses a different "
+        "outer shield silhouette than the selected reference, or if the silhouette is distorted to fit the motif."
     )
 
 
@@ -1333,7 +1718,7 @@ def save_generation_output(image_data, mime_type, prompt, payload, mode):
         "creatureHasTail": creature_has_tail,
         "referenceImages": [asset["manifestPath"] for asset in preset_reference_assets(preset)],
         "shieldShapeReference": shield_shape_asset["manifestPath"] if shield_shape_asset else "",
-        "shieldShapeControlComposite": mode == "openai" and bool(shield_shape_asset),
+        "shieldShapeControlComposite": mode in {"openai", "gemini"} and bool(shield_shape_asset),
         "estimatedCostUsd": estimate_generation_cost(mode, str(payload.get("openaiModel") if mode == "openai" else payload.get("model", "")), payload),
         "mimeType": mime_type,
         "promptLength": len(prompt),
@@ -1576,22 +1961,37 @@ def call_gemini(api_key, model, prompt, image_data, mime_type, payload):
     preset = get_preset(str(payload.get("presetId", "")))
     preset_id = str(payload.get("presetId", ""))
     extra_source_images = additional_source_images(payload)
-    if image_data:
-        parts.append({"text": "Primary source image. Follow this for the subject, motif, silhouette, and visual identity unless the preset prompt says otherwise."})
-        parts.append({"inline_data": {"mime_type": mime_type, "data": image_data}})
-    for index, source_image in enumerate(extra_source_images, start=2):
-        parts.append({"text": f"Additional source image {index}. Treat this as another view of the same subject only when the preset prompt assigns that role. Use it to keep object labels, colors, and material regions consistent; do not replace the primary source image."})
-        parts.append({"inline_data": {
-            "mime_type": source_image["mimeType"],
-            "data": source_image["data"]
-        }})
     shield_shape_asset = selected_shield_shape_asset(preset, payload)
-    if shield_shape_asset:
-        parts.append({"text": "Selected shield silhouette reference. This high-contrast mask is mandatory for the finished shield's outer contour. Use it as the required shield outline and proportion guide only. Keep the primary source image as the motif, redesign the inner face to fit this exact silhouette, and render the motif as integrated shallow bas-relief with light brushed color rather than a stamped image."})
+
+    if image_data and shield_shape_asset:
+        image_bytes = base64.b64decode(image_data)
+        control_bytes, control_mime_type = build_shield_layout_control_image(
+            image_bytes,
+            shield_shape_asset,
+            gemini_control_pixel_size(payload)
+        )
+        parts.append({"text": "Image 1: Forge-built shield layout control composite. This is the strongest shape-control image. Use its outer silhouette, centered scale, margin, and broad motif placement as the structural guide. Redraw it into a finished shield; do not copy it as a flat pasted image. Fit the motif and ornament inside this silhouette; do not stretch or alter the silhouette to fit the motif."})
+        parts.append({"inline_data": {
+            "mime_type": control_mime_type,
+            "data": base64.b64encode(control_bytes).decode("utf-8")
+        }})
+        parts.append({"text": "Image 2: original source motif or approved front shield. Use this for the subject, material identity, color language, and visual style. Do not let it override Image 1's selected shield outline."})
+        parts.append({"inline_data": {"mime_type": mime_type, "data": image_data}})
+        parts.append({"text": "Image 3: clean selected shield silhouette mask. This high-contrast mask is mandatory for the finished shield's outer contour. Match its top edge, shoulder corners, side curves, waist, bottom point or rounding, width-to-height proportion, and overall profile. Anything outside this mask must remain background only; keep rim, bevel, relief, ornament, and material construction inside or exactly on the mask edge."})
         parts.append({"inline_data": {
             "mime_type": shield_shape_asset["mimeType"],
             "data": base64.b64encode(shield_shape_asset["path"].read_bytes()).decode("utf-8")
         }})
+    else:
+        if image_data:
+            parts.append({"text": "Primary source image. Follow this for the subject, motif, silhouette, and visual identity unless the preset prompt says otherwise."})
+            parts.append({"inline_data": {"mime_type": mime_type, "data": image_data}})
+        for index, source_image in enumerate(extra_source_images, start=2):
+            parts.append({"text": f"Additional source image {index}. Treat this as another view of the same subject only when the preset prompt assigns that role. Use it to keep object labels, colors, and material regions consistent; do not replace the primary source image."})
+            parts.append({"inline_data": {
+                "mime_type": source_image["mimeType"],
+                "data": source_image["data"]
+            }})
     for index, asset in enumerate(preset_reference_assets(preset), start=1):
         parts.append({"text": f"Preset reference image {index}. Use only for the role described in the preset prompt; do not replace the primary source image or written concept with this reference."})
         parts.append({"inline_data": {
@@ -2104,6 +2504,8 @@ def initialize_app_storage():
     PRESETS.mkdir(parents=True, exist_ok=True)
     OUTPUTS.mkdir(parents=True, exist_ok=True)
     RUNTIMES.mkdir(parents=True, exist_ok=True)
+    UPDATES.mkdir(parents=True, exist_ok=True)
+    UPDATE_DOWNLOADS.mkdir(parents=True, exist_ok=True)
     readme_path = OUTPUTS / "README.txt"
     if not readme_path.exists():
         readme_path.write_text(OUTPUTS_README, encoding="utf-8")

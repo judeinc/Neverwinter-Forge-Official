@@ -1,0 +1,70 @@
+Use Image 1 as the approved FRONT orthographic shield render. Create a matching BACK orthographic shield render for the same shield.
+
+This is not a handle-generation pass. The game will add handles, grips, straps, mounting hardware, and combat attachment details later. The back view should be a clean flat reverse-side visual reference that borrows the front shield's material style.
+
+Strict orthographic BACK view.
+Zero perspective distortion.
+Flat camera.
+No 3/4 turn.
+No tilt.
+No angle change.
+
+The shield must remain centered, straight, and parallel to the camera. Keep the full shield visible inside the frame with the same general scale, margin, width, height, outer silhouette, and vertical centerline as the front view.
+
+Create the reverse side as a mostly flat shield back:
+- flat rear surface
+- very shallow surface depth only
+- no convex front-face bulge
+- no raised central emblem
+- no sculptural bas-relief motif
+- no decorative front-face scene copied onto the back
+- no deep rim protrusions
+- no handle
+- no grip
+- no leather arm straps
+- no buckles
+- no brackets
+- no mounting loops
+- no nails or rivets forming handle hardware
+
+Preserve the shield identity from the front:
+- same outer shield shape and proportions
+- same broad material family
+- same color palette
+- same rim or edge material, simplified for the back
+- same fantasy aesthetic and finish
+- same construction logic
+- same readable material zones
+
+Borrow style from the front without copying the front decoration. If the front has bronze, brass, iron, painted enamel, dark wood, pale wood, leather, bone, stone, or carved metal, use those materials on the back in a quiet, practical reverse-side arrangement. Let the rear surface feel like the undecorated continuation of the front shield's material world.
+
+The back may include only broad, flat, mesh-friendly construction cues:
+- simple wood plank direction
+- subtle metal rear plate zones
+- simple painted color fields
+- plain inset panels
+- very shallow seams
+- broad edge banding
+- soft material transitions
+- restrained rear-side wear on the rim only
+
+Keep all rear details low and broad. The back should read as flat game-ready texture reference, not as a fully modeled mechanical shield back.
+
+Do not invent new heraldry, symbols, faction markings, readable icons, letters, runes, text, labels, watermarks, or a second emblem. Do not place the front motif on the back. Do not make the back more ornate than the front.
+
+No extra props.
+No weapons.
+No character holding the shield.
+No hands.
+No scenery.
+No room.
+No floor texture.
+No fog.
+No smoke.
+No particles.
+
+Use a neutral dark-to-mid gray studio gradient background. The shield should be suspended slightly in front of the background with soft, even frontal studio lighting and gentle ambient occlusion. Avoid dramatic shadows, rim lighting, colored lighting, cinematic contrast, and angled presentation.
+
+The final result should look like the flat reverse-side concept art for the same shield: clean, centered, fully visible, material-consistent, silhouette-matched, and ready for game asset interpretation.
+
+Hard failures to avoid: handle, straps, grips, buckles, brackets, back-mounted hardware, copied front emblem, raised rear relief, ornate rear scene, new crest, readable text, angled shield, perspective view, cropped shield, white background, extra props, noisy texture, heavy grime, fragile tiny details, detached parts, or losing the front shield's material identity.

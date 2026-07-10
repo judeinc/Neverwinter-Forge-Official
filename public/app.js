@@ -95,6 +95,13 @@ const statusEl = document.querySelector("#status");
 const dropzone = document.querySelector("#dropzone");
 const splashScreen = document.querySelector("#splashScreen");
 const splashStatus = document.querySelector("#splashStatus");
+const updateBanner = document.querySelector("#updateBanner");
+const updateTitle = document.querySelector("#updateTitle");
+const updateMessage = document.querySelector("#updateMessage");
+const updateProgress = document.querySelector("#updateProgress");
+const updateProgressFill = document.querySelector("#updateProgressFill");
+const updatePrimaryButton = document.querySelector("#updatePrimary");
+const updateSecondaryButton = document.querySelector("#updateSecondary");
 
 let selectedImage = null;
 let currentOutputImage = null;
@@ -107,6 +114,7 @@ let depthInputImage = null;
 let upscalerInstalled = false;
 let depthReady = false;
 let upscalerPollTimer = null;
+let updatePollTimer = null;
 let presets = [];
 let pricing = {};
 let openaiPricing = {};
@@ -170,6 +178,8 @@ loadExtraPrompt();
 loadPricing();
 loadUpscalerStatus();
 loadDepthStatus();
+loadUpdateStatus();
+window.setTimeout(checkForUpdatesQuietly, 1800);
 renderSessionCost();
 updateProviderSettings();
 setupDependencyAccordion();
@@ -393,6 +403,30 @@ downloadUpscalerButton.addEventListener("click", async () => {
   const result = await response.json();
   renderUpscalerStatus(result);
   startUpscalerPolling();
+});
+
+updatePrimaryButton.addEventListener("click", async () => {
+  const action = updatePrimaryButton.dataset.action || "";
+  if (action === "download") {
+    await startUpdateDownload();
+  } else if (action === "apply") {
+    await applyDownloadedUpdate();
+  } else if (action === "dismiss") {
+    await dismissUpdateBanner();
+  } else if (action === "open-release") {
+    const url = updatePrimaryButton.dataset.url;
+    if (url) window.open(url, "_blank", "noopener");
+  }
+});
+
+updateSecondaryButton.addEventListener("click", async () => {
+  const action = updateSecondaryButton.dataset.action || "";
+  if (action === "open-release") {
+    const url = updateSecondaryButton.dataset.url;
+    if (url) window.open(url, "_blank", "noopener");
+    return;
+  }
+  await dismissUpdateBanner();
 });
 
 upscale2xButton.addEventListener("click", async () => {
@@ -1095,6 +1129,191 @@ async function loadDepthStatus() {
   }
 }
 
+async function loadUpdateStatus() {
+  try {
+    const response = await fetch(`/api/update/status?t=${Date.now()}`);
+    const result = await response.json();
+    renderUpdateStatus(result);
+    if (result.download?.active) startUpdatePolling();
+  } catch {
+    updateBanner.classList.add("hidden");
+  }
+}
+
+async function checkForUpdatesQuietly() {
+  try {
+    const response = await fetch("/api/update/check", { method: "POST" });
+    if (!response.ok) return;
+    const result = await response.json();
+    renderUpdateStatus(result);
+  } catch {
+    // Update checks are intentionally quiet unless there is a useful state to show.
+  }
+}
+
+async function startUpdateDownload() {
+  updatePrimaryButton.disabled = true;
+  updatePrimaryButton.textContent = "Starting...";
+  try {
+    const response = await fetch("/api/update/download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({})
+    });
+    const result = await response.json();
+    renderUpdateStatus(result);
+    if (result.download?.active) startUpdatePolling();
+  } catch {
+    renderUpdateError("Could not start the update download.");
+  }
+}
+
+async function applyDownloadedUpdate() {
+  updatePrimaryButton.disabled = true;
+  updatePrimaryButton.textContent = "Restarting...";
+  try {
+    const response = await fetch("/api/update/apply", { method: "POST" });
+    const result = await response.json();
+    if (!response.ok) {
+      renderUpdateError(result.error || "Could not start the updater.");
+      return;
+    }
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "applying";
+    updateTitle.textContent = "Updating Neverwinter Forge";
+    updateMessage.textContent = result.message || "Forge is closing. The updater will install the latest version and relaunch Forge.";
+    updateProgress.classList.add("hidden");
+    updatePrimaryButton.classList.add("hidden");
+    updateSecondaryButton.classList.add("hidden");
+  } catch {
+    renderUpdateError("Could not start the updater.");
+  }
+}
+
+async function dismissUpdateBanner() {
+  try {
+    await fetch("/api/update/dismiss", { method: "POST" });
+  } catch {
+    // The banner can still be hidden locally if the dismiss call fails.
+  }
+  updateBanner.classList.add("hidden");
+}
+
+function startUpdatePolling() {
+  if (updatePollTimer) return;
+  updatePollTimer = window.setInterval(async () => {
+    const response = await fetch(`/api/update/status?t=${Date.now()}`);
+    const result = await response.json();
+    renderUpdateStatus(result);
+    if (!result.download?.active) {
+      window.clearInterval(updatePollTimer);
+      updatePollTimer = null;
+    }
+  }, 700);
+}
+
+function renderUpdateStatus(status) {
+  const notice = status.notice;
+  const latest = status.latest;
+  const download = status.download || {};
+  updateBanner.classList.add("hidden");
+  updateBanner.dataset.state = "";
+  updateProgress.classList.add("hidden");
+  updatePrimaryButton.classList.remove("hidden");
+  updateSecondaryButton.classList.remove("hidden");
+  updatePrimaryButton.disabled = false;
+  updateSecondaryButton.disabled = false;
+  updatePrimaryButton.dataset.action = "";
+  updateSecondaryButton.dataset.action = "dismiss";
+  updatePrimaryButton.dataset.url = "";
+  updateSecondaryButton.dataset.url = "";
+  updateSecondaryButton.textContent = "Dismiss";
+
+  if (notice?.status === "installed") {
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "installed";
+    updateTitle.textContent = "Neverwinter Forge Updated";
+    updateMessage.textContent = notice.message || `Forge has been updated to ${notice.version}.`;
+    updatePrimaryButton.textContent = "OK";
+    updatePrimaryButton.dataset.action = "dismiss";
+    updateSecondaryButton.classList.add("hidden");
+    return;
+  }
+
+  if (notice?.status === "error") {
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "error";
+    updateTitle.textContent = "Update Failed";
+    updateMessage.textContent = notice.message || "The previous Forge files were restored.";
+    updatePrimaryButton.textContent = "OK";
+    updatePrimaryButton.dataset.action = "dismiss";
+    updateSecondaryButton.classList.add("hidden");
+    return;
+  }
+
+  if (download.active) {
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "downloading";
+    updateTitle.textContent = "Downloading Forge Update";
+    updateMessage.textContent = download.message || "Downloading the latest Neverwinter Forge release...";
+    updateProgress.classList.remove("hidden");
+    updateProgressFill.style.width = `${download.percent || 0}%`;
+    updatePrimaryButton.disabled = true;
+    updatePrimaryButton.textContent = `${download.percent || 0}%`;
+    updateSecondaryButton.textContent = "Hide";
+    return;
+  }
+
+  if (download.status === "ready") {
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "ready";
+    const version = download.release?.version || latest?.version || "latest";
+    updateTitle.textContent = `Update Ready: ${version}`;
+    updateMessage.textContent = status.canInstall
+      ? "Please restart Forge to update to the latest version."
+      : "Update downloaded. Install/restart is available in the packaged Forge app, not source mode.";
+    updateProgress.classList.remove("hidden");
+    updateProgressFill.style.width = "100%";
+    updatePrimaryButton.textContent = status.canInstall ? "Restart and Update" : "Open Release";
+    updatePrimaryButton.dataset.action = status.canInstall ? "apply" : "open-release";
+    updatePrimaryButton.dataset.url = download.release?.htmlUrl || status.releasePageUrl || "";
+    updateSecondaryButton.textContent = "Later";
+    return;
+  }
+
+  if (download.status === "error") {
+    renderUpdateError(download.error || "Update failed.");
+    return;
+  }
+
+  if (latest?.available) {
+    updateBanner.classList.remove("hidden");
+    updateBanner.dataset.state = "available";
+    updateTitle.textContent = `Update Available: ${latest.version}`;
+    updateMessage.textContent = latest.assetUrl
+      ? (latest.name || "A new Neverwinter Forge release is ready to download.")
+      : "A newer release exists, but no Forge ZIP asset is attached yet.";
+    updatePrimaryButton.textContent = latest.assetUrl ? "Download Update" : "Open Release";
+    updatePrimaryButton.dataset.action = latest.assetUrl ? "download" : "open-release";
+    updatePrimaryButton.dataset.url = latest.htmlUrl || status.releasePageUrl || "";
+    updateSecondaryButton.textContent = "Release Notes";
+    updateSecondaryButton.dataset.action = "open-release";
+    updateSecondaryButton.dataset.url = latest.htmlUrl || status.releasePageUrl || "";
+  }
+}
+
+function renderUpdateError(message) {
+  updateBanner.classList.remove("hidden");
+  updateBanner.dataset.state = "error";
+  updateTitle.textContent = "Forge Update";
+  updateMessage.textContent = message;
+  updateProgress.classList.add("hidden");
+  updatePrimaryButton.classList.add("hidden");
+  updateSecondaryButton.classList.remove("hidden");
+  updateSecondaryButton.textContent = "Dismiss";
+  updateSecondaryButton.dataset.action = "dismiss";
+}
+
 function startUpscalerPolling() {
   if (upscalerPollTimer) return;
   upscalerPollTimer = window.setInterval(async () => {
@@ -1284,8 +1503,21 @@ async function loadPresetReferenceImage(imagePath, index) {
   }
 }
 
-function renderShieldShapePicker(preset) {
+function getShieldShapeGroups(preset) {
   const shapes = preset?.shapeReferenceImages || [];
+  const groups = (preset?.shapeReferenceGroups || [])
+    .map((group) => ({
+      ...group,
+      images: (group.images || []).filter((imagePath) => shapes.includes(imagePath))
+    }))
+    .filter((group) => group.images.length > 0);
+  if (groups.length > 0) return groups;
+  return shapes.length > 0 ? [{ id: "shield-shapes", name: "Shield Shapes", images: shapes }] : [];
+}
+
+function renderShieldShapePicker(preset) {
+  const groups = getShieldShapeGroups(preset);
+  const shapes = groups.flatMap((group) => group.images);
   const showPicker = isShieldPreset(preset) && shapes.length > 0;
   shieldShapePicker.classList.toggle("hidden", !showPicker);
   shieldShapeGrid.innerHTML = "";
@@ -1299,35 +1531,67 @@ function renderShieldShapePicker(preset) {
   clearShieldShapeButton.dataset.active = String(!selectedShieldShapePath);
   clearShieldShapeButton.setAttribute("aria-pressed", String(!selectedShieldShapePath));
   const selectedIndex = selectedShieldShapePath ? shapes.indexOf(selectedShieldShapePath) : -1;
-  shieldShapeStatus.textContent = selectedIndex >= 0 ? `Selected shape ${selectedIndex + 1}` : "Random shape";
-  shapes.forEach((imagePath, index) => {
-    const isSelected = imagePath === selectedShieldShapePath;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "shield-shape-tile";
-    button.title = `Shield shape ${index + 1}`;
-    button.dataset.active = String(isSelected);
-    button.setAttribute("aria-label", `Shield shape ${index + 1}`);
-    button.setAttribute("aria-pressed", String(isSelected));
+  const selectedGroup = groups.find((group) => group.images.includes(selectedShieldShapePath));
+  shieldShapeStatus.textContent = selectedIndex >= 0
+    ? `Selected ${selectedGroup?.name || "shield shape"} ${(selectedGroup?.images.indexOf(selectedShieldShapePath) ?? selectedIndex) + 1}${selectedGroup?.aspectRatio ? ` (${selectedGroup.aspectRatio})` : ""}`
+    : "Random shape";
 
-    const image = document.createElement("img");
-    image.src = presetAssetUrl(imagePath);
-    image.alt = "";
-    image.loading = "lazy";
-    button.appendChild(image);
-    if (isSelected) {
-      const badge = document.createElement("span");
-      badge.className = "shield-shape-check";
-      badge.textContent = "Selected";
-      button.appendChild(badge);
+  groups.forEach((group) => {
+    const section = document.createElement("section");
+    section.className = "shield-shape-section";
+
+    const header = document.createElement("div");
+    header.className = "shield-shape-section-header";
+    const title = document.createElement("h4");
+    title.textContent = group.name || "Shield Shapes";
+    header.appendChild(title);
+    if (group.aspectRatio) {
+      const ratio = document.createElement("span");
+      ratio.textContent = `${group.aspectRatio} output`;
+      header.appendChild(ratio);
     }
+    section.appendChild(header);
 
-    button.addEventListener("click", () => {
-      selectedShieldShapePath = imagePath;
-      localStorage.setItem("neverwinterForge.shieldShapePath", selectedShieldShapePath);
-      renderShieldShapePicker(preset);
+    const groupGrid = document.createElement("div");
+    groupGrid.className = "shield-shape-section-grid";
+    group.images.forEach((imagePath, index) => {
+      const isSelected = imagePath === selectedShieldShapePath;
+      const label = `${group.name || "Shield shape"} ${index + 1}`;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "shield-shape-tile";
+      button.title = group.aspectRatio ? `${label} (${group.aspectRatio})` : label;
+      button.dataset.active = String(isSelected);
+      button.dataset.aspect = group.aspectRatio || "1:1";
+      button.setAttribute("aria-label", label);
+      button.setAttribute("aria-pressed", String(isSelected));
+
+      const image = document.createElement("img");
+      image.src = presetAssetUrl(imagePath);
+      image.alt = "";
+      image.loading = "lazy";
+      button.appendChild(image);
+      if (isSelected) {
+        const badge = document.createElement("span");
+        badge.className = "shield-shape-check";
+        badge.textContent = "Selected";
+        button.appendChild(badge);
+      }
+
+      button.addEventListener("click", () => {
+        selectedShieldShapePath = imagePath;
+        localStorage.setItem("neverwinterForge.shieldShapePath", selectedShieldShapePath);
+        if (group.aspectRatio && basReliefAspectRatio.value !== group.aspectRatio) {
+          basReliefAspectRatio.value = group.aspectRatio;
+          localStorage.setItem("neverwinterForge.basReliefAspectRatio", group.aspectRatio);
+          renderSessionCost();
+        }
+        renderShieldShapePicker(preset);
+      });
+      groupGrid.appendChild(button);
     });
-    shieldShapeGrid.appendChild(button);
+    section.appendChild(groupGrid);
+    shieldShapeGrid.appendChild(section);
   });
 }
 
@@ -1572,7 +1836,7 @@ function isBasReliefPreset(preset) {
 }
 
 function isShieldPreset(preset) {
-  return preset?.id === "shield-emblem";
+  return preset?.id === "shield-emblem" || preset?.id === "shield-emblem-back";
 }
 
 function isColorGuidePreset(preset) {
@@ -1599,7 +1863,10 @@ function cloneImageForPayload(image, fallbackName) {
 function getSelectedShieldShapeReference(generationPresetId = selectedPresetId) {
   const preset = presets.find((item) => item.id === generationPresetId);
   if (!isShieldPreset(preset) || !selectedShieldShapePath) return {};
-  if (!preset.shapeReferenceImages?.includes(selectedShieldShapePath)) return {};
+  const shapePreset = preset.shapeReferenceImages?.length
+    ? preset
+    : presets.find((item) => item.id === "shield-emblem");
+  if (!shapePreset?.shapeReferenceImages?.includes(selectedShieldShapePath)) return {};
   return { path: selectedShieldShapePath };
 }
 

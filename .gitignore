@@ -29,6 +29,7 @@ presets/extra_prompt.txt
 *.bin
 *.mp4
 runtimes/downloads/
+updates/
 
 # Local scratch data
 tmp/
