@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.3.0B Release
+
+### Added
+- Added the Neverwinter Forge auto-updater framework with GitHub Releases version checks, update download progress, restart/update messaging, and a separate packaged updater helper.
+- Added `version.json` release metadata so packaged builds can compare the installed Forge version against the latest GitHub release.
+- Added Shield Back generation for creating a flat material-matched rear shield view from an approved front shield.
+- Added a Vertical / Kite Shields section with 9 tall 2:3 shield silhouettes for Shield Emblem generation.
+
+### Changed
+- Tightened Shield Emblem selected-silhouette rules so the artwork must conform to the chosen shield boundary instead of stretching or changing the shield outline to fit the design.
+- Improved Gemini shield-control routing so the selected shield shape remains the structural guide for the final output.
+- Improved bas-relief emblem and shield ornament prompting so supporting filigree is derived from the source motif's symbolism rather than falling back to a stock fantasy motif.
+- Tightened outfit back-view prompts so dresses, robes, coats, panels, and armor layers wrap coherently around the rear view.
+- Updated packaged build configuration to include a standalone `ForgeUpdater.exe` that can safely replace the installed Forge files through a temporary runner copy.
+
+### Tested
+- Built the packaged PyInstaller release.
+- Verified the updater replacement flow in a disposable install folder, including file replacement, backup creation, update-state notice writing, and preservation of local outputs, runtimes, depth config, and extra prompt data.
+
 ## 1.3.0A Release
 
 ### Added
