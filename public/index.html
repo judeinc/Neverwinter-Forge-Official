@@ -227,9 +227,26 @@
           <span>Source outfit has visible skin-like areas</span>
         </label>
 
+        <label id="neckConnectorField" class="field checkbox-field hidden">
+          <input id="createNeckConnector" type="checkbox">
+          <span>Create Neck Connector</span>
+        </label>
+
+        <label id="neckConnectorStyleField" class="field hidden">
+          <span>Neck Connector Style</span>
+          <select id="neckConnectorStyle">
+            <option value="auto">Auto Match Outfit</option>
+            <option value="choker-collar">Choker / Collar</option>
+            <option value="necklace-pendant">Necklace / Pendant</option>
+            <option value="gorget-armor">Gorget / Armor</option>
+            <option value="cloth-scarf">Cloth / Scarf</option>
+            <option value="ceremonial-fantasy">Ceremonial / Fantasy</option>
+          </select>
+        </label>
+
         <label id="extremeSimplifyField" class="field checkbox-field hidden">
           <input id="extremeSimplify" type="checkbox">
-          <span>Extreme Simplify</span>
+          <span id="extremeSimplifyLabel">Extreme Simplify</span>
         </label>
 
         <label id="creatureTailField" class="field checkbox-field hidden">

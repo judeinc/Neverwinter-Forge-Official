@@ -12,6 +12,8 @@ Monochrome light gray clay/resin/plaster statue material only. Pure grayscale ou
 
 For unseen back details, infer minimally from the front design. Continue visible straps, armor plates, clothing folds, hair masses, and base motifs in a logical symmetrical sculpted way. Do not add new story elements, weapons, props, logos, colors, patterns, or decorative details that are not implied by the reference.
 
+For belts, sashes, harnesses, pouch straps, scabbard loops, armor bands, trim bands, and side-mounted accessories, preserve the front-view height, thickness, material, side placement, and attachment logic as if the miniature were rotated in 3D. Back-facing straps and bands should line up at the sides and continue cleanly around the body. If the rear half is unclear, simplify it as a plain continuation of the same sculpted piece rather than inventing a new rear buckle, pouch, symbol, or ornament.
+
 Keep all details solid and printable. Simplified hair in solid clumps. Simplified folds, straps, and armor plates. No thin floating elements. No fragile overhangs. No loose strands. Base must be one solid piece with the figure.
 
 No micro surface noise. No pores. No skin grain. No scratches. No dirt. No stone texture. Detail must look sculpted as solid forms, not texture noise.

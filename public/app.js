@@ -65,8 +65,13 @@ const clearShieldShapeButton = document.querySelector("#clearShieldShape");
 const promptModeField = document.querySelector("#promptMode");
 const skinSurfaceField = document.querySelector("#skinSurfaceField");
 const preserveSkinSurfaceField = document.querySelector("#preserveSkinSurface");
+const neckConnectorField = document.querySelector("#neckConnectorField");
+const createNeckConnectorToggle = document.querySelector("#createNeckConnector");
+const neckConnectorStyleField = document.querySelector("#neckConnectorStyleField");
+const neckConnectorStyleSelect = document.querySelector("#neckConnectorStyle");
 const extremeSimplifyField = document.querySelector("#extremeSimplifyField");
 const extremeSimplifyToggle = document.querySelector("#extremeSimplify");
+const extremeSimplifyLabel = document.querySelector("#extremeSimplifyLabel");
 const creatureTailField = document.querySelector("#creatureTailField");
 const creatureHasTailField = document.querySelector("#creatureHasTail");
 const extraPromptField = document.querySelector("#extraPrompt");
@@ -124,6 +129,7 @@ let selectedPresetId = localStorage.getItem("neverwinterForge.presetId") || "min
 let selectedShieldShapePath = localStorage.getItem("neverwinterForge.shieldShapePath") || "";
 let generateButtonBaseLabel = "Generate";
 const COLOR_GUIDE_PRESET_ID = "id-map-color-guide";
+const SIMPLIFY_OBJECTS_PRESET_ID = "simplify-objects";
 const splashMessages = [
   "Warming the forge...",
   "Loading presets...",
@@ -134,13 +140,25 @@ const SKIN_SURFACE_PROMPT = `Visible skin-like outfit areas:
 The source outfit intentionally has exposed skin-like areas. Preserve those exposed areas instead of covering them with new cloth, armor, gloves, sleeves, leggings, collars, or panels.
 Render exposed skin-like areas as smooth matte mannequin material: skin-toned plastic or resin, featureless, clean, non-realistic, low-shine, and PBR-readable.
 No pores, veins, body hair, blemishes, sweat, scars, anatomy detail, or realistic skin texture. Keep it simple like a neutral material mask.
-Only preserve exposed areas that are clearly part of the source outfit design. Do not add new exposed areas that are not in the source.`;
+Only preserve exposed areas that are clearly part of the source outfit design. Do not add new exposed areas that are not in the source.
+Skin cutoff guard:
+Do not use mannequin skin as a cap, plug, filler, sleeve extension, glove extension, collar insert, neck stump, wrist stump, ankle stump, or artificial transition material.
+At wrists, forearms, glove ends, bracer ends, sleeve cuffs, collars, gorgets, necklaces, neck rings, boot tops, and armor cutoffs, the outfit piece should terminate with its own material edge unless the source clearly shows exposed skin continuing beyond that exact edge.
+If a bracer, glove, sleeve, collar, gorget, boot, or armor piece ends at a modular cutoff, finish it with a clean hard material rim, cuff, seam, bevel, shallow cap, or open dark interior. Do not add a gray or skin-toned body section beyond the edge just to complete the limb.
+At the neck, terminate the body at the collar or neckline plane. Do not render a raised mannequin neck column, gray neck tube, exposed throat cylinder, or skin-colored plug above the collar.
+Preserve skin only in intentional open regions such as bare torso, bare upper arm, open shoulder, exposed thigh, or deliberate neckline. Never infer extra skin just because the locked mannequin template has arms, neck, wrists, ankles, or gaps.`;
 const ROBE_DRESS_SKIN_SURFACE_PROMPT = `Visible skin-like outfit areas for robe/dress:
 The source outfit intentionally has exposed skin-like areas, but the robe/dress silhouette wins for the lower body.
 Preserve exposed skin-like areas only above the waist, such as neckline, upper chest, shoulders, upper arms, or forearms, when they are clearly part of the source design.
 Render any preserved upper-body skin-like areas as smooth matte mannequin material: skin-toned plastic or resin, featureless, clean, non-realistic, low-shine, and PBR-readable.
 Do not preserve lower-body exposed skin. Do not show thighs, knees, calves, feet, or a full mannequin leg through robe/dress openings.
-For ground-length dresses, gowns, and robes, close the lower garment, hide the lower body fully, cap the bottom, and keep the contact shadow. The dress/robe must always win below the waist.`;
+For ground-length dresses, gowns, and robes, close the lower garment, hide the lower body fully, cap the bottom, and keep the contact shadow. The dress/robe must always win below the waist.
+Skin cutoff guard:
+Do not use mannequin skin as a cap, plug, filler, sleeve extension, glove extension, collar insert, neck stump, wrist stump, ankle stump, or artificial transition material.
+At wrists, forearms, glove ends, bracer ends, sleeve cuffs, collars, gorgets, necklaces, neck rings, boot tops, and armor cutoffs, the garment or armor piece should terminate with its own material edge unless the source clearly shows exposed skin continuing beyond that exact edge.
+If a sleeve, bracer, glove, collar, gorget, boot, dress edge, or armor piece ends at a modular cutoff, finish it with a clean hard material rim, cuff, seam, bevel, hem, shallow cap, or open dark interior. Do not add a gray or skin-toned body section beyond the edge just to complete the limb.
+At the neck, terminate the body at the collar or neckline plane. Do not render a raised mannequin neck column, gray neck tube, exposed throat cylinder, or skin-colored plug above the collar.
+Preserve skin only in intentional open upper-body regions such as bare shoulder, exposed neckline, open upper chest, or deliberately bare upper arm. Never infer extra skin at neck, wrist, ankle, or lower-body gaps.`;
 const EXTREME_SIMPLIFY_PROMPT = `Extreme Simplify:
 Create a clean canvas version of the outfit for image-to-3D modeling. Preserve the silhouette, garment construction, large armor plates, major seams, major belts, large sashes, collars, cuffs, boots, robe or dress hem rules, and broad material zones.
 Remove all embroidery, floral designs, damask patterns, tiny filigree, decorative scrollwork, brocade, lace patterning, decals, symbols, sigils, heraldry, logos, readable icons, tiny trim motifs, micro buckles, small studs, noisy engravings, ornamental surface art, busy texture detail, scratches, grime, dirt, rust, and photoreal material noise.
@@ -148,6 +166,63 @@ For creature presets, also remove individual fur strands, shaggy fur edges, tiny
 Reduce materials to bare minimum PBR-readable textiles and surfaces: plain cloth, plain leather, smooth metal, padded fabric, simple chainmail zones, simple sculpted fur masses, broad grouped scale or hide zones, matte skin-like mannequin material when skin preservation is enabled, and clean boot or paw-wrap material.
 Make the simplified PBR material separation stronger: clear roughness differences, broad smooth highlights on metal, subdued cloth sheen, controlled leather sheen, and clean color blocking.
 Do not flatten the outfit into one material. Keep useful large material zones, but remove decorative surface art so the user can repaint details later.`;
+const OBJECT_EXTREME_SIMPLIFY_PROMPT = `Extreme Simplify Objects:
+Run a stronger cleanup pass for image-to-3D object extraction.
+Preserve the requested object identity, silhouette, broad proportions, major functional parts, primary material zones, large handles, blades, rims, guards, hinges, buckles, panels, openings, bases, legs, and structural seams.
+Remove tiny filigree, micro scrollwork, small decals, logos, readable text, busy etched patterns, tiny repeated ornament, tassels, loose cords, dangling strands, thin fringe, fragile spikes, stray ribbons, small straps that do not define the construction, excessive buckles, tiny bolts, tiny gems, scratches, grime, rust, chipped paint, high-frequency surface texture, and decorative clutter.
+Collapse clusters of small straps, trims, wires, or filigree into one or two broader clean forms when their placement matters.
+Keep only large functional straps, bands, rims, sockets, handles, or supports that are necessary for the object to read correctly.
+Reduce materials to clean broad PBR-readable surfaces such as plain metal, wood, leather, cloth, stone, ceramic, bone, glass, painted surface, or gem.
+Do not redesign the object, add new parts, or make it blocky. Make it cleaner, sturdier, and easier to convert into a mesh.`;
+const NECK_CONNECTOR_PROMPT = `Create Neck Connector:
+Add a fitted collar-level neck connector piece that acts as a clean wearable modular socket between this outfit body and a separately generated head.
+Design it from the outfit's existing visual language: borrow broad shapes, materials, colors, trim logic, gems, metalwork, leatherwork, cloth bands, bracer shapes, boot shapes, belt motifs, or armor motifs already present in the source outfit.
+Use creative variety. Do not default to the same simple choker every time. Choose one connector archetype that best fits the outfit's content, era, material, and silhouette.
+When a specific Neck Connector Style is selected, that selected style is authoritative. When Auto Match Outfit is selected, choose the strongest connector type from the source outfit instead of falling back to a generic choker.
+Possible connector archetypes include: broad choker, layered choker, pendant necklace, medallion necklace, torque collar, torc necklace, gorget plate, segmented armor collar, leather strap collar, cloth wrap collar, scarf-like short wrap, clasped mantle edge, decorative neck ring, crescent necklace, chain-and-plaque necklace, gem-set collar, high fabric collar, low collarbone collar, shoulder-linked collar, yoke-like collar, tabard-neck clasp, ribbon neck band, braided cord collar, bone or horn collar, ceremonial neck plate, mage amulet socket, and broad recessed socket collar.
+Pendant or medallion variants are allowed when they make sense: the pendant, plaque, clasp, or amulet can visually cap the front neckline and create a clean modular break, while the actual collar-level cutoff/socket remains centered and usable for plugging in a head.
+If using a necklace-style connector, make it broad and sculptural enough to read as mesh support, not a thin string. A chain, cord, ribbon, or pendant should become a simplified solid band, plaque, clasp, or amulet form suitable for image-to-3D conversion.
+It must cover or replace any exposed mannequin neck stump. Do not leave gray or skin-toned neck filler visible above the outfit.
+This overrides visible-skin preservation only at the modular neck cutoff: exposed shoulders, upper chest, or intentional open neckline skin may remain, but the plug-in head socket must not be a skin stump.
+Collar-plane cutoff rule: the outfit should end at the collar, gorget, necklace, choker, scarf, or neckline plane. Do not render a vertical neck tube rising above it.
+Scale the connector to the body, not like a small bottle cap: it should fit the full locked neck diameter and sit naturally on the shoulders, collarbone, upper chest, or gorget area with believable thickness and width.
+Anatomy fit check: the connector must be at least as wide as the locked neck opening and visually integrated with the torso neckline. It should have enough front depth, side thickness, shoulder/collarbone coverage, or collar height to read as a wearable mesh piece, not a tiny plug.
+Do not shrink the locked neck diameter to fit the connector. The connector must scale up to the template neck opening, not the neck opening scale down to the connector.
+If the source character has an anime-thin neck, ignore that anatomy and build the connector for the locked modular body's neck opening diameter.
+The socket may be a shallow concave cap, shallow convex cap, flat cap, clean rim, or hollow dark recessed opening at collar level. It can be open or capped; the later 3D generator can fill the interior.
+Keep the top cutoff clean, centered, circular or oval enough for a head/neck mesh to plug into later, and flush with the collar plane rather than raised into a visible cylinder. The opening should be large enough for the body's modular neck scale, not a tiny hole.
+Keep it rig-friendly, symmetrical enough for front/back generation, close to the neck cutoff, and not tall enough to become a head, mask, hood, helmet, face, throat, or neck column.
+Avoid a thin coin rim, tiny cap, cork, button, bottle-cap plug, miniature ring perched on top of the torso, raised gray cylinder, exposed mannequin neck tube, or tall cup-shaped socket.
+Do not add hair, chin, jaw, face, head, throat anatomy, realistic skin, a full mannequin neck, or a visible vertical neck cylinder.
+In Auto Match Outfit mode, if the outfit already has a good collar, gorget, choker, necklace, or neck rim, strengthen and clean that existing piece instead of inventing a second competing neck piece. In a specific style mode, adapt the chosen style to the outfit while preserving the locked neck scale.
+Use broad readable forms and avoid tiny filigree unless the outfit already relies on large matching ornament. Prefer one strong connector idea over many small decorations.`;
+const NECK_CONNECTOR_STYLE_PROMPTS = {
+  auto: `Neck Connector Style: Auto Match Outfit.
+Choose the neck connector archetype that best matches the source outfit's existing neckwear, armor language, cloth language, jewelry language, bracers, belts, boots, and material hierarchy.
+If the source already has a necklace or pendant, prefer a broad necklace or pendant connector. If it has armor or hard bracers, prefer a gorget or plate collar. If it has soft cloth, prefer a cloth wrap or collar. If it is formal or magical, prefer a ceremonial connector.
+Do not default to a choker unless a choker/collar is genuinely the best match. Keep the result body-scaled, broad enough for mesh generation, fitted to the locked neck opening, and flush at the collar plane.`,
+  "choker-collar": `Neck Connector Style: Choker / Collar.
+Force the connector toward a fitted choker, collar band, low collar, high collar, neck ring, or structured collar.
+It should wrap fully around the neck opening as a broad wearable band with body-scale thickness, not a tiny rim.
+Avoid pendant-dominant, scarf-dominant, or heavy armor gorget solutions unless the outfit clearly requires them.`,
+  "necklace-pendant": `Neck Connector Style: Necklace / Pendant.
+Force the connector toward a necklace, pendant, medallion, amulet, chain-and-plaque, crescent necklace, torque, torc, or broad decorative neck piece.
+It must still function as a modular mesh connector: make the necklace broad, sculptural, and solid enough to create a clean neck break and hide the mannequin neck stump.
+The pendant, medallion, clasp, or plaque may cap the front neckline visually, while the top neck cutoff remains centered, body-scale, collar-level, and usable for plugging in a head.
+Do not turn it into a thin string, tiny charm, or fragile chain.`,
+  "gorget-armor": `Neck Connector Style: Gorget / Armor.
+Force the connector toward an armored gorget, segmented armor collar, metal socket collar, plate yoke, raised neck guard, or hard protective neck piece.
+It should use the outfit's armor, bracer, boot, belt, or metal motifs and fit naturally over the upper chest, collarbone, shoulders, and full neck diameter.
+Avoid delicate necklace-only or soft scarf solutions.`,
+  "cloth-scarf": `Neck Connector Style: Cloth / Scarf.
+Force the connector toward a cloth wrap, scarf-like short wrap, soft collar, mantle edge, folded fabric band, ribbon neck band, or padded textile connector.
+It should be broad, clean, and sculptural enough for mesh generation, with a body-scale neck opening and no loose dangling strips.
+Avoid hard armor gorgets or jewelry-dominant pendants unless the outfit clearly requires them.`,
+  "ceremonial-fantasy": `Neck Connector Style: Ceremonial / Fantasy.
+Force the connector toward a more expressive fantasy connector: ceremonial neck plate, gem-set collar, mage amulet socket, noble yoke, ritual collar, ornate clasp, bone or horn collar, or symbolic but non-logo neck piece.
+Use the outfit's existing motifs and materials, but keep the forms broad, readable, mesh-friendly, and body-scaled.
+Avoid tiny filigree, fragile chains, unreadable micro-ornament, or a small cap-like plug.`
+};
 const CREATURE_TAIL_ENABLED_PROMPT = `Creature tail option:
 Creature has tail is enabled. Keep one tail attached at the correct rear pelvis/tail-root area whenever that view can naturally show it. The tail must be straight on its view axis: centered and vertical/downward in front or back views, and a clean straight profile extension in side view. Do not curve, sway, curl, twist, wag, hook, arc, coil, or drift the tail left or right. Do not rotate or angle a front or back view just to show more tail. The dedicated creature side view should show the full tail profile. Follow any tail range or tail silhouette reference included by the selected creature preset, and never exceed that skeleton's allowed tail length or extension.`;
 const CREATURE_TAIL_DISABLED_PROMPT = `Creature tail option:
@@ -162,6 +237,8 @@ extraPromptField.value = localStorage.getItem("neverwinterForge.extraPrompt") ||
 objectPromptField.value = localStorage.getItem("neverwinterForge.objectPrompt") || "";
 promptModeField.value = localStorage.getItem("neverwinterForge.promptMode") || "preset-extra";
 preserveSkinSurfaceField.checked = localStorage.getItem("neverwinterForge.preserveSkinSurface") === "true";
+createNeckConnectorToggle.checked = localStorage.getItem("neverwinterForge.createNeckConnector") === "true";
+neckConnectorStyleSelect.value = localStorage.getItem("neverwinterForge.neckConnectorStyle") || "auto";
 extremeSimplifyToggle.checked = localStorage.getItem("neverwinterForge.extremeSimplify") === "true";
 creatureHasTailField.checked = localStorage.getItem("neverwinterForge.creatureHasTail") === "true";
 apiKeyField.value = localStorage.getItem("neverwinterForge.apiKey") || "";
@@ -235,6 +312,15 @@ promptModeField.addEventListener("change", () => {
 
 preserveSkinSurfaceField.addEventListener("change", () => {
   localStorage.setItem("neverwinterForge.preserveSkinSurface", String(preserveSkinSurfaceField.checked));
+});
+
+createNeckConnectorToggle.addEventListener("change", () => {
+  localStorage.setItem("neverwinterForge.createNeckConnector", String(createNeckConnectorToggle.checked));
+  renderInputMode();
+});
+
+neckConnectorStyleSelect.addEventListener("change", () => {
+  localStorage.setItem("neverwinterForge.neckConnectorStyle", neckConnectorStyleSelect.value);
 });
 
 extremeSimplifyToggle.addEventListener("change", () => {
@@ -328,6 +414,30 @@ generateButton.addEventListener("click", async () => {
       viewId: selectedImage ? "open-image" : "open-text",
       busyLabel: "Running open prompt...",
       statusLabel: "Open prompt complete.",
+      useResultAsFrontReference: true
+    });
+    return;
+  }
+
+  if (isImagePromptPreset(selected)) {
+    const objectPrompt = objectPromptField.value.trim();
+    if (!selectedImage) {
+      setStatus("Choose a source image with the object you want to simplify.", true);
+      return;
+    }
+    if (!objectPrompt) {
+      setStatus("Describe which object or objects to extract and simplify first.", true);
+      objectPromptField.focus();
+      return;
+    }
+
+    await runGeneration({
+      image: selectedImage,
+      prompt: buildPrompt(),
+      textPrompt: objectPrompt,
+      viewId: "simplify-objects-front",
+      busyLabel: "Simplifying object extraction...",
+      statusLabel: "Simplified object extraction complete.",
       useResultAsFrontReference: true
     });
     return;
@@ -559,6 +669,8 @@ async function runGeneration({ image, additionalImages = [], prompt, textPrompt 
       basReliefAspectRatio: basReliefAspectRatio.value,
       openaiOutputFormat: "png",
       preserveSkinSurface: usesSkinSurfaceControl(outfitOptionPreset) && preserveSkinSurfaceField.checked,
+      createNeckConnector: usesNeckConnectorControl(outfitOptionPreset) && createNeckConnectorToggle.checked,
+      neckConnectorStyle: neckConnectorStyleSelect.value,
       extremeSimplify: usesOutfitOptionControls(outfitOptionPreset) && extremeSimplifyToggle.checked,
       creatureHasTail: isCreaturePreset(outfitOptionPreset) && creatureHasTailField.checked,
       viewId,
@@ -644,7 +756,7 @@ async function runDerivedView(presetId, busyLabel, statusLabel) {
   ].join("\n");
   await runGeneration({
     image: derivedInputImage,
-    prompt: [sourceRoutingPrompt, preset.prompt.trim(), getSkinSurfacePrompt(getSelectedPreset()), getExtremeSimplifyPrompt(getSelectedPreset()), getCreatureTailPrompt(getSelectedPreset()), extraPromptField.value.trim()].filter(Boolean).join("\n\n"),
+    prompt: [sourceRoutingPrompt, preset.prompt.trim(), getSkinSurfacePrompt(getSelectedPreset()), getNeckConnectorPrompt(getSelectedPreset()), getExtremeSimplifyPrompt(getSelectedPreset()), getCreatureTailPrompt(getSelectedPreset()), extraPromptField.value.trim()].filter(Boolean).join("\n\n"),
     generationPresetId: presetId,
     viewId: presetId.replace("miniature-", ""),
     busyLabel,
@@ -1763,6 +1875,7 @@ function buildPrompt() {
   const extraPrompt = extraPromptField.value.trim();
   const objectPrompt = objectPromptField.value.trim();
   const skinSurfacePrompt = getSkinSurfacePrompt(selected);
+  const neckConnectorPrompt = getNeckConnectorPrompt(selected);
   const extremeSimplifyPrompt = getExtremeSimplifyPrompt(selected);
   const creatureTailPrompt = getCreatureTailPrompt(selected);
   if (isOpenPromptPreset(selected)) {
@@ -1777,15 +1890,19 @@ function buildPrompt() {
     return [objectPrompt, extraPrompt, sizeRequest, aspectRequest].filter(Boolean).join("\n\n");
   }
 
-  const objectRequest = isTextToImagePreset(selected) && objectPrompt
-    ? `${selectedPresetId === "bas-relief-emblem-concept" ? "Bas-relief subject to generate" : "Object to generate"}:\n${objectPrompt}`
+  const objectRequest = (isTextToImagePreset(selected) || isImagePromptPreset(selected)) && objectPrompt
+    ? `${selectedPresetId === "bas-relief-emblem-concept" ? "Bas-relief subject to generate" : isImagePromptPreset(selected) ? "Objects to extract and simplify" : "Object to generate"}:\n${objectPrompt}`
     : "";
   const sizeRequest = buildGeminiCanvasSizeRequest(selected);
   const aspectRequest = buildGeminiCanvasAspectRequest(selected);
 
-  if (promptModeField.value === "extra-override") return [extraPrompt, objectRequest, skinSurfacePrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest].filter(Boolean).join("\n\n");
-  if (promptModeField.value === "preset-only") return [presetPrompt, objectRequest, skinSurfacePrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest].filter(Boolean).join("\n\n");
-  return [presetPrompt, objectRequest, skinSurfacePrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest, extraPrompt].filter(Boolean).join("\n\n");
+  if (isImagePromptPreset(selected)) {
+    return [presetPrompt, objectRequest, extremeSimplifyPrompt, sizeRequest, aspectRequest, extraPrompt].filter(Boolean).join("\n\n");
+  }
+
+  if (promptModeField.value === "extra-override") return [extraPrompt, objectRequest, skinSurfacePrompt, neckConnectorPrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest].filter(Boolean).join("\n\n");
+  if (promptModeField.value === "preset-only") return [presetPrompt, objectRequest, skinSurfacePrompt, neckConnectorPrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest].filter(Boolean).join("\n\n");
+  return [presetPrompt, objectRequest, skinSurfacePrompt, neckConnectorPrompt, extremeSimplifyPrompt, creatureTailPrompt, sizeRequest, aspectRequest, extraPrompt].filter(Boolean).join("\n\n");
 }
 
 function getBackViewPresetId() {
@@ -1825,6 +1942,10 @@ function presetAssetUrl(imagePath) {
 
 function isTextToImagePreset(preset) {
   return preset?.kind === "text-to-image";
+}
+
+function isImagePromptPreset(preset) {
+  return preset?.kind === "image-prompt" || preset?.id === SIMPLIFY_OBJECTS_PRESET_ID;
 }
 
 function isOpenPromptPreset(preset) {
@@ -1881,8 +2002,12 @@ function usesSkinSurfaceControl(preset) {
     || preset.id.startsWith("modular-robe-dress-");
 }
 
+function usesNeckConnectorControl(preset) {
+  return usesSkinSurfaceControl(preset);
+}
+
 function usesOutfitOptionControls(preset) {
-  return usesSkinSurfaceControl(preset) || isCreaturePreset(preset);
+  return usesSkinSurfaceControl(preset) || isCreaturePreset(preset) || isImagePromptPreset(preset);
 }
 
 function getOutfitOptionPreset(generationPresetId = selectedPresetId) {
@@ -1899,8 +2024,14 @@ function getSkinSurfacePrompt(preset) {
   return SKIN_SURFACE_PROMPT;
 }
 
+function getNeckConnectorPrompt(preset) {
+  if (!usesNeckConnectorControl(preset) || !createNeckConnectorToggle.checked) return "";
+  return [NECK_CONNECTOR_PROMPT, NECK_CONNECTOR_STYLE_PROMPTS[neckConnectorStyleSelect.value] || ""].filter(Boolean).join("\n\n");
+}
+
 function getExtremeSimplifyPrompt(preset) {
   if (!usesOutfitOptionControls(preset) || !extremeSimplifyToggle.checked) return "";
+  if (isImagePromptPreset(preset)) return OBJECT_EXTREME_SIMPLIFY_PROMPT;
   return EXTREME_SIMPLIFY_PROMPT;
 }
 
@@ -1951,6 +2082,7 @@ function getGenerateButtonLabel() {
   const selected = getSelectedPreset();
   if (isOpenPromptPreset(selected)) return "Generate Open Prompt";
   if (isColorGuidePreset(selected)) return "Front Color Guide";
+  if (isImagePromptPreset(selected)) return "Simplify Objects";
   const isTextMode = isTextToImagePreset(selected);
   const isBasReliefConcept = selectedPresetId === "bas-relief-emblem-concept";
   return isBasReliefConcept ? "Generate Emblem" : isTextMode ? "Generate Object" : "Generate";
@@ -1959,6 +2091,7 @@ function getGenerateButtonLabel() {
 function renderInputMode() {
   const selected = getSelectedPreset();
   const isTextMode = isTextToImagePreset(selected);
+  const isImagePromptMode = isImagePromptPreset(selected);
   const isOpenMode = isOpenPromptPreset(selected);
   const isBasReliefConcept = selectedPresetId === "bas-relief-emblem-concept";
   const isCreatureMode = isCreaturePreset(selected);
@@ -1968,30 +2101,35 @@ function renderInputMode() {
   geminiOutputSizeField.classList.toggle("hidden", !showGeminiCanvasControls);
   basReliefAspectRatioField.classList.toggle("hidden", !showGeminiCanvasControls);
   skinSurfaceField.classList.toggle("hidden", !usesSkinSurfaceControl(selected));
+  neckConnectorField.classList.toggle("hidden", !usesNeckConnectorControl(selected));
+  neckConnectorStyleField.classList.toggle("hidden", !usesNeckConnectorControl(selected) || !createNeckConnectorToggle.checked);
   extremeSimplifyField.classList.toggle("hidden", !showOutfitOptionControls);
+  extremeSimplifyLabel.textContent = isImagePromptMode ? "Extreme Simplify Objects" : "Extreme Simplify";
   creatureTailField.classList.toggle("hidden", !isCreatureMode);
-  if (isCreatureMode && promptModeField.value !== "preset-extra") {
+  if ((isCreatureMode || isImagePromptMode) && promptModeField.value !== "preset-extra") {
     promptModeField.value = "preset-extra";
     localStorage.setItem("neverwinterForge.promptMode", promptModeField.value);
   }
-  promptModeField.disabled = isCreatureMode;
+  promptModeField.disabled = isCreatureMode || isImagePromptMode;
   extraPromptLabel.textContent = isCreatureMode ? "Creature Type / Extra Prompt" : "Misc / Extra Prompt";
   extraPromptField.placeholder = isCreatureMode
     ? "Required. Example: gnoll with hyena head and broad mane; no tail. Devilish scaled humanoid with ram horns. Or: lizardlike dog-leg creature with scaled hide; tail enabled."
     : "Optional extra instructions, or full override when selected above.";
   geminiOutputSizeLabel.textContent = isShieldPreset(selected) ? "Shield Output Size" : isBasReliefPreset(selected) ? "Bas-Relief Output Size" : "Gemini Output Size";
   geminiAspectRatioLabel.textContent = isShieldPreset(selected) ? "Shield Aspect Ratio" : isBasReliefPreset(selected) ? "Bas-Relief Aspect Ratio" : "Gemini Aspect Ratio";
-  inputTitle.textContent = isOpenMode ? "Open Prompt" : isBasReliefConcept ? "Emblem Prompt" : isTextMode ? "Object Prompt" : isColorGuideMode ? "Front Source" : "Input";
-  objectPromptLabel.textContent = isOpenMode ? "What would you like to generate?" : isBasReliefConcept ? "What bas-relief emblem would you like to generate?" : "What object would you like to generate?";
+  inputTitle.textContent = isOpenMode ? "Open Prompt" : isImagePromptMode ? "Simplify Objects" : isBasReliefConcept ? "Emblem Prompt" : isTextMode ? "Object Prompt" : isColorGuideMode ? "Front Source" : "Input";
+  objectPromptLabel.textContent = isOpenMode ? "What would you like to generate?" : isImagePromptMode ? "What should Forge extract and simplify?" : isBasReliefConcept ? "What bas-relief emblem would you like to generate?" : "What object would you like to generate?";
   objectPromptField.placeholder = isOpenMode
     ? "Describe the image you want. Add an optional input image above for image-to-image."
+    : isImagePromptMode
+    ? "Example: extract the three hats; extract only the shield and sword; simplify the helmet and remove tiny filigree"
     : isBasReliefConcept
     ? "Example: ancient oak spirit mask, knightly sword and roses, dragon skull altar, elven moon priestess plaque"
     : "Example: ornate dwarven hammer, ancient spellbook, gothic lantern, sci-fi healing device";
-  dropzone.classList.toggle("hidden", isTextMode && !isOpenMode);
+  dropzone.classList.toggle("hidden", isTextMode && !isOpenMode && !isImagePromptMode);
   colorGuidePairPanel.classList.toggle("hidden", !isColorGuideMode);
-  textInputPanel.classList.toggle("hidden", !isTextMode && !isOpenMode);
-  dropzone.querySelector("span").textContent = isOpenMode ? "Optional image reference" : isColorGuideMode ? "Front source image" : "Choose or drop an image";
+  textInputPanel.classList.toggle("hidden", !isTextMode && !isOpenMode && !isImagePromptMode);
+  dropzone.querySelector("span").textContent = isOpenMode ? "Optional image reference" : isImagePromptMode ? "Source image with object(s)" : isColorGuideMode ? "Front source image" : "Choose or drop an image";
   openPromptModeButton.dataset.active = String(isOpenMode);
   if (!generateButton.classList.contains("is-busy")) {
     generateButton.textContent = getGenerateButtonLabel();

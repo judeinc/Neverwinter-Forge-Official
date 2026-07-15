@@ -173,6 +173,19 @@
       ]
     },
     {
+      "id": "simplify-objects",
+      "name": "Simplify Objects",
+      "description": "Image-plus-prompt extraction for simplified orthographic props, placeables, weapons, shields, helmets, and other non-person objects.",
+      "prompt": "simplify-objects/prompt.txt",
+      "kind": "image-prompt",
+      "group": "Objects",
+      "provider": "openai",
+      "recommendedModel": "gpt-image-2",
+      "derivedViews": [
+        "simplify-objects-back"
+      ]
+    },
+    {
       "id": "open-prompt",
       "name": "Open Prompt",
       "description": "Freeform text-to-image or image-to-image generation without a preset prompt.",
@@ -578,6 +591,16 @@
       "prompt": "object-concept/back-view.txt",
       "kind": "derived",
       "provider": "openai"
+    },
+    {
+      "id": "simplify-objects-back",
+      "name": "Simplified Object Back",
+      "description": "Creates a matching direct rear view from the approved simplified object extraction.",
+      "prompt": "simplify-objects/back-view.txt",
+      "kind": "derived",
+      "group": "Objects",
+      "provider": "openai",
+      "recommendedModel": "gpt-image-2"
     },
     {
       "id": "object-concept-side",

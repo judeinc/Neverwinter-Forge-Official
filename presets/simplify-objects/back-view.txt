@@ -1,0 +1,83 @@
+Use Image 1 as the approved simplified FRONT object extraction. Create a matching direct BACK orthographic view of the exact same object or object set.
+
+Treat this as a strict turnaround-sheet continuation. The back view must look like the entire approved front object sheet rotated exactly 180 degrees around one shared vertical group axis, like turning over one flat card that contains all objects. Do not rotate each object independently in place.
+
+This is for AI-to-3D mesh generation, Blender cleanup, game asset creation, and Substance Painter workflow.
+
+Strict orthographic BACK view.
+Zero perspective distortion.
+Flat camera.
+No 3/4 turn.
+No tilt.
+No angle change.
+
+Preserve the same object identity:
+- same object count
+- same spacing and scale relationships
+- same silhouette and proportions
+- same primary forms
+- same material categories
+- same color palette
+- same simplified ornament language
+- same structural logic
+
+Shared group flip rule for multiple objects:
+- when multiple objects are present, rotate the entire object set as one group around a single shared vertical axis through the center of the whole image
+- reverse the left-to-right order after the turn: the front-left object becomes the back-right object, the front-center object stays centered, and the front-right object becomes the back-left object
+- preserve each object's matching identity after the position swap, so the back of each object appears in the correct mirrored group position
+- keep the same spacing rhythm and scale relationships after the reversal
+- do not spin each object around its own local center while leaving it in the same left-to-right position
+- do not preserve the front view's left-to-right order for a multi-object back view
+
+Turnaround matching rules:
+- match the front view's total height and width for each object
+- match top, bottom, left, and right silhouette landmarks
+- keep handles, blades, rims, guards, straps, buckles, seams, pouches, hinges, lids, legs, bases, panels, openings, and major construction features aligned as logical wraparound structures
+- continue any band, belt, strap, sash, rim, handle wrap, trim, panel seam, or material boundary around the back instead of dropping it or replacing it
+- preserve the same centerline and vertical alignment
+- preserve matching left-right symmetry when the object is symmetrical
+- do not move major features higher, lower, wider, narrower, or off center
+- do not change proportions, thickness, taper, curvature, or stance
+- do not add extra rear protrusions unless they are a simple logical continuation of visible front-side structure
+
+Back-side design logic:
+Use the front view's broad structure to infer the rear minimally and logically.
+Do not copy front-only symbols, face details, emblems, front decals, or front ornaments onto the back unless they clearly wrap around the object.
+If a rear detail is unknown, use a simple continuation of the front form and material zones rather than inventing decoration.
+Do not redesign the object.
+Do not add new parts, new props, new symbols, or a different theme.
+
+If multiple objects are present, keep every object separate, suspended, fully visible, non-overlapping, and reversed left-to-right as one unified 180-degree group flip of the approved front extraction.
+Do not merge objects.
+Do not add labels, numbers, arrows, captions, or text.
+
+Simplification must remain consistent with the front view.
+Keep details clean, broad, readable, and mesh-friendly.
+Remove tiny filigree, micro decals, tiny repeated ornament, logos, readable text, scratches, grime, dirt, rust, chipped paint, tiny bolts, and high-frequency texture unless those details were intentionally preserved in the approved front view.
+
+Full object set centered and fully visible.
+Clean margin around every object.
+No cropping.
+No cut-off edges.
+
+Studio product render presentation only.
+Plain neutral dark-to-mid gray gradient studio background.
+No environment.
+No room.
+No scenery.
+No fog.
+No smoke.
+No particles.
+No watermark.
+
+Even soft frontal studio lighting.
+Balanced lighting.
+Gentle ambient occlusion only.
+No dramatic shadows.
+No colored lighting.
+
+High resolution output.
+Clean render.
+Stable shape.
+Readable silhouette.
+Optimized for clean structured 3D prop extraction.

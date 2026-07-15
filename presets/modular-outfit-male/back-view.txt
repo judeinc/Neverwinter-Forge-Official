@@ -15,6 +15,11 @@ The figure must be:
 - centered on a dark neutral studio background
 - lit with clean direct studio lighting
 
+Back-view anatomy scale guard:
+- Image 2 controls body scale in the back view. Do not inherit thin anime/stylized source anatomy from Image 1.
+- Preserve the locked neck cutoff diameter, shoulder width, arm thickness, wrist cutoff diameter, torso width, hip width, leg length, and boot scale.
+- Do not shrink the neck opening, thin the arms, narrow the shoulders, taper wrists into tiny cylinders, or redraw the body into a stylized character shape.
+
 Preserve the same outfit from the front view:
 - same silhouette
 - same garment length
@@ -23,6 +28,7 @@ Preserve the same outfit from the front view:
 - same armor zones
 - same belts and strap logic
 - same belt height, belt width, buckle scale, sash layering, side-strap placement, and waistline position
+- same side-mounted pouches, loops, hanging tabs, scabbard hangers, closure tabs, trim bands, and accessory attachment logic when visible or implied
 - same boots
 - same collar and wrist cutoff style
 - same clean PBR-readable material identity
@@ -38,7 +44,30 @@ Garment wraparound rules:
 - Do not create two isolated side wings, chaps-like panels, detached curtain strips, or floating front-edge remnants on the back.
 - Preserve underlayer and outer-layer relationships as complete wrapped layers, not as unrelated left and right pieces.
 
-For belts, sashes, waist straps, cross straps, tabard edges, and armor bands, preserve the front-view placement exactly as if the garment were being rotated in 3D. Do not move the belt higher or lower on the body. Do not change the belt thickness, number of layers, material, color, buckle scale, or strap count. Back-facing belt and strap details should line up with the visible front design at the sides and continue cleanly around the waist.
+Circumference continuity rules:
+- Treat belts, sashes, waist straps, cross straps, shoulder-to-waist harnesses, pouch straps, scabbard loops, tabard attachment bands, armor bands, trim bands, closure tabs, buckled tabs, and side-mounted accessories as physical pieces wrapping around a 3D body.
+- Preserve the front-view placement exactly as if the garment were being rotated in 3D: height, width, thickness, layer order, material, color, strap count, buckle scale, pouch size, pouch side, and attachment points must remain consistent.
+- Back-facing belts, sashes, straps, bands, and accessories must line up with the visible front design at the side seams and continue cleanly around the waist, hips, torso, shoulders, or thighs as appropriate.
+- If the front shows only the front half of a belt, sash, strap, pouch, loop, tab, band, or hanger, infer the rear half as a simple continuation of the same object instead of changing it into a new design.
+- Do not move belts higher or lower, do not change belt thickness, do not swap leather to metal or cloth, do not add a new rear buckle unless the front clearly implies one, and do not remove side pouches or hangers unless the locked silhouette would be blocked.
+- If an accessory would hide arm gaps, leg separation, or modular cutoffs, simplify or flatten it while preserving its location and material identity.
+
+Modular socket orientation rules:
+- Treat the neck opening, neck connector, collar, choker, gorget, necklace rim, wrist cuffs, bracer openings, sleeve ends, gauntlet ends, boot tops, and other modular cutoffs as physical rimmed sockets on the same 3D body after a 180-degree rotation.
+- The back view must show the rear-facing side of each socket or rim. Do not paste, mirror, or repeat front-facing socket lips, front clasps, front seams, gems, pendants, V-points, buckles, or decorative openings onto the back unless they clearly wrap all the way around.
+- The neck socket stays centered at the top of the torso and reads as one continuous top-facing ring or recessed opening with the rear collar/gorget/connector visible. Do not create a second neck socket, double collar ring, front-facing throat plug, or duplicate front V-shape on the rear.
+- Wrist sockets, bracer openings, sleeve ends, and cuff rims stay aligned to each forearm's long axis at the handless cutoffs.
+- Treat each wrist piece as one continuous sleeve/bracer/cuff tube wrapping around the forearm. The back view shows the rear-facing half of that same tube and the far-side edge of the opening, not a second camera-facing hollow cylinder.
+- The handless wrist cutoff should read as a clean transverse cut through the forearm gear: simple rear rim, side thickness, dark interior only if visible, and no duplicated front lip.
+- Do not aim the wrist opening toward the camera on both the front and back views. Do not create two circular mouth openings for one wrist piece. Do not add an extra end cap, extra ring, or nested tube at the rear.
+- If the front socket detail is directional, keep that directional feature on the unseen front side and use a simpler rear band, rear seam, rear bevel, or rear rim on the back.
+
+Arm depth and cuff perspective rules:
+- Treat both arms as 3D cylinders that rotate with the torso through a true 180-degree turn, not as flat front-view sleeves pasted onto a rear-facing body.
+- Preserve the locked T-pose arm angle, arm length, and wrist cutoff position, but rotate sleeve folds, bracer seams, cuff rims, highlights, shadows, and openings to their rear-facing side.
+- In the front view, a cuff or bracer mouth may face the camera. In the back view, that same wrist piece must show the rear half, side thickness, and far-side edge of the opening, so any dark circular interior should be hidden, narrowed, shifted to the far edge, or mostly occluded by the rim.
+- The back view must show rear shoulder caps, rear sleeve volume, rear forearm curvature, and rear cuff/bracer surfaces. Front-only cuff seams, front lips, front clasps, and camera-facing circular holes stay on the unseen front side.
+- Before finalizing, mentally blink the front and back images as an overlay: the torso, shoulders, arms, forearms, and cuffs must visibly change orientation. It is a failure if the arms and cuff mouths look unchanged while only the torso/back details changed.
 
 Infer unseen back details minimally. Do not invent new props, new weapons, new symbols, new large ornaments, or a different outfit.
 
@@ -50,4 +79,4 @@ Simplify decoration, not material identity. Preserve structural ornament and non
 
 No scratches, grime, dirt, rust, battle damage, noisy roughness, etched damage, grunge overlays, or micro-surface noise.
 
-Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, mirrored front openings on the back, chaps-like rear side panels, detached side wings, incomplete wraparound cloth, broken underlayer/outer-layer continuity, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.
+Hard failures to avoid: head, face, hair, hands, fingers, A-pose, lowered arms, cropped arms, cropped boots, wide torso, thick waist, heavy hips, oversized boots, double neck socket, duplicate wrist socket rings, front-facing wrist holes copied onto the rear, two camera-facing wrist openings for one cuff, nested wrist tubes, extra wrist end caps, unchanged front-view arm perspective, identical front cuff mouths on the rear view, rear cuffs showing the same dark circular openings as the front, forearms pasted flat from the front view, arm depth not rotated 180 degrees, front-facing collar copied onto the rear, front-facing bracer openings copied onto the rear, belt height drift, sash height drift, missing side pouch, missing strap continuation, mismatched rear belt material, invented rear buckle, broken wraparound accessory logic, mirrored front openings on the back, chaps-like rear side panels, detached side wings, incomplete wraparound cloth, broken underlayer/outer-layer continuity, cloaks, capes, mantles, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, messy props, fantasy portrait styling, or changing the outfit identity.

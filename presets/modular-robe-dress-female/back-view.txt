@@ -17,6 +17,11 @@ The figure must be:
 - lit with clean direct studio lighting
 - grounded by a clear soft contact shadow under the flat garment bottom when ground-length
 
+Back-view anatomy scale guard:
+- Image 2 controls upper-body scale in the back view. Do not inherit thin anime/stylized source anatomy from Image 1.
+- Preserve the locked neck cutoff diameter, shoulder width, arm thickness, wrist cutoff diameter, upper-body width, centerline, and framing.
+- Do not shrink the neck opening, thin the arms, narrow the shoulders, taper wrists into tiny cylinders, or redraw the upper body into a stylized character shape.
+
 Preserve the same garment from the front view:
 - same upper-body silhouette
 - same dress, gown, robe, or skirt length
@@ -25,6 +30,7 @@ Preserve the same garment from the front view:
 - same color palette
 - same material categories
 - same belts, sashes, collars, cuffs, sleeves, trim, bodice logic, and broad cloth-panel logic
+- same waist attachments, side bows, pouch-like accessories, hanging tabs, closure tabs, trim bands, and accessory attachment logic when visible or implied
 - same clean PBR-readable material identity
 
 Continue the front design logically around the back with clean construction, readable seams, belt continuation, sash continuation, collar continuation, cuff continuation, broad garment folds, and simple PBR-readable cloth.
@@ -38,6 +44,31 @@ Layer and wraparound rules:
 - Do not mirror the front opening onto the back unless the front clearly proves there is also a rear opening.
 - Use creative license to close, join, or simplify rear panels so the back reads as a complete dress/gown/robe instead of a front design copied onto the rear.
 - Lace, trim, and embroidered borders may continue around rear seams or rear panel edges, but they should sit on coherent cloth layers, not on detached side flaps.
+
+Circumference continuity rules:
+- Treat belts, sashes, waist ties, ribbon bands, bodice bands, apron ties, overskirt attachment bands, trim bands, closure tabs, side bows, side pouches, hanging tabs, and decorative waist hardware as physical pieces wrapping around a 3D garment volume.
+- Preserve the front-view placement exactly as if the garment were being rotated in 3D: height, width, thickness, layer order, material, color, band count, bow scale, pouch size, side placement, and attachment points must remain consistent.
+- Back-facing belts, sashes, ties, trim bands, and accessories must line up with the visible front design at the side seams and continue cleanly around the waist, bodice, hips, shoulders, or skirt attachment line as appropriate.
+- If the front shows only the front half of a belt, sash, tie, pouch, loop, tab, band, or hanger, infer the rear half as a simple continuation of the same object instead of changing it into a new design.
+- Do not move belts or sashes higher or lower, do not change their thickness or material, do not invent a large rear bow or rear buckle unless the front clearly implies one, and do not remove side attachments unless they would break the locked silhouette.
+- If an accessory would create a high slit, reveal legs under a ground-length garment, or break the capped hem logic, flatten or simplify it while preserving its location and material identity.
+
+Modular socket orientation rules:
+- Treat the neck opening, neck connector, collar, choker, gorget, necklace rim, wrist cuffs, bracer openings, sleeve ends, gauntlet ends, bodice top edge, and other modular cutoffs as physical rimmed sockets on the same 3D garment after a 180-degree rotation.
+- The back view must show the rear-facing side of each socket or rim. Do not paste, mirror, or repeat front-facing socket lips, front clasps, front seams, gems, pendants, V-points, buckles, or decorative openings onto the back unless they clearly wrap all the way around.
+- The neck socket stays centered at the top of the torso and reads as one continuous top-facing ring or recessed opening with the rear collar/gorget/connector visible. Do not create a second neck socket, double collar ring, front-facing throat plug, or duplicate front neckline shape on the rear.
+- Wrist sockets, bracer openings, sleeve ends, and cuff rims stay aligned to each forearm's long axis at the handless cutoffs.
+- Treat each wrist piece as one continuous sleeve/bracer/cuff tube wrapping around the forearm. The back view shows the rear-facing half of that same tube and the far-side edge of the opening, not a second camera-facing hollow cylinder.
+- The handless wrist cutoff should read as a clean transverse cut through the forearm gear: simple rear rim, side thickness, dark interior only if visible, and no duplicated front lip.
+- Do not aim the wrist opening toward the camera on both the front and back views. Do not create two circular mouth openings for one wrist piece. Do not add an extra end cap, extra ring, or nested tube at the rear.
+- If the front socket detail is directional, keep that directional feature on the unseen front side and use a simpler rear band, rear seam, rear bevel, or rear rim on the back.
+
+Arm depth and cuff perspective rules:
+- Treat both arms as 3D cylinders that rotate with the torso through a true 180-degree turn, not as flat front-view sleeves pasted onto a rear-facing garment.
+- Preserve the locked T-pose arm angle, arm length, sleeve volume, and wrist cutoff position, but rotate sleeve folds, cuff rims, bracer seams, highlights, shadows, and openings to their rear-facing side.
+- In the front view, a sleeve cuff or bracer mouth may face the camera. In the back view, that same wrist piece must show the rear half, side thickness, and far-side edge of the opening, so any dark circular interior should be hidden, narrowed, shifted to the far edge, or mostly occluded by the rim.
+- The back view must show rear shoulder/sleeve volume, rear forearm curvature, and rear cuff/bracer surfaces. Front-only cuff seams, front lips, front clasps, trim points, and camera-facing circular holes stay on the unseen front side.
+- Before finalizing, mentally blink the front and back images as an overlay: the torso, shoulders, sleeves, forearms, and cuffs must visibly change orientation. It is a failure if the arms and cuff mouths look unchanged while only the torso/back details changed.
 
 Dress, skirt, and hem rules:
 - If the front view is ground-length, the back view must also be ground-length.
@@ -58,4 +89,4 @@ Cloaks and capes are not allowed. Do not include cloaks, capes, mantles, separat
 
 Remove all heraldry and identifiers in the back view. No heraldic symbols, faction marks, family crests, badges, sigils, emblems, religious symbols, readable icons, logos, text, decals, or watermarks. Replace any such marks with plain material, clean trim, non-symbolic borders, or abstract panel geometry.
 
-Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open skirt gaps, mirrored front openings on the back, rear chaps, detached side wings, two isolated rear skirt strips, broken underdress/overdress continuity, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the garment identity.
+Hard failures to avoid: head, face, hair, hands, fingers, visible feet under ground-length garments, visible boots under ground-length garments, visible thighs or full mannequin legs under ground-length garments, high skirt slits, open skirt gaps, double neck socket, duplicate wrist socket rings, front-facing wrist holes copied onto the rear, two camera-facing wrist openings for one cuff, nested wrist tubes, extra wrist end caps, unchanged front-view arm perspective, identical front cuff mouths on the rear view, rear cuffs showing the same dark circular openings as the front, forearms pasted flat from the front view, arm depth not rotated 180 degrees, front-facing collar copied onto the rear, front-facing bracer or sleeve openings copied onto the rear, belt height drift, sash height drift, missing side attachment, missing trim-band continuation, mismatched rear waist material, invented rear buckle or oversized rear bow, broken wraparound accessory logic, mirrored front openings on the back, rear chaps, detached side wings, two isolated rear skirt strips, broken underdress/overdress continuity, separated legs under ground-length garments, hollow underside, open interior base, uncapped bottom, floating hem, missing contact shadow, A-pose, lowered arms, cropped arms, cropped hem, exaggerated anatomy, sexualized redesign, cloaks, capes, mantles, weapons, shields, heraldry, crests, insignias, logos, faction symbols, noisy detail, dirty materials, fantasy portrait styling, or changing the garment identity.

@@ -72,19 +72,33 @@ DEPTH_REQUIRED_MODELS = [
 BAS_RELIEF_PRESETS = {"bas-relief-emblem", "bas-relief-emblem-concept"}
 SHIELD_PRESETS = {"shield-emblem", "shield-emblem-back"}
 OPEN_PROMPT_PRESET = "open-prompt"
+IMAGE_PROMPT_KIND = "image-prompt"
+SIMPLIFY_OBJECTS_PRESETS = {"simplify-objects", "simplify-objects-back"}
 BAS_RELIEF_AND_OPEN_PROMPT_PRESETS = BAS_RELIEF_PRESETS | SHIELD_PRESETS | {OPEN_PROMPT_PRESET}
 CREATURE_PRESET_PREFIX = "creature-"
 SKIN_SURFACE_PROMPT = """Visible skin-like outfit areas:
 The source outfit intentionally has exposed skin-like areas. Preserve those exposed areas instead of covering them with new cloth, armor, gloves, sleeves, leggings, collars, or panels.
 Render exposed skin-like areas as smooth matte mannequin material: skin-toned plastic or resin, featureless, clean, non-realistic, low-shine, and PBR-readable.
 No pores, veins, body hair, blemishes, sweat, scars, anatomy detail, or realistic skin texture. Keep it simple like a neutral material mask.
-Only preserve exposed areas that are clearly part of the source outfit design. Do not add new exposed areas that are not in the source."""
+Only preserve exposed areas that are clearly part of the source outfit design. Do not add new exposed areas that are not in the source.
+Skin cutoff guard:
+Do not use mannequin skin as a cap, plug, filler, sleeve extension, glove extension, collar insert, neck stump, wrist stump, ankle stump, or artificial transition material.
+At wrists, forearms, glove ends, bracer ends, sleeve cuffs, collars, gorgets, necklaces, neck rings, boot tops, and armor cutoffs, the outfit piece should terminate with its own material edge unless the source clearly shows exposed skin continuing beyond that exact edge.
+If a bracer, glove, sleeve, collar, gorget, boot, or armor piece ends at a modular cutoff, finish it with a clean hard material rim, cuff, seam, bevel, shallow cap, or open dark interior. Do not add a gray or skin-toned body section beyond the edge just to complete the limb.
+At the neck, terminate the body at the collar or neckline plane. Do not render a raised mannequin neck column, gray neck tube, exposed throat cylinder, or skin-colored plug above the collar.
+Preserve skin only in intentional open regions such as bare torso, bare upper arm, open shoulder, exposed thigh, or deliberate neckline. Never infer extra skin just because the locked mannequin template has arms, neck, wrists, ankles, or gaps."""
 ROBE_DRESS_SKIN_SURFACE_PROMPT = """Visible skin-like outfit areas for robe/dress:
 The source outfit intentionally has exposed skin-like areas, but the robe/dress silhouette wins for the lower body.
 Preserve exposed skin-like areas only above the waist, such as neckline, upper chest, shoulders, upper arms, or forearms, when they are clearly part of the source design.
 Render any preserved upper-body skin-like areas as smooth matte mannequin material: skin-toned plastic or resin, featureless, clean, non-realistic, low-shine, and PBR-readable.
 Do not preserve lower-body exposed skin. Do not show thighs, knees, calves, feet, or a full mannequin leg through robe/dress openings.
-For ground-length dresses, gowns, and robes, close the lower garment, hide the lower body fully, cap the bottom, and keep the contact shadow. The dress/robe must always win below the waist."""
+For ground-length dresses, gowns, and robes, close the lower garment, hide the lower body fully, cap the bottom, and keep the contact shadow. The dress/robe must always win below the waist.
+Skin cutoff guard:
+Do not use mannequin skin as a cap, plug, filler, sleeve extension, glove extension, collar insert, neck stump, wrist stump, ankle stump, or artificial transition material.
+At wrists, forearms, glove ends, bracer ends, sleeve cuffs, collars, gorgets, necklaces, neck rings, boot tops, and armor cutoffs, the garment or armor piece should terminate with its own material edge unless the source clearly shows exposed skin continuing beyond that exact edge.
+If a sleeve, bracer, glove, collar, gorget, boot, dress edge, or armor piece ends at a modular cutoff, finish it with a clean hard material rim, cuff, seam, bevel, hem, shallow cap, or open dark interior. Do not add a gray or skin-toned body section beyond the edge just to complete the limb.
+At the neck, terminate the body at the collar or neckline plane. Do not render a raised mannequin neck column, gray neck tube, exposed throat cylinder, or skin-colored plug above the collar.
+Preserve skin only in intentional open upper-body regions such as bare shoulder, exposed neckline, open upper chest, or deliberately bare upper arm. Never infer extra skin at neck, wrist, ankle, or lower-body gaps."""
 EXTREME_SIMPLIFY_PROMPT = """Extreme Simplify:
 Create a clean canvas version of the outfit for image-to-3D modeling. Preserve the silhouette, garment construction, large armor plates, major seams, major belts, large sashes, collars, cuffs, boots, robe or dress hem rules, and broad material zones.
 Remove all embroidery, floral designs, damask patterns, tiny filigree, decorative scrollwork, brocade, lace patterning, decals, symbols, sigils, heraldry, logos, readable icons, tiny trim motifs, micro buckles, small studs, noisy engravings, ornamental surface art, busy texture detail, scratches, grime, dirt, rust, and photoreal material noise.
@@ -92,6 +106,63 @@ For creature presets, also remove individual fur strands, shaggy fur edges, tiny
 Reduce materials to bare minimum PBR-readable textiles and surfaces: plain cloth, plain leather, smooth metal, padded fabric, simple chainmail zones, simple sculpted fur masses, broad grouped scale or hide zones, matte skin-like mannequin material when skin preservation is enabled, and clean boot or paw-wrap material.
 Make the simplified PBR material separation stronger: clear roughness differences, broad smooth highlights on metal, subdued cloth sheen, controlled leather sheen, and clean color blocking.
 Do not flatten the outfit into one material. Keep useful large material zones, but remove decorative surface art so the user can repaint details later."""
+OBJECT_EXTREME_SIMPLIFY_PROMPT = """Extreme Simplify Objects:
+Run a stronger cleanup pass for image-to-3D object extraction.
+Preserve the requested object identity, silhouette, broad proportions, major functional parts, primary material zones, large handles, blades, rims, guards, hinges, buckles, panels, openings, bases, legs, and structural seams.
+Remove tiny filigree, micro scrollwork, small decals, logos, readable text, busy etched patterns, tiny repeated ornament, tassels, loose cords, dangling strands, thin fringe, fragile spikes, stray ribbons, small straps that do not define the construction, excessive buckles, tiny bolts, tiny gems, scratches, grime, rust, chipped paint, high-frequency surface texture, and decorative clutter.
+Collapse clusters of small straps, trims, wires, or filigree into one or two broader clean forms when their placement matters.
+Keep only large functional straps, bands, rims, sockets, handles, or supports that are necessary for the object to read correctly.
+Reduce materials to clean broad PBR-readable surfaces such as plain metal, wood, leather, cloth, stone, ceramic, bone, glass, painted surface, or gem.
+Do not redesign the object, add new parts, or make it blocky. Make it cleaner, sturdier, and easier to convert into a mesh."""
+NECK_CONNECTOR_PROMPT = """Create Neck Connector:
+Add a fitted collar-level neck connector piece that acts as a clean wearable modular socket between this outfit body and a separately generated head.
+Design it from the outfit's existing visual language: borrow broad shapes, materials, colors, trim logic, gems, metalwork, leatherwork, cloth bands, bracer shapes, boot shapes, belt motifs, or armor motifs already present in the source outfit.
+Use creative variety. Do not default to the same simple choker every time. Choose one connector archetype that best fits the outfit's content, era, material, and silhouette.
+When a specific Neck Connector Style is selected, that selected style is authoritative. When Auto Match Outfit is selected, choose the strongest connector type from the source outfit instead of falling back to a generic choker.
+Possible connector archetypes include: broad choker, layered choker, pendant necklace, medallion necklace, torque collar, torc necklace, gorget plate, segmented armor collar, leather strap collar, cloth wrap collar, scarf-like short wrap, clasped mantle edge, decorative neck ring, crescent necklace, chain-and-plaque necklace, gem-set collar, high fabric collar, low collarbone collar, shoulder-linked collar, yoke-like collar, tabard-neck clasp, ribbon neck band, braided cord collar, bone or horn collar, ceremonial neck plate, mage amulet socket, and broad recessed socket collar.
+Pendant or medallion variants are allowed when they make sense: the pendant, plaque, clasp, or amulet can visually cap the front neckline and create a clean modular break, while the actual collar-level cutoff/socket remains centered and usable for plugging in a head.
+If using a necklace-style connector, make it broad and sculptural enough to read as mesh support, not a thin string. A chain, cord, ribbon, or pendant should become a simplified solid band, plaque, clasp, or amulet form suitable for image-to-3D conversion.
+It must cover or replace any exposed mannequin neck stump. Do not leave gray or skin-toned neck filler visible above the outfit.
+This overrides visible-skin preservation only at the modular neck cutoff: exposed shoulders, upper chest, or intentional open neckline skin may remain, but the plug-in head socket must not be a skin stump.
+Collar-plane cutoff rule: the outfit should end at the collar, gorget, necklace, choker, scarf, or neckline plane. Do not render a vertical neck tube rising above it.
+Scale the connector to the body, not like a small bottle cap: it should fit the full locked neck diameter and sit naturally on the shoulders, collarbone, upper chest, or gorget area with believable thickness and width.
+Anatomy fit check: the connector must be at least as wide as the locked neck opening and visually integrated with the torso neckline. It should have enough front depth, side thickness, shoulder/collarbone coverage, or collar height to read as a wearable mesh piece, not a tiny plug.
+Do not shrink the locked neck diameter to fit the connector. The connector must scale up to the template neck opening, not the neck opening scale down to the connector.
+If the source character has an anime-thin neck, ignore that anatomy and build the connector for the locked modular body's neck opening diameter.
+The socket may be a shallow concave cap, shallow convex cap, flat cap, clean rim, or hollow dark recessed opening at collar level. It can be open or capped; the later 3D generator can fill the interior.
+Keep the top cutoff clean, centered, circular or oval enough for a head/neck mesh to plug into later, and flush with the collar plane rather than raised into a visible cylinder. The opening should be large enough for the body's modular neck scale, not a tiny hole.
+Keep it rig-friendly, symmetrical enough for front/back generation, close to the neck cutoff, and not tall enough to become a head, mask, hood, helmet, face, throat, or neck column.
+Avoid a thin coin rim, tiny cap, cork, button, bottle-cap plug, miniature ring perched on top of the torso, raised gray cylinder, exposed mannequin neck tube, or tall cup-shaped socket.
+Do not add hair, chin, jaw, face, head, throat anatomy, realistic skin, a full mannequin neck, or a visible vertical neck cylinder.
+In Auto Match Outfit mode, if the outfit already has a good collar, gorget, choker, necklace, or neck rim, strengthen and clean that existing piece instead of inventing a second competing neck piece. In a specific style mode, adapt the chosen style to the outfit while preserving the locked neck scale.
+Use broad readable forms and avoid tiny filigree unless the outfit already relies on large matching ornament. Prefer one strong connector idea over many small decorations."""
+NECK_CONNECTOR_STYLE_PROMPTS = {
+    "auto": """Neck Connector Style: Auto Match Outfit.
+Choose the neck connector archetype that best matches the source outfit's existing neckwear, armor language, cloth language, jewelry language, bracers, belts, boots, and material hierarchy.
+If the source already has a necklace or pendant, prefer a broad necklace or pendant connector. If it has armor or hard bracers, prefer a gorget or plate collar. If it has soft cloth, prefer a cloth wrap or collar. If it is formal or magical, prefer a ceremonial connector.
+Do not default to a choker unless a choker/collar is genuinely the best match. Keep the result body-scaled, broad enough for mesh generation, fitted to the locked neck opening, and flush at the collar plane.""",
+    "choker-collar": """Neck Connector Style: Choker / Collar.
+Force the connector toward a fitted choker, collar band, low collar, high collar, neck ring, or structured collar.
+It should wrap fully around the neck opening as a broad wearable band with body-scale thickness, not a tiny rim.
+Avoid pendant-dominant, scarf-dominant, or heavy armor gorget solutions unless the outfit clearly requires them.""",
+    "necklace-pendant": """Neck Connector Style: Necklace / Pendant.
+Force the connector toward a necklace, pendant, medallion, amulet, chain-and-plaque, crescent necklace, torque, torc, or broad decorative neck piece.
+It must still function as a modular mesh connector: make the necklace broad, sculptural, and solid enough to create a clean neck break and hide the mannequin neck stump.
+The pendant, medallion, clasp, or plaque may cap the front neckline visually, while the top neck cutoff remains centered, body-scale, collar-level, and usable for plugging in a head.
+Do not turn it into a thin string, tiny charm, or fragile chain.""",
+    "gorget-armor": """Neck Connector Style: Gorget / Armor.
+Force the connector toward an armored gorget, segmented armor collar, metal socket collar, plate yoke, raised neck guard, or hard protective neck piece.
+It should use the outfit's armor, bracer, boot, belt, or metal motifs and fit naturally over the upper chest, collarbone, shoulders, and full neck diameter.
+Avoid delicate necklace-only or soft scarf solutions.""",
+    "cloth-scarf": """Neck Connector Style: Cloth / Scarf.
+Force the connector toward a cloth wrap, scarf-like short wrap, soft collar, mantle edge, folded fabric band, ribbon neck band, or padded textile connector.
+It should be broad, clean, and sculptural enough for mesh generation, with a body-scale neck opening and no loose dangling strips.
+Avoid hard armor gorgets or jewelry-dominant pendants unless the outfit clearly requires them.""",
+    "ceremonial-fantasy": """Neck Connector Style: Ceremonial / Fantasy.
+Force the connector toward a more expressive fantasy connector: ceremonial neck plate, gem-set collar, mage amulet socket, noble yoke, ritual collar, ornate clasp, bone or horn collar, or symbolic but non-logo neck piece.
+Use the outfit's existing motifs and materials, but keep the forms broad, readable, mesh-friendly, and body-scaled.
+Avoid tiny filigree, fragile chains, unreadable micro-ornament, or a small cap-like plug."""
+}
 CREATURE_TAIL_ENABLED_PROMPT = """Creature tail option:
 Creature has tail is enabled. Keep one tail attached at the correct rear pelvis/tail-root area whenever that view can naturally show it. The tail must be straight on its view axis: centered and vertical/downward in front or back views, and a clean straight profile extension in side view. Do not curve, sway, curl, twist, wag, hook, arc, coil, or drift the tail left or right. Do not rotate or angle a front or back view just to show more tail. The dedicated creature side view should show the full tail profile. Follow any tail range or tail silhouette reference included by the selected creature preset, and never exceed that skeleton's allowed tail length or extension."""
 CREATURE_TAIL_DISABLED_PROMPT = """Creature tail option:
@@ -1513,20 +1584,30 @@ def build_prompt(payload):
             return "\n\n".join(part for part in [text_prompt, size_request, aspect_request] if part)
         return "\n\n".join(part for part in [text_prompt, extra_prompt, size_request, aspect_request] if part)
 
-    text_prompt_label = "Bas-relief subject to generate" if preset_id == "bas-relief-emblem-concept" else "Object to generate"
-    object_request = f"{text_prompt_label}:\n{text_prompt}" if preset_kind == "text-to-image" and text_prompt else ""
+    image_prompt_preset = is_image_prompt_preset(preset_id)
+    if preset_id == "bas-relief-emblem-concept":
+        text_prompt_label = "Bas-relief subject to generate"
+    elif preset_kind == IMAGE_PROMPT_KIND or image_prompt_preset:
+        text_prompt_label = "Objects to extract and simplify"
+    else:
+        text_prompt_label = "Object to generate"
+    object_request = f"{text_prompt_label}:\n{text_prompt}" if (preset_kind in {"text-to-image", IMAGE_PROMPT_KIND} or image_prompt_preset) and text_prompt else ""
     skin_surface_request = build_skin_surface_request(preset_id, payload)
+    neck_connector_request = build_neck_connector_request(preset_id, payload)
     extreme_simplify_request = build_extreme_simplify_request(preset_id, payload)
     creature_tail_request = build_creature_tail_request(preset_id, payload)
     shield_shape_request = build_shield_shape_request(preset_id, payload)
     size_request = build_output_size_request(preset_id, payload)
     aspect_request = build_aspect_ratio_request(preset_id, payload)
 
+    if preset_kind == IMAGE_PROMPT_KIND or image_prompt_preset:
+        return "\n\n".join(part for part in [preset_prompt, object_request, extreme_simplify_request, size_request, aspect_request, extra_prompt] if part)
+
     if prompt_mode == "extra-override":
-        return "\n\n".join(part for part in [extra_prompt, object_request, skin_surface_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request] if part)
+        return "\n\n".join(part for part in [extra_prompt, object_request, skin_surface_request, neck_connector_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request] if part)
     if prompt_mode == "preset-only":
-        return "\n\n".join(part for part in [preset_prompt, object_request, skin_surface_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request] if part)
-    return "\n\n".join(part for part in [preset_prompt, object_request, skin_surface_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request, extra_prompt] if part)
+        return "\n\n".join(part for part in [preset_prompt, object_request, skin_surface_request, neck_connector_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request] if part)
+    return "\n\n".join(part for part in [preset_prompt, object_request, skin_surface_request, neck_connector_request, extreme_simplify_request, creature_tail_request, shield_shape_request, size_request, aspect_request, extra_prompt] if part)
 
 
 def build_skin_surface_request(preset_id, payload):
@@ -1539,11 +1620,22 @@ def build_skin_surface_request(preset_id, payload):
     return SKIN_SURFACE_PROMPT
 
 
+def build_neck_connector_request(preset_id, payload):
+    if not truthy(payload.get("createNeckConnector")):
+        return ""
+    if not uses_neck_connector_control(preset_id):
+        return ""
+    style_prompt = NECK_CONNECTOR_STYLE_PROMPTS.get(get_neck_connector_style(payload), "")
+    return "\n\n".join(part for part in [NECK_CONNECTOR_PROMPT, style_prompt] if part)
+
+
 def build_extreme_simplify_request(preset_id, payload):
     if not truthy(payload.get("extremeSimplify")):
         return ""
     if not uses_outfit_option_controls(preset_id):
         return ""
+    if is_image_prompt_preset(preset_id):
+        return OBJECT_EXTREME_SIMPLIFY_PROMPT
     return EXTREME_SIMPLIFY_PROMPT
 
 
@@ -1635,6 +1727,13 @@ def is_open_prompt_preset(preset_id):
     return str(preset_id) == OPEN_PROMPT_PRESET
 
 
+def is_image_prompt_preset(preset_id):
+    if str(preset_id) in SIMPLIFY_OBJECTS_PRESETS:
+        return True
+    preset = get_preset(str(preset_id))
+    return bool(preset and preset.get("kind") == IMAGE_PROMPT_KIND)
+
+
 def is_creature_preset(preset_id):
     return str(preset_id).startswith(CREATURE_PRESET_PREFIX)
 
@@ -1652,6 +1751,17 @@ def uses_skin_surface_control(preset_id):
     )
 
 
+def uses_neck_connector_control(preset_id):
+    return uses_skin_surface_control(preset_id)
+
+
+def get_neck_connector_style(payload):
+    style = str(payload.get("neckConnectorStyle", "auto")).strip()
+    if style not in NECK_CONNECTOR_STYLE_PROMPTS:
+        return "auto"
+    return style
+
+
 def uses_outfit_option_controls(preset_id):
     preset_id = str(preset_id)
     return (
@@ -1659,6 +1769,7 @@ def uses_outfit_option_controls(preset_id):
         or preset_id.startswith("modular-armored-outfit-")
         or preset_id.startswith("modular-robe-dress-")
         or is_creature_preset(preset_id)
+        or is_image_prompt_preset(preset_id)
     )
 
 
@@ -1701,6 +1812,8 @@ def save_generation_output(image_data, mime_type, prompt, payload, mode):
     shield_shape_asset = selected_shield_shape_asset(preset, payload)
     extra_source_images = additional_source_images(payload)
     preserve_skin_surface = uses_skin_surface_control(preset_id) and truthy(payload.get("preserveSkinSurface"))
+    create_neck_connector = uses_neck_connector_control(preset_id) and truthy(payload.get("createNeckConnector"))
+    neck_connector_style = get_neck_connector_style(payload) if create_neck_connector else ""
     extreme_simplify = uses_outfit_option_controls(preset_id) and truthy(payload.get("extremeSimplify"))
     creature_has_tail = is_creature_preset(preset_id) and truthy(payload.get("creatureHasTail"))
     metadata = {
@@ -1714,6 +1827,8 @@ def save_generation_output(image_data, mime_type, prompt, payload, mode):
         "geminiOutputSize": payload.get("geminiOutputSize"),
         "basReliefAspectRatio": payload.get("basReliefAspectRatio"),
         "preserveSkinSurface": preserve_skin_surface,
+        "createNeckConnector": create_neck_connector,
+        "neckConnectorStyle": neck_connector_style,
         "extremeSimplify": extreme_simplify,
         "creatureHasTail": creature_has_tail,
         "referenceImages": [asset["manifestPath"] for asset in preset_reference_assets(preset)],

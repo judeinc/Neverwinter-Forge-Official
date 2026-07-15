@@ -16,7 +16,17 @@ The figure must be:
 - centered on a dark neutral studio background
 - lit with clean direct studio lighting
 
-The silhouette template wins over the outfit source whenever they conflict. Keep the body slim, narrow-waisted, controlled at the hips, slim in the arms, long enough in the arms, slim in the legs, and practical in boot scale. Do not broaden the body into heroic fantasy proportions.
+The silhouette template wins over the outfit source whenever they conflict. Keep the locked male body proportions, shoulder width, torso width, waist, hip width, arm length, arm thickness, neck opening diameter, wrist cutoff diameter, leg length, lower-leg form, and boot scale. Do not broaden the body into heroic fantasy proportions, thin the arms below the template, shrink the neck opening below the template, narrow the shoulders below the template, or turn the render into character art.
+
+Locked anatomy scale rules:
+- Image 2 controls body anatomy scale. Image 1 controls outfit design only.
+- Ignore anime, stylized illustration, doll-like, pin-up, fashion sketch, or source-character anatomy proportions.
+- Do not copy a thin anime neck, tiny collar opening, narrow shoulders, toothpick arms, tiny wrists, oversized head proportions, or stretched stylized limbs from the source.
+- The neck cutoff must keep the locked template's full neck diameter and read as a body-scale modular opening.
+- Arms must keep the locked template's arm cylinder thickness from shoulder to wrist. Do not taper the forearms into thin sticks.
+- Wrist cutoffs, bracers, gauntlets, cuffs, and sleeve ends must fit around the locked wrist/forearm diameter, not around a shrunken anime wrist.
+- If visible skin-like areas are preserved, the skin surface must conform to the locked template proportions, not the source character anatomy.
+- If the source outfit is drawn on a thin character, rebuild the outfit on the locked modular body instead of shrinking the modular body to match the source.
 
 Rebuild the source outfit onto the locked silhouette. Preserve the outfit's main identity and readable material layout. Keep large armor plates, tunics, tabards, belts, sashes, collars, cuffs, boots, leather zones, cloth zones, metal zones, chainmail zones, fur liners, pauldrons, shoulder guards, upper-arm armor, tailored sleeved coats, trench coats, fitted robes, and long structured coat-like garments when they are important to the design and are not cloak/cape substitutes.
 

@@ -18,7 +18,17 @@ The figure must be:
 - lit with clean direct studio lighting
 - grounded by a clear soft contact shadow under the flat garment bottom
 
-The silhouette template wins over the source whenever they conflict for pose, upper body, arm position, neck cutoff, wrist cutoffs, width, and framing. Keep the robe centered and symmetrical enough for image-to-3D cleanup.
+The silhouette template wins over the source whenever they conflict for pose, upper body, arm position, arm thickness, neck cutoff, neck opening diameter, wrist cutoffs, wrist cutoff diameter, width, anatomy, and framing. Keep the robe centered and symmetrical enough for image-to-3D cleanup. Do not thin the arms below the template, shrink the neck opening below the template, narrow the shoulders below the template, or turn the render into character art.
+
+Locked anatomy scale rules:
+- Image 2 controls body anatomy scale. Image 1 controls garment design only.
+- Ignore anime, stylized illustration, doll-like, pin-up, fashion sketch, or source-character anatomy proportions.
+- Do not copy a thin anime neck, tiny collar opening, narrow shoulders, toothpick arms, tiny wrists, oversized head proportions, or stretched stylized limbs from the source.
+- The neck cutoff must keep the locked template's full neck diameter and read as a body-scale modular opening.
+- Arms must keep the locked template's arm cylinder thickness from shoulder to wrist. Do not taper the forearms into thin sticks.
+- Wrist cutoffs, bracers, sleeve cuffs, gauntlet cutoffs, and sleeve ends must fit around the locked wrist/forearm diameter, not around a shrunken anime wrist.
+- If visible skin-like areas are preserved, the skin surface must conform to the locked template proportions, not the source character anatomy.
+- If the source robe is drawn on a thin character, rebuild the robe on the locked modular body instead of shrinking the modular body to match the source.
 
 Robe and hem rules:
 - If the source is a robe, ankle-length garment, floor-length garment, or skirt-like lower garment that goes well past the knees, convert it into a full ground-length robe.
