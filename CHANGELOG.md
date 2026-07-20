@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.3.0C Release
+
+### Changed
+- Improved Model Batch Editor and Edit + Clone material targeting so MDBs with multiple material packets can edit Primary / Head, Eyes, Facial Hair / Extra, all material packets, or exact named packets separately.
+- Added shared MDB packet classification helpers so Model Batch Tools, Model Batch Editor, and Edit + Clone label packet roles consistently, including collision packets.
+- Improved Model Batch Tools and Edit + Clone previews and receipts to show internal packet-name sync and `SKIN` skeleton-reference sync counts before and after cloning.
+- Updated race-clone naming to preserve lowercase source file style while still applying the selected race/sex target.
+- Added explicit Leave unchanged behavior for Hair Shape and Helmet Visibility so batch edits can preserve each MDB's existing behavior packet flags.
+
+### Fixed
+- Fixed folder rescans in the MDB tools so choosing a new folder replaces the loaded model set instead of appending stale models and editor state.
+- Fixed primary material selection so head models with eye packets no longer show eye textures as the primary head material by default.
+- Fixed cloned internal packet-name sync for related sub-packets such as eye meshes and apparel-style sibling packets while leaving `COLS` collision packets untouched.
+- Fixed Edit + Clone conflict preview for per-model output folders.
+- Fixed color picker editing in the MDB editor surfaces so dragging the picker or typing hex color values no longer closes/rebuilds the control after the first input.
+
+### Tested
+- Verified race-cloning a test head MDB updates the head packet, eye packet, and `SKIN` skeleton references while preserving the source MDB and leaving `COLS` unchanged.
+- Verified Model Batch Tools, Model Batch Editor, and Edit + Clone browser flows against local NWN2 MDB folders.
+- Ran Python and JavaScript syntax checks for the Forge MDB backend and editor scripts.
+
 ## 1.3.0B Release
 
 ### Added

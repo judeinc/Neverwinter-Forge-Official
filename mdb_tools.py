@@ -22,6 +22,20 @@ TEXTURE_FIELD_OFFSETS = {
     "glowMap": 96,
 }
 
+MATERIAL_ROLE_LABELS = {
+    "primary": "Primary / Head",
+    "eyes": "Eyes",
+    "facialHair": "Facial Hair / Extra",
+    "other": "Other Material",
+    "lod": "LOD Material",
+}
+
+PARSE_STATUS_LABELS = {
+    "parsed": "Parsed",
+    "withNotes": "Parsed With Notes",
+    "parseError": "Parse Error",
+}
+
 
 TEXTURE_FLAG_LABELS = {
     "cutoutAlpha": "Cutout Alpha",
@@ -115,15 +129,7 @@ def scan_mdb_folder(root_path, recursive=True, max_files=2000):
     texture_names = collect_texture_names(root, recursive=recursive)
     reports = [inspect_mdb_file(path, root, texture_names) for path in unique_files]
 
-    summary = {
-        "total": len(reports),
-        "ready": sum(1 for report in reports if report.status == "Ready"),
-        "needsReview": sum(1 for report in reports if report.status == "Needs Review"),
-        "willNotWork": sum(1 for report in reports if report.status == "Will Not Work In Game"),
-        "byType": {},
-    }
-    for report in reports:
-        summary["byType"][report.asset_type] = summary["byType"].get(report.asset_type, 0) + 1
+    summary = summarize_reports(reports)
 
     return {
         "rootPath": str(root),
@@ -144,6 +150,23 @@ def collect_texture_names(root, recursive=True):
     return texture_names
 
 
+def summarize_reports(reports):
+    summary = {
+        "total": len(reports),
+        "parsed": sum(1 for report in reports if report.status == PARSE_STATUS_LABELS["parsed"]),
+        "withNotes": sum(1 for report in reports if report.status == PARSE_STATUS_LABELS["withNotes"]),
+        "parseErrors": sum(1 for report in reports if report.status == PARSE_STATUS_LABELS["parseError"]),
+        "byType": {},
+    }
+    # Legacy aliases keep older UI code and saved state harmless while wording moves to factual labels.
+    summary["ready"] = summary["parsed"]
+    summary["needsReview"] = summary["withNotes"]
+    summary["willNotWork"] = summary["parseErrors"]
+    for report in reports:
+        summary["byType"][report.asset_type] = summary["byType"].get(report.asset_type, 0) + 1
+    return summary
+
+
 def inspect_mdb_file(path, root=None, texture_names=None):
     path = Path(path).resolve()
     root = Path(root).resolve() if root else path.parent
@@ -153,7 +176,7 @@ def inspect_mdb_file(path, root=None, texture_names=None):
         data = path.read_bytes()
     except Exception as exc:
         warnings = [MdbWarning("error", f"Could not read model file: {exc}")]
-        return MdbReport(path, root, "Will Not Work In Game", classify_asset(path.name), warnings=warnings)
+        return MdbReport(path, root, PARSE_STATUS_LABELS["parseError"], classify_asset(path.name), warnings=warnings)
 
     return inspect_mdb_bytes(data, path, root, texture_names)
 
@@ -170,7 +193,7 @@ def inspect_mdb_bytes(data, display_path, root=None, texture_names=None):
     try:
         if len(data) < 12 or data[:4] != b"NWN2":
             warnings.append(MdbWarning("error", "This is not a valid NWN2 model file."))
-            return MdbReport(path, root, "Will Not Work In Game", classify_asset(path.name), warnings=warnings)
+            return MdbReport(path, root, PARSE_STATUS_LABELS["parseError"], classify_asset(path.name), warnings=warnings)
 
         major, minor, packet_count = struct.unpack_from("<HHI", data, 4)
         version = f"{major}.{minor}"
@@ -214,15 +237,7 @@ def scan_uploaded_mdb_files(uploaded_files, max_files=2000):
         for item in mdb_files
     ]
 
-    summary = {
-        "total": len(reports),
-        "ready": sum(1 for report in reports if report.status == "Ready"),
-        "needsReview": sum(1 for report in reports if report.status == "Needs Review"),
-        "willNotWork": sum(1 for report in reports if report.status == "Will Not Work In Game"),
-        "byType": {},
-    }
-    for report in reports:
-        summary["byType"][report.asset_type] = summary["byType"].get(report.asset_type, 0) + 1
+    summary = summarize_reports(reports)
 
     return {
         "rootPath": "Imported files",
@@ -311,6 +326,8 @@ def clone_and_edit_models(jobs, output_dir="", conflict_mode="auto"):
                 "oldName": source.stem,
                 "newName": cloned["outputPath"].stem,
                 "changed": changed,
+                "internalNameChanges": cloned.get("internalNameChanges", []),
+                "skeletonChanges": cloned.get("skeletonChanges", []),
             })
         except Exception as exc:
             errors.append({"path": str(job.get("path", "")), "error": str(exc)})
@@ -369,6 +386,8 @@ def clone_and_edit_uploaded_model(uploaded_file, output_dir, new_name, edit_job=
         "oldName": source_stem,
         "newName": cloned["outputPath"].stem,
         "changed": changed,
+        "internalNameChanges": cloned.get("internalNameChanges", []),
+        "skeletonChanges": cloned.get("skeletonChanges", []),
     }
     return {
         "outputDir": str(output),
@@ -443,6 +462,7 @@ def apply_mdb_edit_to_buffer(data, job):
     material_flags = job.get("materialFlags") if isinstance(job.get("materialFlags"), dict) else {}
     material_values = job.get("materialValues") if isinstance(job.get("materialValues"), dict) else {}
     texture_references = job.get("textureReferences") if isinstance(job.get("textureReferences"), dict) else {}
+    material_target = normalize_material_target(job.get("materialTarget"))
     hair_value = job.get("hairShortening")
     helm_value = job.get("helmetHairHiding")
     if not material_flags and not material_values and not texture_references and hair_value is None and helm_value is None:
@@ -454,7 +474,9 @@ def apply_mdb_edit_to_buffer(data, job):
 
     packet_count = struct.unpack_from("<I", data, 8)[0]
     lookup_start = 12
-    material_written = False
+    model_stem = edit_model_stem(job)
+    material_packets = []
+
     for index in range(packet_count):
         entry = lookup_start + index * 8
         if entry + 8 > len(data):
@@ -477,34 +499,16 @@ def apply_mdb_edit_to_buffer(data, job):
         if is_lod_name(packet_name):
             continue
 
-        if (material_flags or material_values or texture_references) and not material_written and actual_signature in MATERIAL_PACKET_TYPES:
+        if (material_flags or material_values or texture_references) and actual_signature in MATERIAL_PACKET_TYPES:
             material_start = material_start_for_signature(actual_signature, payload_start)
             if material_start is not None:
-                if texture_references:
-                    changed = write_texture_references(data, material_start, texture_references) or changed
-
-                if material_values:
-                    changed = write_material_values(data, material_start, material_values) or changed
-
-                if material_flags:
-                    flags_offset = material_start + 160
-                    if flags_offset + 4 > len(data):
-                        material_written = True
-                        continue
-                    old_flags = struct.unpack_from("<I", data, flags_offset)[0]
-                    new_flags = old_flags
-                    for key, enabled in material_flags.items():
-                        if key not in MATERIAL_FLAG_BITS:
-                            continue
-                        bit = 1 << MATERIAL_FLAG_BITS[key]
-                        if bool(enabled):
-                            new_flags |= bit
-                        else:
-                            new_flags &= ~bit
-                    if new_flags != old_flags:
-                        struct.pack_into("<I", data, flags_offset, new_flags)
-                        changed = True
-                material_written = True
+                material_packets.append({
+                    "index": index,
+                    "signature": actual_signature,
+                    "name": packet_name,
+                    "materialStart": material_start,
+                    "role": material_packet_role(packet_name, model_stem),
+                })
 
         if hair_value is not None and actual_signature == "HAIR":
             changed = write_behavior_value(data, payload_start + 32, HAIR_BEHAVIOR_VALUES, hair_value) or changed
@@ -512,7 +516,110 @@ def apply_mdb_edit_to_buffer(data, job):
         if helm_value is not None and actual_signature == "HELM":
             changed = write_behavior_value(data, payload_start + 32, HELM_BEHAVIOR_VALUES, helm_value) or changed
 
+    for packet in selected_material_packets(material_packets, material_target):
+        material_start = packet["materialStart"]
+        if texture_references:
+            changed = write_texture_references(data, material_start, texture_references) or changed
+
+        if material_values:
+            changed = write_material_values(data, material_start, material_values) or changed
+
+        if material_flags:
+            changed = write_material_flags(data, material_start, material_flags) or changed
+
     return changed
+
+
+def write_material_flags(data, material_start, material_flags):
+    flags_offset = material_start + 160
+    if flags_offset + 4 > len(data):
+        return False
+    old_flags = struct.unpack_from("<I", data, flags_offset)[0]
+    new_flags = old_flags
+    for key, enabled in material_flags.items():
+        if key not in MATERIAL_FLAG_BITS:
+            continue
+        bit = 1 << MATERIAL_FLAG_BITS[key]
+        if bool(enabled):
+            new_flags |= bit
+        else:
+            new_flags &= ~bit
+    if new_flags == old_flags:
+        return False
+    struct.pack_into("<I", data, flags_offset, new_flags)
+    return True
+
+
+def normalize_material_target(raw_target):
+    if not isinstance(raw_target, dict):
+        return {"mode": "role", "role": "primary"}
+
+    mode = str(raw_target.get("mode", "role"))
+    if mode == "all":
+        return {"mode": "all"}
+    if mode == "index":
+        indexes = raw_target.get("indexes", raw_target.get("index", []))
+        if not isinstance(indexes, list):
+            indexes = [indexes]
+        clean_indexes = []
+        for value in indexes:
+            try:
+                clean_indexes.append(int(value))
+            except Exception:
+                continue
+        return {"mode": "index", "indexes": clean_indexes}
+    if mode == "name":
+        names = raw_target.get("names", raw_target.get("name", []))
+        if not isinstance(names, list):
+            names = [names]
+        clean_names = [str(value).strip().lower() for value in names if str(value).strip()]
+        return {"mode": "name", "names": clean_names}
+
+    role = str(raw_target.get("role", "primary"))
+    if role not in MATERIAL_ROLE_LABELS or role == "lod":
+        role = "primary"
+    return {"mode": "role", "role": role}
+
+
+def selected_material_packets(material_packets, target):
+    if not material_packets:
+        return []
+    if target.get("mode") == "all":
+        return material_packets
+    if target.get("mode") == "index":
+        wanted = set(target.get("indexes", []))
+        return [packet for packet in material_packets if packet["index"] in wanted]
+    if target.get("mode") == "name":
+        wanted = set(target.get("names", []))
+        return [packet for packet in material_packets if packet.get("name", "").lower() in wanted]
+
+    role = target.get("role", "primary")
+    selected = [packet for packet in material_packets if packet.get("role") == role]
+    if selected:
+        return selected
+    if role == "primary":
+        return [select_primary_material_packet(material_packets)]
+    return []
+
+
+def select_primary_material_packet(material_packets):
+    for packet in material_packets:
+        if packet.get("role") == "primary":
+            return packet
+    for packet in material_packets:
+        if packet.get("role") not in {"eyes", "facialHair", "lod"}:
+            return packet
+    return material_packets[0]
+
+
+def edit_model_stem(job):
+    new_name = sanitize_fixed_name(str(job.get("newName", "")).strip())
+    if new_name:
+        return new_name
+    raw_path = str(job.get("path", "")).strip()
+    if raw_path:
+        return Path(raw_path).stem
+    return ""
 
 
 def write_texture_references(data, material_start, references):
@@ -618,6 +725,7 @@ def clone_single_model(source, output_dir, new_base_name, conflict_mode="auto"):
         "outputPath": str(cloned["outputPath"]),
         "oldName": source.stem,
         "newName": cloned["outputPath"].stem,
+        "internalNameChanges": cloned.get("internalNameChanges", []),
         "skeletonChanges": cloned.get("skeletonChanges", []),
     }
 
@@ -635,6 +743,7 @@ def clone_single_model_bytes(raw_data, old_base_name, output_dir, new_base_name,
         raise ValueError("This is not a valid NWN2 model file.")
 
     packet_count = struct.unpack_from("<I", data, 8)[0]
+    internal_name_changes = []
     skeleton_changes = []
     for index in range(packet_count):
         entry = 12 + index * 8
@@ -650,10 +759,18 @@ def clone_single_model_bytes(raw_data, old_base_name, output_dir, new_base_name,
         if actual_signature:
             signature = actual_signature
         payload_start = offset + 8
-        packet_name = read_fixed_string(data, payload_start)
-        renamed_packet = rename_related_name(packet_name, old_base_name, final_base_name)
-        if renamed_packet != packet_name:
-            write_fixed_string(data, payload_start, renamed_packet)
+        if signature != "COLS":
+            packet_name = read_fixed_string(data, payload_start)
+            renamed_packet = rename_related_name(packet_name, old_base_name, final_base_name)
+            if renamed_packet != packet_name:
+                write_fixed_string(data, payload_start, renamed_packet)
+                internal_name_changes.append({
+                    "packet": index,
+                    "type": signature,
+                    "oldName": packet_name,
+                    "newName": renamed_packet,
+                    "role": material_packet_role(packet_name, old_base_name),
+                })
 
         if signature == "SKIN":
             skeleton_start = payload_start + 32
@@ -672,6 +789,7 @@ def clone_single_model_bytes(raw_data, old_base_name, output_dir, new_base_name,
         "outputPath": output_path,
         "oldName": old_base_name,
         "newName": output_path.stem,
+        "internalNameChanges": internal_name_changes,
         "skeletonChanges": skeleton_changes,
     }
 
@@ -971,7 +1089,7 @@ def validate_report(path, packets, warnings, texture_names):
             warnings.append(MdbWarning("error", f"Walkable surface '{packet.name}' should end in _W."))
 
     if visible_packets:
-        primary = visible_packets[0]
+        primary = select_primary_visible_packet(visible_packets, basename)
         if head_asset and primary.name and primary.name.lower() != basename.lower():
             warnings.append(MdbWarning("error", "Head model filename and main internal name do not match."))
         elif primary.name and primary.name.lower() != basename.lower():
@@ -1027,10 +1145,10 @@ def status_from_warnings(warnings, packets):
     for packet in packets:
         severities.extend(warning.severity for warning in packet.warnings)
     if "error" in severities:
-        return "Will Not Work In Game"
+        return PARSE_STATUS_LABELS["parseError"]
     if "warning" in severities:
-        return "Needs Review"
-    return "Ready"
+        return PARSE_STATUS_LABELS["withNotes"]
+    return PARSE_STATUS_LABELS["parsed"]
 
 
 def classify_asset(filename, packets=None):
@@ -1074,22 +1192,28 @@ def report_to_dict(report):
         "relativePath": safe_relative(report.path, report.root),
         "fileName": report.path.name,
         "status": report.status,
+        "statusLabel": report.status,
         "assetType": report.asset_type,
         "version": report.version,
         "packetCount": report.packet_count,
         "textureCount": texture_count(report.packets),
+        "issueCount": issue_count(report),
         "warnings": [warning.__dict__ for warning in report.warnings],
-        "packets": [packet_to_dict(packet) for packet in report.packets],
+        "packets": [packet_to_dict(packet, report.path.stem) for packet in report.packets],
+        "packetSummary": packet_summary(report.packets, report.path.stem),
     }
 
 
-def packet_to_dict(packet):
+def packet_to_dict(packet, model_stem=""):
+    role = material_packet_role(packet.name, model_stem) if packet.material else ""
     return {
         "index": packet.index,
         "type": packet.signature,
         "offset": packet.offset,
         "size": packet.size,
         "name": packet.name,
+        "materialRole": role,
+        "materialLabel": MATERIAL_ROLE_LABELS.get(role, ""),
         "skeleton": packet.skeleton,
         "material": packet.material,
         "mesh": packet.mesh,
@@ -1114,6 +1238,86 @@ def texture_count(packets):
             if value:
                 names.add(value.lower())
     return len(names)
+
+
+def issue_count(report):
+    return len(report.warnings) + sum(len(packet.warnings) for packet in report.packets)
+
+
+def packet_summary(packets, model_stem=""):
+    material_packets = []
+    role_counts = {}
+    for packet in packets:
+        if not packet.material:
+            continue
+        role = material_packet_role(packet.name, model_stem)
+        label = MATERIAL_ROLE_LABELS.get(role, "Material Packet")
+        entry = {
+            "index": packet.index,
+            "type": packet.signature,
+            "name": packet.name,
+            "role": role,
+            "label": label,
+            "textureCount": len([key for key in TEXTURE_FIELD_KEYS if packet.material.get(key)]),
+            "editable": role != "lod" and packet.signature in MATERIAL_PACKET_TYPES,
+        }
+        material_packets.append(entry)
+        role_counts[role] = role_counts.get(role, 0) + 1
+
+    primary = next((packet for packet in material_packets if packet["role"] == "primary"), None)
+    if primary is None:
+        primary = next((packet for packet in material_packets if packet["role"] not in {"eyes", "facialHair", "lod"}), None)
+    if primary is None and material_packets:
+        primary = material_packets[0]
+
+    return {
+        "materialPackets": material_packets,
+        "materialRoleCounts": role_counts,
+        "primaryMaterialIndex": primary["index"] if primary else None,
+    }
+
+
+def select_primary_visible_packet(packets, model_stem=""):
+    non_lod = [packet for packet in packets if not is_lod_name(packet.name)]
+    candidates = non_lod or packets
+    for packet in candidates:
+        if material_packet_role(packet.name, model_stem) == "primary":
+            return packet
+    for packet in candidates:
+        if material_packet_role(packet.name, model_stem) not in {"eyes", "facialHair", "lod"}:
+            return packet
+    return candidates[0] if candidates else MdbPacket(0, "", 0, 0)
+
+
+def material_packet_role(packet_name, model_stem=""):
+    name = str(packet_name or "").strip()
+    lower = name.lower()
+    stem = str(model_stem or "").strip().lower()
+    if not name:
+        return "other"
+    if is_lod_name(name):
+        return "lod"
+    if "eye" in lower:
+        return "eyes"
+    if stem and (lower == stem or lower.startswith(f"{stem}_")):
+        return "primary"
+    if "head" in lower or "face" in lower:
+        return "primary"
+    if is_facial_hair_packet_name(lower):
+        return "facialHair"
+    return "other"
+
+
+def is_facial_hair_packet_name(lower_name):
+    compact = re.sub(r"[^a-z0-9]+", "", lower_name)
+    return bool(
+        "fhair" in compact
+        or "facialhair" in compact
+        or "beard" in compact
+        or "mustache" in compact
+        or "moustache" in compact
+        or "goatee" in compact
+    )
 
 
 def material_start_for_signature(signature, payload_start):
@@ -1144,6 +1348,30 @@ def rename_related_name(value, old_base, new_base):
         return new_base
     if value_lower.startswith(old_lower):
         return sanitize_fixed_name(new_base + value[len(old_base):])
+    race_renamed = rename_model_race_token(value, old_base, new_base)
+    if race_renamed != value:
+        return sanitize_fixed_name(race_renamed)
+    return value
+
+
+def rename_model_race_token(value, old_base, new_base):
+    old_race = race_code_from_model_name(old_base)
+    new_race = race_code_from_model_name(new_base)
+    if not old_race or not new_race or old_race == new_race:
+        return value
+
+    match = re.match(r"^(?P<prefix>[A-Za-z]_)(?P<race>[A-Za-z0-9]{3})(?P<suffix>(?:_|$).*)", value or "", re.IGNORECASE)
+    if not match or match.group("race").upper() != old_race:
+        return value
+
+    return f"{match.group('prefix')}{apply_case_style(match.group('race'), new_race)}{match.group('suffix')}"
+
+
+def apply_case_style(template, value):
+    if template.islower():
+        return value.lower()
+    if template.isupper():
+        return value.upper()
     return value
 
 

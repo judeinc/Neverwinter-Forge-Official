@@ -21,9 +21,9 @@ const editorStatusEl = document.querySelector("#editorStatus");
 const cloneOutMode = document.body.dataset.editorMode === "clone-out";
 const cloneOutputPathField = document.querySelector("#cloneOutputPath");
 const chooseCloneOutputFolderButton = document.querySelector("#chooseCloneOutputFolder");
-const cloneNewNameField = document.querySelector("#cloneNewName");
 const cloneNameSlotFields = [...document.querySelectorAll("[data-clone-name-slot]")];
 const cloneConflictModeField = document.querySelector("#cloneConflictMode");
+const MDB_SHARED = window.ForgeMdb || {};
 
 const MATERIAL_FLAG_DEFINITIONS = [
   ["cutoutAlpha", "Cutout Alpha"],
@@ -57,6 +57,13 @@ const TEXTURE_REFERENCE_FIELDS = [
   { key: "normalMap", short: "N", label: "Normal" },
   { key: "tintMask", short: "T", label: "Tint" },
   { key: "glowMap", short: "G", label: "Glow" }
+];
+const DEFAULT_MATERIAL_TARGET = { mode: "role", role: "primary" };
+const MATERIAL_TARGET_DEFINITIONS = [
+  { mode: "role", role: "primary", label: "Primary / Head" },
+  { mode: "role", role: "eyes", label: "Eyes" },
+  { mode: "role", role: "facialHair", label: "Facial Hair / Extra" },
+  { mode: "all", role: "", label: "All Material Packets" }
 ];
 const SPECULAR_COLOR_PRESETS = [0, 20, 40, 60, 80, 100];
 const DIFFUSE_COLOR_PRESETS = [
@@ -92,6 +99,8 @@ let editorContextMenu = null;
 let editorContextModelIndex = null;
 let uploadedEditorFileMap = new Map();
 let cloneOutModelSettings = new Map();
+let cloneOutConflictPreviewState = { key: "", loading: false, conflicts: [], duplicates: [], error: "" };
+let cloneOutConflictPreviewTimer = null;
 
 restoreEditorPreferences();
 bindEditorControls();
@@ -102,6 +111,9 @@ function restoreEditorPreferences() {
   editorRecursiveField.checked = localStorage.getItem("neverwinterForge.mdbRecursive") !== "false";
   if (cloneOutMode && cloneOutputPathField) {
     cloneOutputPathField.value = localStorage.getItem("neverwinterForge.mdbCloneOutPath") || "";
+  }
+  if (cloneOutMode && cloneConflictModeField) {
+    cloneConflictModeField.value = localStorage.getItem("neverwinterForge.mdbCloneOutConflictMode") || "auto";
   }
 }
 
@@ -121,12 +133,6 @@ function bindEditorControls() {
       renderSavePreview();
     });
   }
-  if (cloneNewNameField) {
-    cloneNewNameField.addEventListener("input", () => {
-      cloneNewNameField.dataset.autoName = "false";
-      renderSavePreview();
-    });
-  }
   cloneNameSlotFields.forEach((field) => {
     field.addEventListener("input", () => {
       const target = editingTargets()[Number(field.dataset.cloneNameSlot || 0)];
@@ -136,7 +142,12 @@ function bindEditorControls() {
       updateCloneOutCreateButtonState();
     });
   });
-  if (cloneConflictModeField) cloneConflictModeField.addEventListener("change", renderSavePreview);
+  if (cloneConflictModeField) {
+    cloneConflictModeField.addEventListener("change", () => {
+      localStorage.setItem("neverwinterForge.mdbCloneOutConflictMode", cloneConflictModeField.value);
+      renderSavePreview();
+    });
+  }
   importEditorFilesButton.addEventListener("click", () => editorFileInput.click());
   editorFileInput.addEventListener("change", async () => {
     await importEditorFiles([...editorFileInput.files].map((file) => ({ file, path: file.name })));
@@ -265,8 +276,8 @@ async function scanEditorFolder() {
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Could not scan model folder.");
     editorSourceMode = "folder";
-    appendEditorScanResult(result);
-    setEditorStatus(`Added ${result.summary.total} scanned model file${result.summary.total === 1 ? "" : "s"}.`);
+    renderEditorScanResult(result);
+    setEditorStatus(`Loaded ${result.summary.total} scanned model file${result.summary.total === 1 ? "" : "s"} from this folder.`);
   } catch (error) {
     setEditorStatus(error.message, true);
   } finally {
@@ -307,6 +318,13 @@ async function importEditorFiles(files) {
   }
 }
 
+function renderEditorScanResult(result) {
+  editorModels = result.models || [];
+  resetEditorWorkingState();
+  focusedModelIndex = editorModels.length ? 0 : null;
+  renderEditorState();
+}
+
 function appendEditorScanResult(result) {
   const existing = new Set(editorModels.map((model) => modelKey(model)));
   const additions = (result.models || []).filter((model) => {
@@ -317,15 +335,45 @@ function appendEditorScanResult(result) {
   });
   editorModels.push(...additions);
   if (focusedModelIndex === null && editorModels.length) focusedModelIndex = 0;
-  if (cloneOutMode && additions.length && cloneNewNameField && !cloneNewNameField.value.trim()) {
-    cloneNewNameField.value = defaultCloneOutName(additions[0]);
-    cloneNewNameField.dataset.autoName = "true";
-  }
   refreshCloneOutName();
   selectedModelIndexes = new Set([...selectedModelIndexes].filter((index) => editorModels[index]));
   if (editorSelectionAnchorIndex !== null && !editorModels[editorSelectionAnchorIndex]) editorSelectionAnchorIndex = null;
   pendingEdits = emptyPendingEdits();
   renderEditorState();
+}
+
+function resetEditorWorkingState() {
+  selectedModelIndexes = new Set();
+  focusedModelIndex = null;
+  editorSelectionAnchorIndex = null;
+  pendingEdits = emptyPendingEdits();
+  changedModelKeys = new Set();
+  uploadedEditorFileMap = new Map();
+  cloneOutModelSettings = new Map();
+  cloneOutConflictPreviewState = { key: "", loading: false, conflicts: [], duplicates: [], error: "" };
+  clearTimeout(cloneOutConflictPreviewTimer);
+  resetEditorFilters();
+  hideEditorContextMenu();
+  if (editorResultSummary) {
+    editorResultSummary.textContent = "";
+    editorResultSummary.classList.add("hidden");
+  }
+  if (savePreviewPanel) {
+    savePreviewPanel.textContent = "";
+    savePreviewPanel.classList.add("hidden");
+  }
+  cloneNameSlotFields.forEach((field) => {
+    field.value = "";
+    field.placeholder = "Select a model";
+    field.disabled = true;
+  });
+}
+
+function resetEditorFilters() {
+  editorSearchField.value = "";
+  editorTypeFilter.value = "";
+  editorSelectedOnlyField.checked = false;
+  editorChangedOnlyField.checked = false;
 }
 
 function renderEditorState() {
@@ -679,6 +727,28 @@ function renderEditableGroup(group) {
     grid.className = "flag-grid editable-flag-grid";
     group.flags.forEach((flag) => grid.appendChild(editableFlagCheckbox(flag)));
     section.appendChild(grid);
+  } else if (group.kind === "packet-target") {
+    const options = document.createElement("div");
+    options.className = "editor-choice-row packet-target-row";
+    group.options.forEach((option) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = option.active ? "is-active" : "";
+      button.disabled = option.disabled;
+      button.textContent = option.text;
+      button.title = option.title;
+      button.addEventListener("click", () => {
+        pendingEdits.materialTarget = option.target;
+        renderEditorState();
+      });
+      options.appendChild(button);
+    });
+    section.appendChild(options);
+  } else if (group.kind === "packet-inspector") {
+    const list = document.createElement("div");
+    list.className = "packet-inspector-list";
+    group.rows.forEach((row) => list.appendChild(packetInspectorRow(row)));
+    section.appendChild(list);
   } else if (group.kind === "textures") {
     const controls = document.createElement("div");
     controls.className = "texture-edit-controls";
@@ -698,7 +768,11 @@ function renderEditableGroup(group) {
       button.className = option.active ? "is-active" : "";
       button.textContent = option.label;
       button.addEventListener("click", () => {
-        pendingEdits[group.key] = option.value;
+        if (option.preserve) {
+          delete pendingEdits[group.key];
+        } else {
+          pendingEdits[group.key] = option.value;
+        }
         renderEditorState();
       });
       options.appendChild(button);
@@ -773,7 +847,15 @@ function materialValueControl(value) {
     rgb.className = "material-rgb-readout";
     rgb.textContent = value.mixed ? "RGB values: Mixed" : `RGB values: [${rgb255(value.value).join(", ")}]`;
     picker.addEventListener("input", () => {
-      pendingEdits.materialValues[value.key] = hexToRgb(picker.value);
+      const next = hexToRgb(picker.value);
+      pendingEdits.materialValues[value.key] = next;
+      swatch.style.setProperty("--picked-color", rgbCss(next));
+      rgb.textContent = `RGB values: [${rgb255(next).join(", ")}]`;
+      picker.classList.add("has-pending-change");
+      renderSavePreview();
+      renderEditorSummary();
+    });
+    picker.addEventListener("change", () => {
       renderEditorState();
     });
     colorRow.append(swatch, picker, rgb);
@@ -961,8 +1043,14 @@ function renderSavePreview() {
   const body = document.createElement("p");
   const list = document.createElement("ul");
   const saveButton = document.createElement("button");
+  const packetSummary = materialEditSummary(targets);
   title.textContent = "Save Preview";
   body.textContent = `This will save over ${targets.length} MDB file${targets.length === 1 ? "" : "s"}.`;
+  if (packetSummary) {
+    const item = document.createElement("li");
+    item.textContent = packetSummary;
+    list.appendChild(item);
+  }
   changes.forEach((change) => {
     const item = document.createElement("li");
     item.textContent = change;
@@ -996,19 +1084,32 @@ function renderCloneOutPreview() {
   const missingNames = jobs.some((job) => !job.newName);
   const missingImportOutput = editorSourceMode === "import" && jobs.some((job) => !job.outputDir);
   const canClone = Boolean(jobs.length && !missingNames && !missingImportOutput && !uploadOnlyBlocked && hasUploadFile);
+  const canCheckConflicts = Boolean(jobs.length && !missingNames && !missingImportOutput && !uploadOnlyBlocked && hasUploadFile);
 
   const title = document.createElement("h2");
   const body = document.createElement("p");
   const list = document.createElement("ul");
   const createButton = document.createElement("button");
   const plan = document.createElement("div");
+  const packetSummary = materialEditSummary(targets);
 
   title.textContent = "Clone Preview";
   body.textContent = `This will create ${targets.length} changed MDB cop${targets.length === 1 ? "y" : "ies"}. Originals stay untouched.`;
   plan.className = "preview-list";
   plan.appendChild(cloneOutPlanEditor(jobs));
 
-  (changes.length ? changes : ["No material edits queued. The clone will still sync internal names to the new MDB name."]).forEach((change) => {
+  if (packetSummary) {
+    const item = document.createElement("li");
+    item.textContent = packetSummary;
+    list.appendChild(item);
+  }
+  const syncSummary = cloneOutSyncSummary(jobs);
+  if (syncSummary) {
+    const item = document.createElement("li");
+    item.textContent = syncSummary;
+    list.appendChild(item);
+  }
+  (changes.length ? changes : ["No material edits queued. The clone will still sync matching internal packet names and skeleton reference strings."]).forEach((change) => {
     const item = document.createElement("li");
     item.textContent = change;
     list.appendChild(item);
@@ -1021,6 +1122,7 @@ function renderCloneOutPreview() {
   createButton.addEventListener("click", () => saveFlagEdits(targets));
 
   savePreviewPanel.append(title, body, plan, list);
+  savePreviewPanel.appendChild(cloneOutConflictNotice(jobs, canCheckConflicts));
   if (editorSourceMode !== "import") savePreviewPanel.appendChild(editorNotice("Output folders can be left blank to clone into each source folder."));
   if (missingImportOutput) savePreviewPanel.appendChild(editorNotice("Imported MDBs need an output folder because they do not have a source folder on disk.", true));
   if (missingNames) savePreviewPanel.appendChild(editorNotice("Choose a new MDB name.", true));
@@ -1042,6 +1144,7 @@ function cloneOutPlanEditor(jobs) {
     const nameField = document.createElement("label");
     const nameInput = document.createElement("input");
     const chooseButton = document.createElement("button");
+    const syncNote = document.createElement("span");
 
     row.className = "clone-out-plan-row";
     source.textContent = stem(job.model.fileName);
@@ -1055,6 +1158,7 @@ function cloneOutPlanEditor(jobs) {
     outputInput.value = job.outputDir;
     outputInput.addEventListener("input", () => {
       updateCloneOutModelSetting(key, "outputDir", outputInput.value);
+      renderSavePreview();
       updateCloneOutCreateButtonState();
     });
     outputField.appendChild(outputInput);
@@ -1074,14 +1178,156 @@ function cloneOutPlanEditor(jobs) {
       const nextName = cleanFixedName(nameInput.value);
       updateCloneOutModelSetting(key, "newName", nextName);
       syncCloneNameSlotForModel(key, nextName);
+      renderSavePreview();
       updateCloneOutCreateButtonState();
     });
     nameField.appendChild(nameInput);
 
-    row.append(source, outputField, chooseButton, nameField);
+    syncNote.className = "clone-out-sync-note";
+    syncNote.textContent = cloneOutJobSyncDetail(job);
+
+    row.append(source, outputField, chooseButton, nameField, syncNote);
     wrap.appendChild(row);
   });
   return wrap;
+}
+
+function cloneOutSyncSummary(jobs) {
+  const totals = jobs.reduce((memo, job) => {
+    const plan = cloneOutJobSyncPlan(job);
+    memo.internal += plan.internalChanges.length;
+    memo.skeleton += plan.skeletonChanges.length;
+    return memo;
+  }, { internal: 0, skeleton: 0 });
+  const parts = [];
+  if (totals.internal) parts.push(`${totals.internal} internal packet name${totals.internal === 1 ? "" : "s"}`);
+  if (totals.skeleton) parts.push(`${totals.skeleton} skeleton reference${totals.skeleton === 1 ? "" : "s"}`);
+  return parts.length ? `Internal Sync: ${parts.join(", ")}.` : "Internal Sync: no matching packet or skeleton names need changing.";
+}
+
+function cloneOutJobSyncDetail(job) {
+  const plan = cloneOutJobSyncPlan(job);
+  const detail = cloneOutSyncDetail(plan.internalChanges, plan.skeletonChanges);
+  return `Internal packets: ${plan.internalChanges.length} | Skeleton refs: ${plan.skeletonChanges.length}${detail ? ` | ${detail}` : ""}`;
+}
+
+function cloneOutJobSyncPlan(job) {
+  return {
+    internalChanges: MDB_SHARED.internalNameSyncPlan ? MDB_SHARED.internalNameSyncPlan(job.model, job.newName) : [],
+    skeletonChanges: MDB_SHARED.skeletonRefSyncPlan ? MDB_SHARED.skeletonRefSyncPlan(job.model, job.newName) : []
+  };
+}
+
+function cloneOutSyncDetail(internalChanges, skeletonChanges) {
+  const samples = [];
+  internalChanges.slice(0, 2).forEach((change) => samples.push(`${change.oldName} -> ${change.newName}`));
+  skeletonChanges.slice(0, 1).forEach((change) => samples.push(`${change.oldSkeleton} -> ${change.newSkeleton}`));
+  const remaining = internalChanges.length + skeletonChanges.length - samples.length;
+  if (remaining > 0) samples.push(`+${remaining} more`);
+  return samples.join(" | ");
+}
+
+function cloneOutConflictNotice(jobs, canCheck) {
+  const notice = document.createElement("div");
+  notice.className = "conflict-notice";
+  scheduleCloneOutConflictCheck(jobs, canCheck);
+
+  if (!canCheck) {
+    notice.textContent = "Conflict check will run once clone names and output folders are ready.";
+    return notice;
+  }
+  if (cloneOutConflictPreviewState.loading) {
+    notice.textContent = "Checking target name conflicts...";
+    return notice;
+  }
+  if (cloneOutConflictPreviewState.error) {
+    notice.classList.add("warn");
+    notice.textContent = `Could not check output conflicts: ${cloneOutConflictPreviewState.error}`;
+    return notice;
+  }
+
+  const conflicts = cloneOutConflictPreviewState.conflicts || [];
+  const duplicates = cloneOutConflictPreviewState.duplicates || [];
+  if (!conflicts.length && !duplicates.length) {
+    notice.classList.add("ok");
+    notice.textContent = "No target name conflicts found.";
+    return notice;
+  }
+
+  notice.classList.add("warn");
+  const mode = cloneConflictModeField?.selectedOptions?.[0]?.textContent || cloneConflictModeField?.value || "Auto-number";
+  const line = document.createElement("p");
+  line.textContent = `${conflicts.length} existing target${conflicts.length === 1 ? "" : "s"} and ${duplicates.length} repeated planned name${duplicates.length === 1 ? "" : "s"} found. Conflict mode: ${mode}.`;
+  notice.appendChild(line);
+  const list = document.createElement("div");
+  list.className = "conflict-list";
+  conflicts.slice(0, 4).forEach((item) => {
+    const row = document.createElement("span");
+    row.textContent = `Exists: ${item.name}`;
+    row.title = item.path;
+    list.appendChild(row);
+  });
+  duplicates.slice(0, 4).forEach((item) => {
+    const row = document.createElement("span");
+    row.textContent = `Duplicate plan: ${item.name}`;
+    row.title = item.outputDir || "";
+    list.appendChild(row);
+  });
+  notice.appendChild(list);
+  return notice;
+}
+
+function scheduleCloneOutConflictCheck(jobs, canCheck) {
+  const conflictJobs = cloneOutConflictJobs(jobs);
+  const key = canCheck && conflictJobs.length
+    ? `${cloneConflictModeField?.value || "auto"}|${conflictJobs.map((job) => `${job.outputDir}|${job.newName}|${job.path}`).join("|")}`
+    : "";
+  if (!key) {
+    cloneOutConflictPreviewState = { key: "", loading: false, conflicts: [], duplicates: [], error: "" };
+    clearTimeout(cloneOutConflictPreviewTimer);
+    return;
+  }
+  if (cloneOutConflictPreviewState.key === key && !cloneOutConflictPreviewState.loading) return;
+  if (cloneOutConflictPreviewState.key === key && cloneOutConflictPreviewState.loading) return;
+
+  cloneOutConflictPreviewState = { key, loading: true, conflicts: [], duplicates: [], error: "" };
+  clearTimeout(cloneOutConflictPreviewTimer);
+  cloneOutConflictPreviewTimer = setTimeout(async () => {
+    try {
+      const response = await fetch("/api/mdb/conflicts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          outputDir: "",
+          jobs: conflictJobs
+        })
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not check output conflicts.");
+      if (cloneOutConflictPreviewState.key !== key) return;
+      cloneOutConflictPreviewState = {
+        key,
+        loading: false,
+        conflicts: result.conflicts || [],
+        duplicates: result.duplicates || [],
+        error: ""
+      };
+    } catch (error) {
+      if (cloneOutConflictPreviewState.key !== key) return;
+      cloneOutConflictPreviewState = { key, loading: false, conflicts: [], duplicates: [], error: error.message };
+    }
+    if (cloneOutMode) renderSavePreview();
+  }, 250);
+}
+
+function cloneOutConflictJobs(jobs) {
+  return jobs
+    .map((job) => ({
+      path: job.model.path,
+      newName: job.newName,
+      outputDir: job.outputDir || sourceFolder(job.model.path)
+    }))
+    .filter((job) => job.newName && job.outputDir);
 }
 
 async function chooseCloneOutRowFolder(key, input) {
@@ -1096,6 +1342,7 @@ async function chooseCloneOutRowFolder(key, input) {
     if (!result.folder) return;
     input.value = result.folder;
     updateCloneOutModelSetting(key, "outputDir", result.folder);
+    renderSavePreview();
     updateCloneOutCreateButtonState();
     setEditorStatus("Output folder selected for this clone.");
   } catch (error) {
@@ -1134,8 +1381,10 @@ async function saveFlagEdits(targets) {
     await saveCloneOutEdits(targets);
     return;
   }
+  const receiptContext = { materialSummary: materialEditSummary(targets) };
   const jobs = targets.map((model) => ({
     path: model.path,
+    materialTarget: currentMaterialTarget(),
     materialFlags: { ...pendingEdits.materialFlags },
     materialValues: { ...pendingEdits.materialValues },
     textureReferences: { ...pendingEdits.textureReferences },
@@ -1161,7 +1410,7 @@ async function saveFlagEdits(targets) {
     pendingEdits = emptyPendingEdits();
     localStorage.setItem("neverwinterForge.mdbScanDirty", String(Date.now()));
     renderEditorState();
-    renderEditorReceipt(result);
+    renderEditorReceipt(result, receiptContext);
     setEditorStatus(`Saved ${result.saved} MDB file${result.saved === 1 ? "" : "s"}.`);
   } catch (error) {
     setEditorStatus(error.message, true);
@@ -1170,10 +1419,12 @@ async function saveFlagEdits(targets) {
 
 async function saveCloneOutEdits(targets) {
   const outputDir = cloneOutputPathField?.value.trim() || "";
+  const receiptContext = { materialSummary: materialEditSummary(targets) };
   const jobs = buildCloneOutJobs(targets).map((job) => ({
     path: job.model.path,
     newName: job.newName,
     outputDir: job.outputDir,
+    materialTarget: currentMaterialTarget(),
     materialFlags: { ...pendingEdits.materialFlags },
     materialValues: { ...pendingEdits.materialValues },
     textureReferences: { ...pendingEdits.textureReferences },
@@ -1209,7 +1460,7 @@ async function saveCloneOutEdits(targets) {
     if (!response.ok) throw new Error(result.error || "Could not create changed clone.");
     pendingEdits = emptyPendingEdits();
     renderEditorState();
-    renderCloneOutReceipt(result);
+    renderCloneOutReceipt(result, receiptContext);
     if ((result.errors || []).length && !result.copied) {
       setEditorStatus("No changed clones were created. Check the result details.", true);
     } else if ((result.errors || []).length) {
@@ -1222,11 +1473,16 @@ async function saveCloneOutEdits(targets) {
   }
 }
 
-function renderEditorReceipt(result) {
+function renderEditorReceipt(result, context = {}) {
   editorResultSummary.textContent = "";
   const line = document.createElement("strong");
   line.textContent = `Saved ${result.saved} / ${(result.results || []).length} selected MDB file${(result.results || []).length === 1 ? "" : "s"}.`;
   editorResultSummary.appendChild(line);
+  if (context.materialSummary) {
+    const target = document.createElement("div");
+    target.textContent = context.materialSummary;
+    editorResultSummary.appendChild(target);
+  }
   if (result.errors?.length) {
     result.errors.forEach((error) => {
       const item = document.createElement("div");
@@ -1237,17 +1493,29 @@ function renderEditorReceipt(result) {
   editorResultSummary.classList.remove("hidden");
 }
 
-function renderCloneOutReceipt(result) {
+function renderCloneOutReceipt(result, context = {}) {
   editorResultSummary.textContent = "";
   const line = document.createElement("strong");
   const skipped = (result.skipped || []).length;
-  line.textContent = `Created ${result.copied || 0} changed clone${result.copied === 1 ? "" : "s"}${skipped ? `, skipped ${skipped}` : ""}.`;
+  const internalChanges = (result.results || []).reduce((total, item) => total + (item.internalNameChanges || []).length, 0);
+  const skeletonChanges = (result.results || []).reduce((total, item) => total + (item.skeletonChanges || []).length, 0);
+  const syncParts = [];
+  if (internalChanges) syncParts.push(`${internalChanges} internal packet name${internalChanges === 1 ? "" : "s"}`);
+  if (skeletonChanges) syncParts.push(`${skeletonChanges} skeleton reference${skeletonChanges === 1 ? "" : "s"}`);
+  line.textContent = `Created ${result.copied || 0} changed clone${result.copied === 1 ? "" : "s"}${skipped ? `, skipped ${skipped}` : ""}.${syncParts.length ? ` Synced ${syncParts.join(" and ")}.` : ""}`;
   editorResultSummary.appendChild(line);
+  if (context.materialSummary) {
+    const target = document.createElement("div");
+    target.textContent = context.materialSummary;
+    editorResultSummary.appendChild(target);
+  }
   const details = document.createElement("div");
   details.className = "batch-result-details";
   (result.results || []).slice(0, 5).forEach((item) => {
     const row = document.createElement("span");
-    row.textContent = `Created: ${item.newName || stem(item.outputPath || "")}`;
+    const internalCount = (item.internalNameChanges || []).length;
+    const skeletonCount = (item.skeletonChanges || []).length;
+    row.textContent = `Created: ${item.newName || stem(item.outputPath || "")} | Internal ${internalCount} | Skeleton ${skeletonCount}`;
     details.appendChild(row);
   });
   (result.errors || []).slice(0, 5).forEach((error) => {
@@ -1261,17 +1529,20 @@ function renderCloneOutReceipt(result) {
 
 function editableGroups(targets) {
   const groups = [];
-  if (targets.some((model) => primaryMaterialPacket(model))) {
+  if (targets.some((model) => allMaterialPackets(model).length)) {
+    const targetLabel = materialTargetLabel(currentMaterialTarget());
+    groups.push({ kind: "packet-target", title: "Packet Target", options: packetTargetOptions(targets) });
+    groups.push({ kind: "packet-inspector", title: "Packets", rows: packetInspectorRows(targets) });
     const materialFlags = MATERIAL_FLAG_DEFINITIONS.map(([key, label]) => flagState(targets, key, label));
-    groups.push({ kind: "material", title: "Material Flags", flags: materialFlags });
+    groups.push({ kind: "material", title: `${targetLabel} Flags`, flags: materialFlags });
     groups.push({
       kind: "textures",
-      title: "Textures",
+      title: `${targetLabel} Textures`,
       references: TEXTURE_REFERENCE_FIELDS.map((field) => textureReferenceState(targets, field))
     });
     groups.push({
       kind: "material-values",
-      title: "Color & Shine",
+      title: `${targetLabel} Color & Shine`,
       values: MATERIAL_VALUE_DEFINITIONS.map((definition) => materialValueState(targets, definition))
     });
   }
@@ -1293,7 +1564,7 @@ function textureReferenceState(targets, field) {
     return { ...field, value: override, mixed: false };
   }
 
-  const values = targets.map((model) => primaryMaterialPacket(model)?.material?.[field.key] || "");
+  const values = targets.flatMap((model) => materialPacketsForTarget(model).map((packet) => packet.material?.[field.key] || ""));
   const first = values[0] || "";
   const mixed = values.some((value) => value !== first);
   return { ...field, value: mixed ? "" : first, mixed };
@@ -1306,7 +1577,7 @@ function materialValueState(targets, definition) {
   }
 
   const values = targets
-    .map((model) => primaryMaterialPacket(model)?.material?.[definition.key])
+    .flatMap((model) => materialPacketsForTarget(model).map((packet) => packet.material?.[definition.key]))
     .filter((value) => value !== undefined && value !== null);
   if (!values.length) return { ...definition, value: definition.type === "color" ? [1, 1, 1] : 0, mixed: false };
   const first = values[0];
@@ -1319,9 +1590,10 @@ function materialValueState(targets, definition) {
 }
 
 function flagState(targets, key, label) {
-  const values = targets.map((model) => Boolean(primaryMaterialPacket(model)?.material?.renderingOptions?.[key]));
+  const values = targets.flatMap((model) => materialPacketsForTarget(model).map((packet) => Boolean(packet.material?.renderingOptions?.[key])));
   const override = pendingEdits.materialFlags[key];
   if (override !== undefined) return { key, label, checked: Boolean(override), mixed: false };
+  if (!values.length) return { key, label, checked: false, mixed: false };
   const allOn = values.every(Boolean);
   const allOff = values.every((value) => !value);
   return { key, label, checked: allOn, mixed: !allOn && !allOff };
@@ -1331,16 +1603,37 @@ function choiceGroup(targets, key, title, definitions, reader) {
   const override = pendingEdits[key];
   const values = targets.map(reader).filter(Boolean);
   const same = values.length && values.every((value) => value === values[0]) ? values[0] : null;
+  const preserveLabel = same ? `Leave unchanged (${same})` : "Leave unchanged";
   return {
     kind: "choice",
     key,
     title,
-    options: definitions.map(([value, label]) => ({
-      value,
-      label,
-      active: override !== undefined ? override === value : same === value
-    }))
+    options: [
+      {
+        value: "",
+        label: preserveLabel,
+        preserve: true,
+        active: override === undefined
+      },
+      ...definitions.map(([value, label]) => ({
+        value,
+        label,
+        preserve: false,
+        active: override !== undefined && override === value
+      }))
+    ]
   };
+}
+
+function materialEditSummary(targets) {
+  const hasMaterialChanges = Object.keys(pendingEdits.materialFlags).length
+    || Object.keys(pendingEdits.materialValues).length
+    || Object.keys(pendingEdits.textureReferences).length;
+  if (!hasMaterialChanges) return "";
+  const target = currentMaterialTarget();
+  const packetCount = targets.reduce((total, model) => total + materialPacketsForTarget(model, target).length, 0);
+  const modelCount = targets.filter((model) => materialPacketsForTarget(model, target).length).length;
+  return `Target ${materialTargetLabel(target)}: ${packetCount} packet${packetCount === 1 ? "" : "s"} across ${modelCount} MDB${modelCount === 1 ? "" : "s"}.`;
 }
 
 function pendingChangeList() {
@@ -1367,7 +1660,7 @@ function pendingChangeList() {
 
 function matchFirstSelected(targets) {
   const first = targets[0];
-  const material = primaryMaterialPacket(first)?.material || {};
+  const material = materialPacketsForTarget(first)[0]?.material || {};
   MATERIAL_FLAG_DEFINITIONS.forEach(([key]) => {
     pendingEdits.materialFlags[key] = Boolean(material.renderingOptions?.[key]);
   });
@@ -1482,6 +1775,173 @@ function textureChips(model) {
   return wrap;
 }
 
+function packetInspectorRows(targets) {
+  if (targets.length === 1) {
+    const model = targets[0];
+    return nonLodPackets(model).map((packet) => {
+      const role = materialPacketRole(model, packet);
+      const hasMaterial = Boolean(packet.material && Object.keys(packet.material).length);
+      return {
+        name: packet.name || packet.type,
+        type: packet.type,
+        role,
+        label: hasMaterial ? materialPacketLabel(model, packet) : packetKindLabel(packet),
+        count: 1,
+        textureCount: textureCountForPacket(packet),
+        material: hasMaterial,
+        target: hasMaterial && packet.name ? { mode: "name", names: [packet.name] } : null
+      };
+    });
+  }
+
+  const byKey = new Map();
+  targets.forEach((model) => {
+    nonLodPackets(model).forEach((packet) => {
+      const role = materialPacketRole(model, packet);
+      const hasMaterial = Boolean(packet.material && Object.keys(packet.material).length);
+      const key = `${packet.type}|${role}|${packet.name || ""}`.toLowerCase();
+      const current = byKey.get(key) || {
+        name: packet.name || packet.type,
+        type: packet.type,
+        role,
+        label: hasMaterial ? materialPacketLabel(model, packet) : packetKindLabel(packet),
+        count: 0,
+        textureCount: 0,
+        material: hasMaterial,
+        target: hasMaterial && packet.name ? { mode: "name", names: [packet.name] } : null
+      };
+      current.count += 1;
+      current.textureCount += textureCountForPacket(packet);
+      byKey.set(key, current);
+    });
+  });
+  return [...byKey.values()].sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: "base" }));
+}
+
+function packetInspectorRow(row) {
+  const item = document.createElement(row.target ? "button" : "div");
+  const name = document.createElement("strong");
+  const meta = document.createElement("span");
+  item.className = row.material ? "packet-inspector-item is-material" : "packet-inspector-item";
+  if (row.target) {
+    item.type = "button";
+    item.addEventListener("click", () => {
+      pendingEdits.materialTarget = row.target;
+      renderEditorState();
+    });
+  }
+  name.textContent = row.name;
+  meta.textContent = `${row.label} / ${row.type}${row.count > 1 ? ` / ${row.count} MDBs` : ""}${row.material ? ` / ${row.textureCount} texture slot${row.textureCount === 1 ? "" : "s"}` : ""}`;
+  item.append(name, meta);
+  return item;
+}
+
+function textureCountForPacket(packet) {
+  return TEXTURE_REFERENCE_FIELDS.filter((field) => packet.material?.[field.key]).length;
+}
+
+function packetTargetOptions(targets) {
+  const current = currentMaterialTarget();
+  const roleOptions = MATERIAL_TARGET_DEFINITIONS.map((definition) => {
+    const count = materialTargetPacketCount(targets, definition);
+    const active = sameMaterialTarget(current, definition);
+    return {
+      target: definition.mode === "all" ? { mode: "all" } : { mode: "role", role: definition.role },
+      text: `${definition.label} (${count})`,
+      title: count
+        ? `Apply material edits to ${definition.label.toLowerCase()} packets in the selected MDBs.`
+        : `No ${definition.label.toLowerCase()} packets were found in the current selection.`,
+      active,
+      disabled: count === 0
+    };
+  });
+  return [...roleOptions, ...namedPacketTargetOptions(targets, current)];
+}
+
+function namedPacketTargetOptions(targets, current) {
+  const byName = new Map();
+  targets.forEach((model) => {
+    allMaterialPackets(model).forEach((packet) => {
+      const role = materialPacketRole(model, packet);
+      if (["primary", "eyes"].includes(role)) return;
+      const name = String(packet.name || "").trim();
+      if (!name) return;
+      const key = name.toLowerCase();
+      const currentValue = byName.get(key) || { name, count: 0, roles: new Set() };
+      currentValue.count += 1;
+      currentValue.roles.add(role);
+      byName.set(key, currentValue);
+    });
+  });
+
+  return [...byName.values()]
+    .sort((left, right) => left.name.localeCompare(right.name, undefined, { sensitivity: "base" }))
+    .map((item) => {
+      const target = { mode: "name", names: [item.name] };
+      const active = sameMaterialTarget(current, target);
+      return {
+        target,
+        text: `${item.name} (${item.count})`,
+        title: `Apply material edits to packet ${item.name}.`,
+        active,
+        disabled: false
+      };
+    });
+}
+
+function materialTargetPacketCount(targets, target) {
+  if (MDB_SHARED.materialTargetPacketCount) return MDB_SHARED.materialTargetPacketCount(targets, target);
+  return targets.reduce((total, model) => total + materialPacketsForTarget(model, target).length, 0);
+}
+
+function currentMaterialTarget() {
+  const target = pendingEdits.materialTarget || DEFAULT_MATERIAL_TARGET;
+  if (target.mode === "all") return { mode: "all" };
+  if (target.mode === "name") return { mode: "name", names: [...(target.names || [])] };
+  return { mode: "role", role: target.role || "primary" };
+}
+
+function sameMaterialTarget(left, right) {
+  if (MDB_SHARED.sameMaterialTarget) return MDB_SHARED.sameMaterialTarget(left, right);
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function materialTargetLabel(target = currentMaterialTarget()) {
+  if (target.mode === "name") return (target.names || []).join(", ") || "Named Packet";
+  if (MDB_SHARED.materialTargetLabel) return MDB_SHARED.materialTargetLabel(target, MATERIAL_TARGET_DEFINITIONS);
+  return MATERIAL_TARGET_DEFINITIONS.find((item) => sameMaterialTarget(target, item))?.label || "Primary / Head";
+}
+
+function materialPacketsForTarget(model, target = currentMaterialTarget()) {
+  if (MDB_SHARED.materialPacketsForTarget) return MDB_SHARED.materialPacketsForTarget(model, target);
+  return allMaterialPackets(model);
+}
+
+function allMaterialPackets(model) {
+  if (MDB_SHARED.allMaterialPackets) return MDB_SHARED.allMaterialPackets(model);
+  return nonLodPackets(model).filter((packet) => packet.material && Object.keys(packet.material).length);
+}
+
+function selectPrimaryMaterialPacket(model) {
+  if (MDB_SHARED.selectPrimaryMaterialPacket) return MDB_SHARED.selectPrimaryMaterialPacket(model);
+  return allMaterialPackets(model)[0] || null;
+}
+
+function materialPacketRole(model, packet) {
+  if (MDB_SHARED.packetRole) return MDB_SHARED.packetRole(model, packet);
+  return packet?.materialRole || "other";
+}
+
+function materialPacketLabel(model, packet) {
+  if (MDB_SHARED.packetLabel) return MDB_SHARED.packetLabel(model, packet);
+  return packet?.materialLabel || "Material Packet";
+}
+
+function packetKindLabel(packet) {
+  if (MDB_SHARED.packetKindLabel) return MDB_SHARED.packetKindLabel(packet);
+  return packet?.type || "Packet";
+}
+
 function textureReferences(model) {
   const material = primaryMaterialPacket(model)?.material || {};
   return TEXTURE_REFERENCE_FIELDS.map((field) => ({
@@ -1503,9 +1963,7 @@ function flagSummaryText(model) {
 }
 
 function primaryMaterialPacket(model) {
-  const packets = nonLodPackets(model);
-  return packets.find((packet) => ["SKIN", "RIGD"].includes(packet.type) && packet.material && Object.keys(packet.material).length)
-    || packets.find((packet) => packet.material && Object.keys(packet.material).length);
+  return selectPrimaryMaterialPacket(model);
 }
 
 function hairPacket(model) {
@@ -1517,6 +1975,7 @@ function helmPacket(model) {
 }
 
 function nonLodPackets(model) {
+  if (MDB_SHARED.nonLodPackets) return MDB_SHARED.nonLodPackets(model);
   return (model.packets || []).filter((packet) => !/(?:_L\d+|_LO\d+|_LOD\d+)$/i.test(String(packet.name || "")));
 }
 
@@ -1528,7 +1987,7 @@ function editorNotice(text, isWarning = false) {
 }
 
 function emptyPendingEdits() {
-  return { materialFlags: {}, materialValues: {}, textureReferences: {} };
+  return { materialTarget: { ...DEFAULT_MATERIAL_TARGET }, materialFlags: {}, materialValues: {}, textureReferences: {} };
 }
 
 function buildCloneOutJobs(targets) {
@@ -1585,6 +2044,12 @@ function cleanFixedName(value) {
 
 function stem(fileName) {
   return String(fileName || "").split(/[\\/]/).pop().replace(/\.[^.]+$/i, "");
+}
+
+function sourceFolder(path) {
+  const value = String(path || "");
+  const index = Math.max(value.lastIndexOf("\\"), value.lastIndexOf("/"));
+  return index > 0 ? value.slice(0, index) : "";
 }
 
 function sameMaterialValue(left, right) {

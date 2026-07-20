@@ -1380,6 +1380,16 @@ button.is-busy:disabled::after {
   padding: 6px 8px;
 }
 
+.clone-out-sync-note {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .model-check {
   display: flex;
   align-items: center;
@@ -1741,6 +1751,15 @@ button.is-busy:disabled::after {
   border-radius: 6px;
   font-family: Consolas, "Cascadia Mono", monospace;
   font-size: 12px;
+}
+
+.preview-item-note {
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .conflict-notice {
@@ -2665,6 +2684,11 @@ button.is-busy:disabled::after {
     linear-gradient(135deg, rgba(240, 201, 107, 0.9), rgba(255, 255, 255, 0.28)) border-box;
 }
 
+.editor-choice-row button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .editor-notice {
   margin: 0;
   color: var(--muted);
@@ -2879,6 +2903,45 @@ button.is-busy:disabled::after {
   font-size: 12px;
 }
 
+.packet-item strong,
+.packet-inspector-item strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.packet-item span,
+.packet-inspector-item span {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.packet-inspector-list {
+  display: grid;
+  gap: 6px;
+}
+
+.packet-inspector-item {
+  width: 100%;
+  padding: 7px 8px;
+  color: inherit;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.packet-inspector-item.is-material {
+  border-color: rgba(147, 188, 214, 0.26);
+}
+
+button.packet-inspector-item:hover {
+  border-color: rgba(240, 201, 107, 0.5);
+  background: rgba(240, 201, 107, 0.08);
+}
+
 .model-details ul {
   margin: 0;
   padding-left: 18px;
@@ -2932,11 +2995,23 @@ button:disabled::after {
     linear-gradient(135deg, rgba(28, 34, 25, 0.88), rgba(13, 17, 18, 0.92));
 }
 
+.preset-group[data-group="faces"] {
+  border-color: rgba(147, 188, 214, 0.3);
+  background:
+    linear-gradient(135deg, rgba(20, 28, 34, 0.88), rgba(13, 17, 18, 0.92));
+}
+
 .preset-button {
   justify-content: flex-start;
   min-height: 42px;
   width: 100%;
   text-align: left;
+}
+
+.preset-button[data-enabled="false"] {
+  color: rgba(237, 232, 220, 0.52);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .preset-button[data-active="true"] {

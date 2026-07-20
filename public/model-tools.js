@@ -42,6 +42,7 @@ const modelViewerTextureList = document.querySelector("#modelViewerTextureList")
 const viewerRotateToggle = document.querySelector("#viewerRotateToggle");
 const viewerTextureToggle = document.querySelector("#viewerTextureToggle");
 const statusEl = document.querySelector("#status");
+const MDB_SHARED = window.ForgeMdb || {};
 
 let currentModels = [];
 let selectedModelIndexes = new Set();
@@ -352,9 +353,9 @@ async function scanMdbFolder() {
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Could not scan model folder.");
     currentSourceMode = "folder";
-    appendMdbScanResult(result);
+    renderMdbScanResult(result, { resetFilters: true });
     const suffix = result.truncated ? ` Showing first ${result.maxFiles}.` : "";
-    setStatus(`Added ${result.summary.total} scanned model files.${suffix}`);
+    setStatus(`Loaded ${result.summary.total} scanned model files from this folder.${suffix}`);
   } catch (error) {
     setStatus(error.message, true);
   } finally {
@@ -391,9 +392,9 @@ async function importMdbFiles(files) {
   }
 }
 
-function renderMdbScanResult(result) {
+function renderMdbScanResult(result, options = {}) {
   currentModels = result.models || [];
-  selectedModelIndexes = new Set();
+  resetMdbWorkingState(options);
   focusedModelIndex = currentModels.length ? 0 : null;
 
   renderSummary(summarizeModels(currentModels));
@@ -401,6 +402,30 @@ function renderMdbScanResult(result) {
   renderModelRows();
   renderModelDetails();
   renderSelectionState();
+}
+
+function resetMdbWorkingState(options = {}) {
+  selectedModelIndexes = new Set();
+  focusedModelIndex = null;
+  lastCreatedBatchPaths = [];
+  conflictPreviewState = { key: "", loading: false, conflicts: [], duplicates: [], error: "" };
+  clearTimeout(conflictPreviewTimer);
+  if (options.resetFilters) resetMdbFilters();
+  hideModelContextMenu();
+  if (renamePreview) {
+    renamePreview.textContent = "";
+    renamePreview.classList.add("hidden");
+  }
+  if (batchResultSummary) {
+    batchResultSummary.textContent = "";
+    batchResultSummary.classList.add("hidden");
+  }
+}
+
+function resetMdbFilters() {
+  modelSearchField.value = "";
+  modelTypeFilter.value = "";
+  showSelectedOnlyField.checked = false;
 }
 
 function appendMdbScanResult(result) {
@@ -585,6 +610,8 @@ function renderModelDetails() {
   modelDetails.append(
     headingBlock(model.fileName),
     detailList([
+      ["Parse Status", factualStatus(model.status)],
+      ["Notes", model.issueCount ? String(model.issueCount) : "None"],
       ["Game Part Type", model.assetType],
       ["Internal Model Name", primary?.name || "Unknown"],
       ["Animation Skeleton", skeleton],
@@ -1395,8 +1422,8 @@ function renderTypeFilterOptions() {
 function safetyChecklist(selected, diskBacked, jobs) {
   return [
     { label: "Copies only", ok: true },
-    { label: "Internal names", ok: Boolean(jobs.length) },
-    { label: cloneMode() === "race" ? "Skeletons synced" : "Skeletons preserved", ok: true },
+    { label: "Internal packet names", ok: Boolean(jobs.length) },
+    { label: cloneMode() === "race" ? "Skeleton refs synced" : "Skeleton refs preserved", ok: true },
     { label: "Textures reused", ok: true },
     { label: `Conflicts: ${conflictLabel()}`, ok: mdbConflictModeField.value !== "overwrite" },
     { label: diskBacked ? "Disk paths ready" : "Needs folder scan", ok: diskBacked },
@@ -1426,8 +1453,8 @@ function renderRenamePreview(selected, diskBacked, preview = buildRenameJobs(sel
     notice.textContent = "Choose at least one same-gender destination race to preview cloned names.";
   } else {
     notice.textContent = cloneMode() === "race"
-      ? "Preview: race code changes, part code overrides, and optional numbering will be written into copied model files."
-      : "Preview: file name and matching internal model names will be changed in the copies.";
+      ? "Preview: race code changes, part code overrides, optional numbering, matching packet names, and SKIN skeleton reference strings will be written into copied model files."
+      : "Preview: file name and matching internal packet names will be changed in the copies.";
   }
   renamePreview.appendChild(notice);
 
@@ -1448,12 +1475,44 @@ function renderRenamePreview(selected, diskBacked, preview = buildRenameJobs(sel
   preview.forEach((job) => {
     const item = document.createElement("div");
     item.className = "preview-item";
-    const skeletonChange = previewSkeletonChange(job);
-    item.textContent = `${stem(job.model.fileName)} -> ${job.newName}.mdb${skeletonChange ? ` | Skeleton: ${skeletonChange.from} -> ${skeletonChange.to}` : ""}`;
+    const internalChanges = previewInternalNameChanges(job);
+    const skeletonChanges = previewSkeletonRefChanges(job);
+    item.textContent = `${stem(job.model.fileName)} -> ${job.newName}.mdb | Internal packets: ${internalChanges.length} | Skeleton refs: ${skeletonChanges.length}`;
+    const detail = previewSyncDetail(internalChanges, skeletonChanges);
+    if (detail) {
+      const note = document.createElement("div");
+      note.className = "preview-item-note";
+      note.textContent = detail;
+      item.appendChild(note);
+    }
     list.appendChild(item);
   });
   renamePreview.appendChild(list);
   renamePreview.classList.remove("hidden");
+}
+
+function previewInternalNameChanges(job) {
+  if (MDB_SHARED.internalNameSyncPlan) return MDB_SHARED.internalNameSyncPlan(job.model, job.newName);
+  return [];
+}
+
+function previewSkeletonRefChanges(job) {
+  if (MDB_SHARED.skeletonRefSyncPlan) return MDB_SHARED.skeletonRefSyncPlan(job.model, job.newName);
+  const skeletonChange = previewSkeletonChange(job);
+  return skeletonChange ? [skeletonChange] : [];
+}
+
+function previewSyncDetail(internalChanges, skeletonChanges) {
+  const samples = [];
+  internalChanges.slice(0, 2).forEach((change) => samples.push(`${change.oldName} -> ${change.newName}`));
+  skeletonChanges.slice(0, 1).forEach((change) => {
+    const oldName = change.oldSkeleton || change.from;
+    const newName = change.newSkeleton || change.to;
+    samples.push(`${oldName} -> ${newName}`);
+  });
+  const remaining = internalChanges.length + skeletonChanges.length - samples.length;
+  if (remaining > 0) samples.push(`+${remaining} more`);
+  return samples.join(" | ");
 }
 
 function previewSkeletonChange(job) {
@@ -1608,8 +1667,9 @@ async function cloneSelectedModels() {
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Could not clone selected models.");
     currentSourceMode = "folder";
-    lastCreatedBatchPaths = createdPathsFromResult(result);
+    const createdPaths = createdPathsFromResult(result);
     renderMdbScanResult({ summary: summarizeModels(result.models), models: result.models });
+    lastCreatedBatchPaths = createdPaths;
     renderBatchResult(result);
     setStatus(`Created ${result.copied} cloned model${result.copied === 1 ? "" : "s"} in ${result.outputDir}.`);
   } catch (error) {
@@ -1651,10 +1711,11 @@ function buildRaceCloneJobs(models) {
       .filter((target) => target.endsWith(parsed.gender))
       .forEach((target) => {
         const number = start === null ? null : String(start + modelIndex).padStart(parsed.numberLength || 2, "0");
-        const partCode = parsed.hasArmorCode ? (partOverride || parsed.partCode) : "";
+        const targetRace = applyCaseStyle(parsed.raceCodeText, target);
+        const partCode = parsed.hasArmorCode ? (partOverride || parsed.partCodeText || parsed.partCode) : "";
         jobs.push({
           model,
-          newName: joinModelName(parsed.prefix, target, partCode, number === null ? parsed.tail : replaceTailNumber(parsed.tail, number))
+          newName: joinModelName(parsed.prefixText || parsed.prefix, targetRace, partCode, number === null ? parsed.tail : replaceTailNumber(parsed.tail, number))
         });
       });
   });
@@ -1702,15 +1763,21 @@ function removeSelectedModels() {
 function renderBatchResult(result) {
   batchResultSummary.textContent = "";
   const skipped = (result.skipped || []).length;
+  const internalChanges = (result.results || []).reduce((total, item) => total + (item.internalNameChanges || []).length, 0);
   const skeletonChanges = (result.results || []).reduce((total, item) => total + (item.skeletonChanges || []).length, 0);
   const line = document.createElement("p");
-  line.textContent = `Created ${result.copied || 0} MDBs${skipped ? `, skipped ${skipped} conflicts` : ""}. ${skeletonChanges ? `Updated ${skeletonChanges} skeleton reference${skeletonChanges === 1 ? "" : "s"}. ` : ""}Textures were reused, not copied.`;
+  const syncParts = [];
+  if (internalChanges) syncParts.push(`Synced ${internalChanges} internal packet name${internalChanges === 1 ? "" : "s"}.`);
+  if (skeletonChanges) syncParts.push(`Synced ${skeletonChanges} skeleton reference${skeletonChanges === 1 ? "" : "s"}.`);
+  line.textContent = `Created ${result.copied || 0} MDBs${skipped ? `, skipped ${skipped} conflicts` : ""}. ${syncParts.join(" ")} Textures were reused, not copied.`;
   batchResultSummary.appendChild(line);
   const details = document.createElement("div");
   details.className = "batch-result-details";
   (result.results || []).slice(0, 5).forEach((item) => {
     const row = document.createElement("span");
-    row.textContent = `Created: ${item.newName || stem(item.outputPath || "")}`;
+    const internalCount = (item.internalNameChanges || []).length;
+    const skeletonCount = (item.skeletonChanges || []).length;
+    row.textContent = `Created: ${item.newName || stem(item.outputPath || "")} | Internal ${internalCount} | Skeleton ${skeletonCount}`;
     details.appendChild(row);
   });
   (result.skipped || []).slice(0, 5).forEach((item) => {
@@ -1816,7 +1883,7 @@ function renderRaceTargets(selected) {
 }
 
 function parsePartName(name) {
-  const match = String(name || "").match(/^([PA])_([A-Za-z]{3})_(.+)$/);
+  const match = String(name || "").match(/^([PA])_([A-Za-z]{3})_(.+)$/i);
   if (!match) return null;
   const prefix = match[1].toUpperCase();
   const raceCode = match[2].toUpperCase();
@@ -1828,13 +1895,24 @@ function parsePartName(name) {
   const numberMatch = tail.match(/(\d+)(?!.*\d)/);
   return {
     prefix,
+    prefixText: match[1],
     raceCode,
+    raceCodeText: match[2],
     gender: raceCode.slice(-1),
     partCode,
+    partCodeText: hasArmorCode ? parts[0] : "",
     tail,
     hasArmorCode,
     numberLength: numberMatch ? numberMatch[1].length : 2
   };
+}
+
+function applyCaseStyle(template, value) {
+  const text = String(template || "");
+  const next = String(value || "");
+  if (text && text === text.toLowerCase()) return next.toLowerCase();
+  if (text && text === text.toUpperCase()) return next.toUpperCase();
+  return next;
 }
 
 function isStandardWearModel(parsed) {
@@ -1878,6 +1956,11 @@ function summarizeModels(models) {
 
 function modelKey(model) {
   return `${model.path || ""}|${model.fileName || ""}`;
+}
+
+function factualStatus(status) {
+  if (MDB_SHARED.factualStatus) return MDB_SHARED.factualStatus(status);
+  return status || "Parsed";
 }
 
 function headingBlock(fileName) {
@@ -2109,9 +2192,16 @@ function packetList(model) {
   title.textContent = "Model Sections";
   list.className = "packet-list";
   nonLodPackets(model).forEach((packet) => {
+    const hasMaterial = Boolean(packet.material && Object.keys(packet.material).length);
     const item = document.createElement("div");
+    const name = document.createElement("strong");
+    const meta = document.createElement("span");
     item.className = "packet-item";
-    item.textContent = `${packet.type}${packet.name ? `: ${packet.name}` : ""}`;
+    name.textContent = packet.name || packet.type;
+    meta.textContent = hasMaterial
+      ? `${materialPacketLabel(model, packet)} / ${packet.type} / ${textureCountForPacket(packet)} texture slot${textureCountForPacket(packet) === 1 ? "" : "s"}`
+      : packetKindLabel(packet);
+    item.append(name, meta);
     list.appendChild(item);
   });
   section.append(title, list);
@@ -2230,10 +2320,12 @@ function flatFlags(model) {
 }
 
 function materialPackets(model) {
-  const primary = primaryPacket(model);
-  if (primary?.material && Object.keys(primary.material).length) return [primary];
-  const fallback = nonLodPackets(model).find((packet) => packet.material && Object.keys(packet.material).length);
-  return fallback ? [fallback] : [];
+  if (MDB_SHARED.allMaterialPackets) return MDB_SHARED.allMaterialPackets(model);
+  return nonLodPackets(model).filter((packet) => packet.material && Object.keys(packet.material).length);
+}
+
+function textureCountForPacket(packet) {
+  return TEXTURE_REFERENCE_FIELDS.filter((field) => packet.material?.[field.key]).length;
 }
 
 function formatRawFlagValue(value) {
@@ -2257,14 +2349,39 @@ function fileMessageList(warnings) {
 }
 
 function primaryPacket(model) {
-  return visibleModelPackets(model)[0] || nonLodPackets(model)[0] || (model.packets || [])[0];
+  if (MDB_SHARED.selectPrimaryMaterialPacket) {
+    const primaryMaterial = MDB_SHARED.selectPrimaryMaterialPacket(model);
+    if (primaryMaterial) return primaryMaterial;
+  }
+  const visible = visibleModelPackets(model);
+  return visible.find((packet) => materialPacketRole(model, packet) === "primary")
+    || visible.find((packet) => !["eyes", "facialHair", "lod"].includes(materialPacketRole(model, packet)))
+    || visible[0]
+    || nonLodPackets(model)[0]
+    || (model.packets || [])[0];
 }
 
 function visibleModelPackets(model) {
   return nonLodPackets(model).filter((packet) => packet.type === "SKIN" || packet.type === "RIGD");
 }
 
+function materialPacketRole(model, packet) {
+  if (MDB_SHARED.packetRole) return MDB_SHARED.packetRole(model, packet);
+  return packet?.materialRole || "other";
+}
+
+function materialPacketLabel(model, packet) {
+  if (MDB_SHARED.packetLabel) return MDB_SHARED.packetLabel(model, packet);
+  return packet?.materialLabel || "Material Packet";
+}
+
+function packetKindLabel(packet) {
+  if (MDB_SHARED.packetKindLabel) return MDB_SHARED.packetKindLabel(packet);
+  return packet?.type || "Packet";
+}
+
 function nonLodPackets(model) {
+  if (MDB_SHARED.nonLodPackets) return MDB_SHARED.nonLodPackets(model);
   return (model.packets || []).filter((packet) => !isLodName(packet.name));
 }
 

@@ -1158,35 +1158,41 @@ class AppHandler(BaseHTTPRequestHandler):
         output_dir = str(payload.get("outputDir", "")).strip()
         jobs = payload.get("jobs", [])
 
-        if not output_dir or not jobs:
+        if not jobs:
             self._send_json({"conflicts": [], "duplicates": [], "outputDirExists": bool(output_dir and Path(output_dir).expanduser().exists())})
             return
 
         try:
-            output = Path(output_dir).expanduser().resolve()
+            default_output = Path(output_dir).expanduser().resolve() if output_dir else None
             seen = {}
             duplicates = []
             conflicts = []
+            output_exists = False
             for job in jobs:
                 name = str(job.get("newName", "")).strip()
                 if not name:
                     continue
+                job_output = str(job.get("outputDir", "")).strip()
+                output = Path(job_output).expanduser().resolve() if job_output else default_output
+                if output is None:
+                    continue
+                output_exists = output_exists or output.exists()
                 file_name = f"{Path(name).stem}.mdb"
-                key = file_name.lower()
+                key = f"{str(output).lower()}|{file_name.lower()}"
                 if key in seen:
-                    duplicates.append({"name": file_name, "first": seen[key], "duplicate": str(job.get("path", ""))})
+                    duplicates.append({"name": file_name, "outputDir": str(output), "first": seen[key], "duplicate": str(job.get("path", ""))})
                 else:
                     seen[key] = str(job.get("path", ""))
                 target = output / file_name
                 if target.exists():
-                    conflicts.append({"name": file_name, "path": str(target)})
+                    conflicts.append({"name": file_name, "path": str(target), "outputDir": str(output)})
         except Exception as exc:
             self._send_json({"error": str(exc)}, status=400)
             return
 
         self._send_json({
-            "outputDir": str(output),
-            "outputDirExists": output.exists(),
+            "outputDir": str(default_output) if default_output else "",
+            "outputDirExists": output_exists,
             "conflicts": conflicts,
             "duplicates": duplicates,
         })
